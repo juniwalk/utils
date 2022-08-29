@@ -1,10 +1,14 @@
 {
 	"name": "juniwalk/utils",
+	"description": "Package of utilities.",
+	"type": "library",
+	"keywords": ["nette","nettefw","forms"],
 	"license": "MIT",
 
 	"authors": [{
 		"name": "Martin Procházka",
-		"email": "juniwalk@outlook.cz"
+		"email": "juniwalk@outlook.cz",
+		"role": "Developer"
 	}],
 
 	"autoload": {

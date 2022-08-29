@@ -7,7 +7,9 @@
 
 namespace JuniWalk\Utils\Enums;
 
-interface LabelledEnum
+use BackedEnum;
+
+interface LabelledEnum extends BackedEnum
 {
 	/**
 	 * @return string[]

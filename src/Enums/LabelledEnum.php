@@ -27,7 +27,7 @@ interface LabelledEnum extends BackedEnum
 	public function icon(): ?string;
 
 	/**
-	 * @return string|null
+	 * @return Color|null
 	 */
-	public function color(): ?string;
+	public function color(): ?Color;
 }

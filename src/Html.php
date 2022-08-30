@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils;
 
 use JuniWalk\Utils\Enums\Color;
+use JuniWalk\Utils\Enums\LabelledEnum;
 use Nette\Utils\Html as NetteHtml;
 
 final class Html extends NetteHtml
@@ -63,5 +64,21 @@ final class Html extends NetteHtml
 		}
 
 		return $html->addClass($icon);
+	}
+
+
+	/**
+	 * @param  LabelledEnum  $enum
+	 * @return static
+	 */
+	public static function enumBadge(LabelledEnum $enum): self
+	{
+		$icon = $enum->icon();
+
+		if ($icon && !Strings::match($icon, '/^fa-/i')) {
+			$icon = 'fa-'.$icon;
+		}
+
+		return static::badge($enum->label(), $enum->color(), $icon);
 	}
 }

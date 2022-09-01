@@ -9,18 +9,38 @@ namespace JuniWalk\Utils;
 
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\LabelledEnum;
+use Nette\Localization\Translator;
 use Nette\Utils\Html as NetteHtml;
 
 final class Html extends NetteHtml
 {
+	private static Translator $translator;
+
+
+	/**
+	 * @param  Translator  $translator
+	 * @return void
+	 */
+	public static function setTranslator(Translator $translator): void
+	{
+		static::$translator = $translator;
+	}
+
+
 	/**
 	 * @param  string  $content
 	 * @param  Color  $color
 	 * @param  string  $icon
+	 * @param  bool  $tryTranslate
 	 * @return static
 	 */
-	public static function badge(string $content, Color $color = Color::Secondary, string $icon = null): self
-	{
+	public static function badge(
+		string $content,
+		Color $color = Color::Secondary,
+		string $icon = null,
+		bool $tryTranslate = true
+	): self {
+		$content = static::translate($content, $tryTranslate);
 		$badge = static::el('span class="badge"')
 			->addClass($color->for('badge'));
 
@@ -80,5 +100,20 @@ final class Html extends NetteHtml
 		}
 
 		return static::badge($enum->label(), $enum->color(), $icon);
+	}
+
+
+	/**
+	 * @param  string  $content
+	 * @param  bool  $tryTranslate
+	 * @return string
+	 */
+	private static function translate(string $content, bool $tryTranslate = true): string
+	{
+		if (!$tryTranslate || !isset(static::$translator)) {
+			return $content;
+		}
+
+		return static::$translator->translate($content);
 	}
 }

@@ -27,9 +27,6 @@ enum Currency: string implements LabeledEnum
 
 	public function color(): Color
 	{
-		return match($this) {
-			self::CZK => Color::Secondary,
-			self::EUR => Color::Secondary,
-		};
+		return Color::Secondary;
 	}
 }

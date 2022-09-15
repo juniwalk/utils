@@ -8,7 +8,7 @@
 namespace JuniWalk\Utils;
 
 use JuniWalk\Utils\Enums\Color;
-use JuniWalk\Utils\Enums\LabelledEnum;
+use JuniWalk\Utils\Enums\LabeledEnum;
 use Nette\Localization\Translator;
 use Nette\Utils\Html as NetteHtml;
 
@@ -88,10 +88,10 @@ final class Html extends NetteHtml
 
 
 	/**
-	 * @param  LabelledEnum  $enum
+	 * @param  LabeledEnum  $enum
 	 * @return static
 	 */
-	public static function enumBadge(LabelledEnum $enum): self
+	public static function enumBadge(LabeledEnum $enum): self
 	{
 		$icon = $enum->icon();
 

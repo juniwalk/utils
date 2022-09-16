@@ -19,8 +19,9 @@ enum Currency: string implements LabeledEnum
 	public function label(): string
 	{
 		return match($this) {
-			self::CZK => 'CZK',
 			self::EUR => 'EUR',
+			self::USD => 'USD',
+			self::CZK => 'CZK',
 		};
 	}
 

@@ -26,6 +26,12 @@ enum Currency: string implements LabeledEnum
 	}
 
 
+	public function format(): string
+	{
+		return '%value% %unit%';
+	}
+
+
 	public function color(): Color
 	{
 		return Color::Secondary;

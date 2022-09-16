@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils;
 
 use JuniWalk\Utils\Enums\Color;
+use JuniWalk\Utils\Enums\Currency;
 use JuniWalk\Utils\Enums\LabeledEnum;
 use Nette\Localization\Translator;
 use Nette\Utils\Html as NetteHtml;
@@ -55,14 +56,14 @@ final class Html extends NetteHtml
 
 	/**
 	 * @param  float  $value
-	 * @param  string  $unit
+	 * @param  Currency  $unit
 	 * @param  int  $decimals
 	 * @return static
 	 */
-	public static function price(float $value, string $unit, int $decimals = 2): self
+	public static function price(float $value, Currency $unit, int $decimals = 2): self
 	{
 		$value = Format::price($value, $unit, $decimals);
-		return self::badge($value)->addClass('badge-pill');
+		return self::badge($value, $unit->color())->addClass('badge-pill');
 	}
 
 

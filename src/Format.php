@@ -7,18 +7,23 @@
 
 namespace JuniWalk\Utils;
 
+use JuniWalk\Utils\Enums\Currency;
+
 final class Format
 {
 	/**
 	 * @param  float  $value
-	 * @param  string  $unit
+	 * @param  Currency  $unit
 	 * @param  int  $decimals
 	 * @return string
 	 */
-	public static function price(float $value, string $unit = 'Kč', int $decimals = 2): string
+	public static function price(float $value, Currency $unit, int $decimals = 2): string
 	{
 		$value = number_format($value, $decimals, ',', ' ');
-		return sprintf('%s %s', $value, $unit);
+		return strtr($unit->format(), [
+			'%value%' => $value,
+			'%unit%' => $unit->label(),
+		]);
 	}
 
 

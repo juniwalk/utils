@@ -28,11 +28,16 @@ final class Html extends NetteHtml
 		string $content,
 		Color $color = Color::Secondary,
 		string $icon = null,
-		bool $tryTranslate = true
+		bool $tryTranslate = true,
+		bool $isPill = false
 	): self {
 		$content = static::translate($content, $tryTranslate);
 		$badge = static::el('span class="badge"')
 			->addClass($color->for('badge'));
+
+		if ($isPill === true) {
+			$badge->addClass('badge-pill');
+		}
 
 		if (!empty($icon)) {
 			$icon = static::icon($icon, true);
@@ -46,7 +51,7 @@ final class Html extends NetteHtml
 	public static function price(float $value, Currency $unit, int $decimals = 2): self
 	{
 		$value = Format::price($value, $unit, $decimals);
-		return self::badge($value, $unit->color())->addClass('badge-pill');
+		return self::badge($value, $unit->color(), isPill: true);
 	}
 
 

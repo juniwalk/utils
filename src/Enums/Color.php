@@ -38,10 +38,6 @@ enum Color: string
 	case Gray = 'gray';
 
 
-	/**
-	 * @param  string  $type
-	 * @return string
-	 */
 	public function for(string $type): string
 	{
 		if (!$this->isBasicColor()) {
@@ -52,9 +48,6 @@ enum Color: string
 	}
 
 
-	/**
-	 * @return bool
-	 */
 	private function isBasicColor(): bool
 	{
 		return match($this) {

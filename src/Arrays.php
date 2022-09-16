@@ -11,11 +11,6 @@ use Stringable;
 
 final class Arrays
 {
-	/**
-	 * @param  mixed[]  $array
-	 * @param  string|null  $prefix
-	 * @return mixed[]
-	 */
 	public static function flatten(iterable $items, string $prefix = null): iterable
 	{
 		$result = [];
@@ -33,10 +28,6 @@ final class Arrays
 	}
 
 
-	/**
-	 * @param  mixed[]  $items
-	 * @return mixed[]
-	 */
 	public static function unflatten(iterable $items): iterable
 	{
 		$result = [];
@@ -56,10 +47,6 @@ final class Arrays
 	}
 
 
-	/**
-	 * @param  mixed[]  $items
-	 * @return string[]
-	 */
 	public static function tokenize(iterable $items): iterable
 	{
 		$result = [];

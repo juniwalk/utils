@@ -18,23 +18,12 @@ final class Html extends NetteHtml
 	private static Translator $translator;
 
 
-	/**
-	 * @param  Translator  $translator
-	 * @return void
-	 */
 	public static function setTranslator(Translator $translator): void
 	{
 		static::$translator = $translator;
 	}
 
 
-	/**
-	 * @param  string  $content
-	 * @param  Color  $color
-	 * @param  string  $icon
-	 * @param  bool  $tryTranslate
-	 * @return static
-	 */
 	public static function badge(
 		string $content,
 		Color $color = Color::Secondary,
@@ -54,12 +43,6 @@ final class Html extends NetteHtml
 	}
 
 
-	/**
-	 * @param  float  $value
-	 * @param  Currency  $unit
-	 * @param  int  $decimals
-	 * @return static
-	 */
 	public static function price(float $value, Currency $unit, int $decimals = 2): self
 	{
 		$value = Format::price($value, $unit, $decimals);
@@ -67,11 +50,6 @@ final class Html extends NetteHtml
 	}
 
 
-	/**
-	 * @param  string  $icon
-	 * @param  bool  $fixedWidth
-	 * @return static
-	 */
 	public static function icon(string $icon, bool $fixedWidth = false): self
 	{
 		$html = static::el('i');
@@ -88,10 +66,6 @@ final class Html extends NetteHtml
 	}
 
 
-	/**
-	 * @param  LabeledEnum  $enum
-	 * @return static
-	 */
 	public static function enumBadge(LabeledEnum $enum): self
 	{
 		$icon = $enum->icon();
@@ -104,11 +78,6 @@ final class Html extends NetteHtml
 	}
 
 
-	/**
-	 * @param  string  $content
-	 * @param  bool  $tryTranslate
-	 * @return string
-	 */
 	private static function translate(string $content, bool $tryTranslate = true): string
 	{
 		if (!$tryTranslate || !isset(static::$translator)) {

@@ -11,11 +11,6 @@ use Nette\Utils\Strings as NetteStrings;
 
 final class Strings extends NetteStrings
 {
-	/**
-	 * @param  string  $content
-	 * @param  string|null  $lang
-	 * @return string
-	 */
 	public static function slugify(string $content, string $lang = null): string
 	{
 		$content = self::transliterate($content, $lang);
@@ -24,11 +19,6 @@ final class Strings extends NetteStrings
 	}
 
 
-	/**
-	 * @param  string  $string
-	 * @param  string|null  $lang
-	 * @return string
-	 */
 	private static function transliterate(string $string, string $lang = null): string
 	{
 		switch($lang) {

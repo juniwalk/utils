@@ -11,12 +11,6 @@ use JuniWalk\Utils\Enums\Currency;
 
 final class Format
 {
-	/**
-	 * @param  float  $value
-	 * @param  Currency  $unit
-	 * @param  int  $decimals
-	 * @return string
-	 */
 	public static function price(float $value, Currency $unit, int $decimals = 2): string
 	{
 		$value = number_format($value, $decimals, ',', ' ');
@@ -27,12 +21,6 @@ final class Format
 	}
 
 
-	/**
-	 * @param  float  $value
-	 * @param  int  $decimals
-	 * @param  string  $format
-	 * @return string
-	 */
 	public static function number(float $value, int $decimals = 2, string $format = '%g%s'): string
 	{
 		$size = ['', 'k', 'M', 'B', 'T', 'Q', 'S', 'O', 'N'];
@@ -44,11 +32,6 @@ final class Format
 	}
 
 
-	/**
-	 * @param  int  $bytes
-	 * @param  int  $decimals
-	 * @return string
-	 */
 	public static function size(int $bytes, int $decimals = 2): string
 	{
 		$size = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];

@@ -5,7 +5,7 @@
  * @license   MIT License
  */
 
-namespace JuniWalk\Utils\Commands;
+namespace JuniWalk\Utils\Console\Tools;
 
 use Throwable;
 use Tracy\Debugger;

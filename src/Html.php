@@ -48,16 +48,16 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function price(float $amount, Currency $unit, int $decimals = 2, bool $icColoredBySign = false): self
+	public static function price(float $amount, Currency $unit, int $decimals = 2, bool $isColoredBySign = false): self
 	{
 		$value = Format::price($amount, $unit, $decimals);
 		$color = $unit->color();
 
-		if ($icColoredBySign && $amount > 0) {
+		if ($isColoredBySign && $amount > 0) {
 			$color = Color::Success;
 		}
 
-		if ($icColoredBySign && $amount < 0) {
+		if ($isColoredBySign && $amount < 0) {
 			$color = Color::Danger;
 		}
 

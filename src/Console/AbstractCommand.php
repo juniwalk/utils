@@ -74,7 +74,7 @@ abstract class AbstractCommand extends Command
 
 			$command = $cli->get($commandName);
 
-			if ($callback && !$callback($command, $input)) {
+			if ($callback && $callback($command, $input) === false) {
 				continue;
 			}
 

@@ -7,7 +7,9 @@
 
 namespace JuniWalk\Utils\Console;
 
+use JuniWalk\Utils\Exceptions\CommandFailedException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -27,15 +29,6 @@ abstract class AbstractCommand extends Command
 	public function addQuestion(callable $question): void
 	{
 		$this->questions[] = $question;
-	}
-
-
-	/**
-	 * @throws CommandNotFoundException
-	 */
-	public function getCommand(string $name): Command
-	{
-		return $this->getApplication()->get($name);
 	}
 
 
@@ -63,7 +56,38 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function exec(string ... $command): int
+	/**
+	 * @throws CommandNotFoundException
+	 * @throws CommandFailedException
+	 */
+	protected function execCommands(array $commandList, callable $callback = null): void
+	{
+		$cli = $this->getApplication();
+
+		if (empty($commandList)) {
+			return;
+		}
+
+		foreach ($commandList as $commandName => $arguments) {
+			$input = new ArrayInput($arguments);
+			$input->setInteractive(false);
+
+			$command = $cli->get($commandName);
+
+			if ($callback && !$callback($command, $input)) {
+				continue;
+			}
+
+			$code = $command->run($input, $this->output);
+
+			if ($code === Command::FAILURE) {
+				throw CommandFailedException::fromName($commandName);
+			}
+		}
+	}
+
+
+	protected function execShell(string ... $command): int
 	{
 		$command = implode(' ', $command);
 

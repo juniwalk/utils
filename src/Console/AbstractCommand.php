@@ -30,6 +30,15 @@ abstract class AbstractCommand extends Command
 	}
 
 
+	/**
+	 * @throws CommandNotFoundException
+	 */
+	public function getCommand(string $name): Command
+	{
+		return $this->getApplication()->get($name);
+	}
+
+
 	protected function initialize(InputInterface $input, OutputInterface $output): void
 	{
 		$this->input = $input;
@@ -75,7 +84,7 @@ abstract class AbstractCommand extends Command
 	protected function confirm(string $message, bool $default = true): bool
 	{
 		return $this->ask(new ConfirmationQuestion(
-			$message.' <comment>[Y,n]</comment> ',
+			$message.' <comment>[Y,n]</> ',
 			$default
 		));
 	}
@@ -90,9 +99,21 @@ abstract class AbstractCommand extends Command
 		}
 
 		return $this->ask(new ChoiceQuestion(
-			$message.' <comment>['.$choices[$default].']</comment> ',
+			$message.' <comment>['.$choices[$default].']</> ',
 			$choices,
 			$default
 		));
+	}
+
+
+	protected function writeHeader(string $message, int $width = 68): void
+	{
+		$message = str_pad($message, $width, ' ', STR_PAD_BOTH);
+
+		$this->output->writeln('');
+		$this->output->writeln('<fg=black;bg=#00cdcd>'.str_repeat(' ', $width).'</>');
+		$this->output->writeln('<fg=black;bg=#00cdcd>'.$message.'</>');
+		$this->output->writeln('<fg=black;bg=#00cdcd>'.str_repeat(' ', $width).'</>');
+		$this->output->writeln('');
 	}
 }

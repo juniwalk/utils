@@ -8,12 +8,12 @@
 namespace JuniWalk\Utils\Console;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Process\Process;
 
 abstract class AbstractCommand extends Command
 {
@@ -41,12 +41,8 @@ abstract class AbstractCommand extends Command
 
 	protected function initialize(InputInterface $input, OutputInterface $output): void
 	{
-		$this->input = $input;
 		$this->output = $output;
-
-		$formatter = $output->getFormatter();
-		$formatter->setStyle('blue', new OutputFormatterStyle('blue'));
-		$formatter->setStyle('fail', new OutputFormatterStyle('red'));
+		$this->input = $input;
 	}
 
 
@@ -67,6 +63,19 @@ abstract class AbstractCommand extends Command
 	}
 
 
+	protected function exec(string ... $command): int
+	{
+		$command = implode(' ', $command);
+
+		$process = Process::fromShellCommandline($command);
+		$process->setTty(Process::isTtySupported());
+
+		return $process->run(function($type, $buffer) {
+			$this->output->write($buffer);
+		});
+	}
+
+
 	protected function terminate(): void
 	{
 		$this->setCode(function(): int {
@@ -75,18 +84,10 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function ask(Question $question): mixed
-	{
-		return $this->getHelper('question')->ask($this->input, $this->output, $question);
-	}
-
-
 	protected function confirm(string $message, bool $default = true): bool
 	{
-		return $this->ask(new ConfirmationQuestion(
-			$message.' <comment>[Y,n]</> ',
-			$default
-		));
+		$question = new ConfirmationQuestion($message.' <comment>[Y,n]</> ', $default);
+		return $this->ask($question);
 	}
 
 
@@ -98,11 +99,14 @@ abstract class AbstractCommand extends Command
 			return $choices[$default];
 		}
 
-		return $this->ask(new ChoiceQuestion(
-			$message.' <comment>['.$choices[$default].']</> ',
-			$choices,
-			$default
-		));
+		$question = new ChoiceQuestion($message.' <comment>['.$choices[$default].']</> ', $choices, $default);
+		return $this->ask($question);
+	}
+
+
+	protected function ask(Question $question): mixed
+	{
+		return $this->getHelper('question')->ask($this->input, $this->output, $question);
 	}
 
 

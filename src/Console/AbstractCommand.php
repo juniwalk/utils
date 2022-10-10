@@ -62,17 +62,17 @@ abstract class AbstractCommand extends Command
 	 */
 	protected function execCommands(array $commandList, callable $callback = null): void
 	{
-		$cli = $this->getApplication();
+		$application = $this->getApplication();
 
 		if (empty($commandList)) {
 			return;
 		}
 
 		foreach ($commandList as $commandName => $arguments) {
-			$input = new ArrayInput($arguments);
-			$input->setInteractive(false);
+			$command = $application->get($commandName);
 
-			$command = $cli->get($commandName);
+			$input = new ArrayInput($arguments, $command->getDefinition());
+			$input->setInteractive(false);
 
 			if ($callback && $callback($command, $input) === false) {
 				continue;

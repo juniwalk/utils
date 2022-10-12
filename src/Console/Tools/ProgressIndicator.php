@@ -9,6 +9,7 @@ namespace JuniWalk\Utils\Console\Tools;
 
 use Throwable;
 use Tracy\Debugger;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -95,6 +96,8 @@ final class ProgressIndicator
 
 			$this->progress->finish();
 		}
+
+		return Command::FAILURE;
 	}
 
 

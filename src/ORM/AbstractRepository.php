@@ -60,6 +60,7 @@ abstract class AbstractRepository
 
 		try {
 			return $builder->getQuery()
+				->setMaxResults(1)
 				->getSingleResult();
 
 		} catch (NoResultException) {

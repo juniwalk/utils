@@ -27,7 +27,7 @@ abstract class AbstractRepository
 	 * @param  EntityManager  $entityManager
 	 * @throws EntityNotFoundException
 	 */
-	final public function __construct(EntityManager $entityManager)
+	public function __construct(EntityManager $entityManager)
 	{
 		$this->connection = $entityManager->getConnection();
 		$this->entityManager = $entityManager;

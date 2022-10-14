@@ -24,6 +24,16 @@ final class Html extends NetteHtml
 	}
 
 
+	public function addText($text, mixed ... $args): static
+	{
+		if (is_string($text) && sizeof($args) > 0) {
+			$text = sprintf($text, ... $args);
+		}
+
+		return parent::addText($text);
+	}
+
+
 	public static function badge(
 		string $content,
 		Color $color = Color::Secondary,

@@ -44,7 +44,7 @@ final class Html extends NetteHtml
 			$badge->addHtml($icon)->addText(' ');
 		}
 
-		return $badge->addHtml(Strings::lower($content));
+		return $badge->addHtml($content);
 	}
 
 

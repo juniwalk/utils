@@ -18,13 +18,12 @@ use Nette\Application\UI\Form;
 
 abstract class AbstractRepository
 {
-	protected EntityManager $entityManager;
-	protected Connection $connection;
+	protected readonly EntityManager $entityManager;
+	protected readonly Connection $connection;
 	protected string $entityName;
 
 
 	/**
-	 * @param  EntityManager  $entityManager
 	 * @throws EntityNotFoundException
 	 */
 	public function __construct(EntityManager $entityManager)

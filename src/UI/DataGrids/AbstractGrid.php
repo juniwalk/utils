@@ -143,7 +143,7 @@ abstract class AbstractGrid extends Control
 
 	final public function render()
 	{
-		$gridTemplate = $this->grid->getTemplate();
+		$gridTemplate = $this->getComponent('grid')->getTemplate();
 		$gridTemplate->controlName = $this->getName();
 		$gridTemplate->hasFiltersAlwaysShown = $this->hasFiltersAlwaysShown;
 		$gridTemplate->isDisabled = $this->isDisabled;

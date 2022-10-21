@@ -148,7 +148,6 @@ abstract class AbstractGrid extends DataGrid
 		$template = $this->getTemplate();
 		$template->controlName = $this->getName();
 		$template->hasFiltersAlwaysShown = $this->hasFiltersAlwaysShown;
-		$template->isResponsive = $this->isResponsive;
 		$template->isDisabled = $this->isDisabled;
 		$template->title = $this->title;
 

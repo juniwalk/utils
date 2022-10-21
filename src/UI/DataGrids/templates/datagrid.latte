@@ -3,9 +3,9 @@
 
 <form n:name="filter" class="ajax">
 
-	<div class="card-header border-0">
+	<div class="card-header border-0" n:ifcontent>
 		<h3 class="card-title" n:if="$title">{$title|translate:[name => $controlName]|noescape}</h3>
-		<div class="card-tools btn-toolbar">
+		<div class="card-tools btn-toolbar" n:ifcontent>
 
 			<div class="btn-group mr-2 datagrid-exports" n:if="$exports" n:block="exports" n:inner-foreach="$exports as $export">
 				{$export->render()}

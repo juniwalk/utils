@@ -21,7 +21,7 @@ abstract class AbstractGrid extends Control
 	protected Translator $translator;
 	protected bool $hasFiltersAlwaysShown = true;
 	protected bool $isDisabled = false;
-	protected string $title;
+	protected ?string $title = null;
 
 
 	public function setDisabled(bool $disabled = true): void
@@ -54,7 +54,7 @@ abstract class AbstractGrid extends Control
 	}
 
 
-	public function setTitle(string $title): void
+	public function setTitle(?string $title): void
 	{
 		$this->title = $title;
 	}

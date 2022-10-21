@@ -12,7 +12,7 @@ use JuniWalk\Utils\Html;
 use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\DataGrid;
 
-abstract class AbstractGridNew extends DataGrid
+abstract class AbstractGrid extends DataGrid
 {
 	protected string $title;
 	protected bool $isDisabled = false;

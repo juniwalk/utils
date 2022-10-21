@@ -1,0 +1,17 @@
+{var $link = [$control->getParent(), link]}
+
+<ul class="pagination pagination-sm m-0 float-md-right" n:if="$paginator->pageCount > 1">
+
+	<li n:class="page-item, $paginator->isFirst() ? disabled">
+		<a class="page-link ajax" n:attr="href => $paginator->isFirst() ? '#' : $link('page!', $paginator->page - 1)">{_ublaboo_datagrid.previous|noescape}</a>
+	</li>
+
+	<li n:class="page-item, $step == $paginator->page ? active" n:foreach="$steps as $step">
+		<a class="page-link ajax" n:attr="href => $paginator->page == $step ? '#' : $link('page!', $step)">{$step}</a>
+	</li>
+
+	<li n:class="page-item, $paginator->isLast() ? disabled">
+		<a class="page-link ajax" n:attr="href => $paginator->isLast() ? '#' : $link('page!', $paginator->page + 1)">{_ublaboo_datagrid.next|noescape}</a>
+	</li>
+
+</ul>

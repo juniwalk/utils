@@ -5,12 +5,12 @@
  * @license   MIT License
  */
 
-namespace JuniWalk\Utils\Enums;
+namespace JuniWalk\Utils\Enums\Traits;
 
 use JuniWalk\Utils\Strings;
 use ValueError;
 
-trait LabeledTrait
+trait Labeled
 {
 	public static function getLabels(): iterable
 	{

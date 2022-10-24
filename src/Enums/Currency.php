@@ -9,7 +9,7 @@ namespace JuniWalk\Utils\Enums;
 
 enum Currency: string implements LabeledEnum
 {
-	use LabeledTrait;
+	use Traits\Labeled;
 
 	case EUR = 'eur';
 	case USD = 'usd';
@@ -18,11 +18,7 @@ enum Currency: string implements LabeledEnum
 
 	public function label(): string
 	{
-		return match($this) {
-			self::EUR => 'EUR',
-			self::USD => 'USD',
-			self::CZK => 'CZK',
-		};
+		return $this->name;
 	}
 
 

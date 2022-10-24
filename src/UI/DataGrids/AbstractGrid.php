@@ -129,14 +129,14 @@ abstract class AbstractGrid extends Control
 
 	final public function redrawGrid(): void
 	{
-		$this->grid->redrawControl();
+		$this->getComponent('grid')->redrawControl();
 		$this->getPresenter()->redirectAjax('this');
 	}
 
 
 	final public function redrawItem(int $id): void
 	{
-		$this->grid->redrawItem($id);
+		$this->getComponent('grid')->redrawItem($id);
 		$this->getPresenter()->redirectAjax('this');
 	}
 

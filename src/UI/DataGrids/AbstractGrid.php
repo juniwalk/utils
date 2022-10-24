@@ -97,7 +97,7 @@ abstract class AbstractGrid extends Control
 			throw new \UnexpectedValueException('$enum has to be instance of '.LabeledEnum::class);
 		}
 
-		$column = $this->grid->addColumnStatus($name.'Scalar', $title)->setAlign('right');
+		$column = $this->grid->addColumnStatus($name, $title)->setAlign('right');
 		$column->onChange[] = function($id, $value) use ($signalMethod, $enum): void {
 			$this->$signalMethod((int) $id, $enum::tryFrom($value));
 		};

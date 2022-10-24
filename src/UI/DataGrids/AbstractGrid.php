@@ -17,6 +17,7 @@ use Ublaboo\DataGrid\DataGrid;
 
 abstract class AbstractGrid extends Control
 {
+	protected DataGrid $grid;
 	protected Translator $translator;
 	protected bool $hasFiltersAlwaysShown = true;
 	protected bool $isDisabled = false;
@@ -37,7 +38,7 @@ abstract class AbstractGrid extends Control
 
 	public function setFilter(iterable $filter): void
 	{
-		$this->getComponent('grid')->setFilter($filter);
+		$this->getComponentGrid()->setFilter($filter);
 	}
 
 
@@ -83,7 +84,7 @@ abstract class AbstractGrid extends Control
 	public function addColumnEnum(string $name, string $title, string $enum, bool $hasBlockButtons = false): Column
 	{
 		$signalMethod = $this->formatSignalMethod($name);
-		$grid = $this->getComponent('grid');
+		$grid = $this->getComponentGrid();
 
 		if (!method_exists($this, $signalMethod)) {
 			return $grid->addColumnText($name, $title)->setAlign('right')
@@ -129,21 +130,21 @@ abstract class AbstractGrid extends Control
 
 	final public function redrawGrid(): void
 	{
-		$this->getComponent('grid')->redrawControl();
+		$this->getComponentGrid()->redrawControl();
 		$this->getPresenter()->redirectAjax('this');
 	}
 
 
 	final public function redrawItem(int $id): void
 	{
-		$this->getComponent('grid')->redrawItem($id);
+		$this->getComponentGrid()->redrawItem($id);
 		$this->getPresenter()->redirectAjax('this');
 	}
 
 
 	final public function render()
 	{
-		$gridTemplate = $this->getComponent('grid')->getTemplate();
+		$gridTemplate = $this->getComponentGrid()->getTemplate();
 		$gridTemplate->controlName = $this->getName();
 		$gridTemplate->hasFiltersAlwaysShown = $this->hasFiltersAlwaysShown;
 		$gridTemplate->isDisabled = $this->isDisabled;
@@ -164,9 +165,19 @@ abstract class AbstractGrid extends Control
 	abstract protected function createComponentGrid(): DataGrid;
 
 
+	protected function getComponentGrid(): DataGrid
+	{
+		if (!isset($this->grid)) {
+			$this->grid = $this->getComponent('grid');
+		}
+
+		return $this->grid;
+	}
+
+
 	final protected function createDataGrid(bool $rememberState = true, string $primaryKey = null): DataGrid
 	{
-		$grid = new DataGrid;
+		$grid = $this->grid = new DataGrid;
 		$grid->setRememberState($rememberState);
 		$grid->setRefreshUrl(!$rememberState);
 		$grid->setCustomPaginatorTemplate(__DIR__.'/templates/datagrid_paginator.latte');

@@ -38,7 +38,7 @@ abstract class AbstractGrid extends Control
 
 	public function setFilter(iterable $filter): void
 	{
-		$this->getComponentGrid()->setFilter($filter);
+		$this->grid->setFilter($filter);
 	}
 
 
@@ -84,10 +84,9 @@ abstract class AbstractGrid extends Control
 	public function addColumnEnum(string $name, string $title, string $enum, bool $hasBlockButtons = false): Column
 	{
 		$signalMethod = $this->formatSignalMethod($name);
-		$grid = $this->getComponentGrid();
 
 		if (!method_exists($this, $signalMethod)) {
-			return $grid->addColumnText($name, $title)->setAlign('right')
+			return $this->grid->addColumnText($name, $title)->setAlign('right')
 				->setRenderer(function($item) use ($name): Html {
 					$enum = $item->{'get'.$name}();
 					return Html::enumBadge($enum);
@@ -98,7 +97,7 @@ abstract class AbstractGrid extends Control
 			throw new \UnexpectedValueException('$enum has to be instance of '.LabeledEnum::class);
 		}
 
-		$column = $grid->addColumnStatus($name, $title)->setAlign('right');
+		$column = $this->grid->addColumnStatus($name, $title)->setAlign('right');
 		$column->onChange[] = function($id, $value) use ($signalMethod, $enum): void {
 			$this->$signalMethod((int) $id, $enum::tryFrom($value));
 		};
@@ -130,21 +129,21 @@ abstract class AbstractGrid extends Control
 
 	final public function redrawGrid(): void
 	{
-		$this->getComponentGrid()->redrawControl();
+		$this->grid->redrawControl();
 		$this->getPresenter()->redirectAjax('this');
 	}
 
 
 	final public function redrawItem(int $id): void
 	{
-		$this->getComponentGrid()->redrawItem($id);
+		$this->grid->redrawItem($id);
 		$this->getPresenter()->redirectAjax('this');
 	}
 
 
 	final public function render()
 	{
-		$gridTemplate = $this->getComponentGrid()->getTemplate();
+		$gridTemplate = $this->getComponent('grid')->getTemplate();
 		$gridTemplate->controlName = $this->getName();
 		$gridTemplate->hasFiltersAlwaysShown = $this->hasFiltersAlwaysShown;
 		$gridTemplate->isDisabled = $this->isDisabled;
@@ -163,16 +162,6 @@ abstract class AbstractGrid extends Control
 
 
 	abstract protected function createComponentGrid(): DataGrid;
-
-
-	protected function getComponentGrid(): DataGrid
-	{
-		if (!isset($this->grid)) {
-			$this->grid = $this->getComponent('grid');
-		}
-
-		return $this->grid;
-	}
 
 
 	final protected function createDataGrid(bool $rememberState = true, string $primaryKey = null): DataGrid

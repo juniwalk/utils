@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils\Enums\Traits;
 
+use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Strings;
 use ValueError;
 

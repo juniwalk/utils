@@ -12,17 +12,12 @@ use Symfony\Component\Console\Input\InputDefinition;
 
 class ArrayInput extends BaseInput
 {
-	public function __construct(InputDefinition $definition, array $params = [])
-	{
-		parent::__construct($params, $definition);
-	}
-
-
 	/**
 	 * {@inheritdoc}
 	 */
 	public function bind(InputDefinition $definition)
 	{
+		$this->definition = $definition;
 		$this->parse();
 	}
 }

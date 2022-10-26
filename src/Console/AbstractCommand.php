@@ -71,7 +71,7 @@ abstract class AbstractCommand extends Command
 		foreach ($commandList as $commandName => $arguments) {
 			$command = $application->get($commandName);
 
-			$input = new ArrayInput($command->getDefinition(), $arguments);
+			$input = new ArrayInput($arguments, $command->getDefinition());
 			$input->setInteractive(false);
 
 			if ($callback && $callback($command, $input) === false) {

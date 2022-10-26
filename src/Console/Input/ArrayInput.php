@@ -23,10 +23,6 @@ class ArrayInput extends BaseInput
 	 */
 	public function bind(InputDefinition $definition)
 	{
-		if ($this->definition <> $definition) {
-			return parent::bind($definition);
-		}
-
 		$this->parse();
 	}
 }

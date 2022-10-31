@@ -8,21 +8,44 @@
 namespace JuniWalk\Utils;
 
 use Nette\Utils\Json as NetteJson;
+use Nette\Utils\JsonException;
+use Nette\IOException;
 use Stringable;
 
-final class Json extends NetteJson
+final class Json implements Stringable
 {
-	public const PATTERN = '/(\"code\:([\/=+0-9a-z]+)\")/iU';
-	public const LITERAL = 'code:';
+	private const PATTERN = '/(\"code\:([\/=+0-9a-z]+)\")/iU';
+	private const LITERAL = 'code:';
+
+	public const FORCE_ARRAY = NetteJson::FORCE_ARRAY;
+	public const PRETTY = NetteJson::PRETTY;
+	public const ESCAPE_UNICODE = NetteJson::ESCAPE_UNICODE;
+
+
+	private function __construct(
+		private readonly string $code
+	) {}
+
+
+	public function __toString(): string
+	{
+		return static::LITERAL.base64_encode($this->code);
+	}
+
+
+	public static function literal(string $code): static
+	{
+		return new static($code);
+	}
 
 
 	/**
-	 * @inheritDoc
+	 * @throws JsonException
 	 */
-	public static function encode(mixed $content, bool $extended = false, bool $escapeUnicode = false): string
+	public static function encode(mixed $content, int $flags = 0): string
 	{
 		if (!is_iterable($content)) {
-			return parent::encode($content, $extended, $escapeUnicode);
+			return NetteJson::encode($content, $flags);
 		}
 
 		$content = Arrays::map($content, function(mixed $value): mixed {
@@ -33,9 +56,9 @@ final class Json extends NetteJson
 			return (string) $value;
 		});
 
-		$json = parent::encode($content, $extended, $escapeUnicode);
+		$json = NetteJson::encode($content, $flags);
 
-		if ($extended === false) {
+		if (!($flags & static::PRETTY)) {
 			return $json;
 		}
 
@@ -44,5 +67,29 @@ final class Json extends NetteJson
 		}
 
 		return $json;
+	}
+
+
+	/**
+	 * @throws JsonException
+	 */
+	public static function decode(string $json, int $flags = 0): mixed
+	{
+		return NetteJson::decode($json, $flags);
+	}
+
+
+	/**
+	 * @throws IOException
+	 * @throws JsonException
+	 */
+	public static function decodeFile(string $file, int $flags = 0): mixed
+	{
+		if (!is_file($file)) {
+			throw new IOException("File '$file' does not exist.");
+		}
+
+		$json = file_get_contents($file);
+		return NetteJson::decode($json, $flags);
 	}
 }

@@ -11,6 +11,24 @@ use Stringable;
 
 final class Arrays
 {
+	public static function map(iterable $items, callable $callback, bool $isRecursive = true): iterable
+	{
+		$callback = function(mixed $value, mixed $key) use ($callback, $isRecursive) {
+			if (!$isRecursive || !is_iterable($value)) {
+				return $callback($value, $key);
+			}
+
+			return static::map($value, $callback, true);
+		};
+
+		foreach($items as $key => $value) {
+			$items[$key] = $callback($value, $key);
+		}
+
+		return $items;
+	}
+
+
 	public static function flatten(iterable $items, string $prefix = null): iterable
 	{
 		$result = [];

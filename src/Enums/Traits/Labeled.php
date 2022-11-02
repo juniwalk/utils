@@ -41,6 +41,10 @@ trait Labeled
 	 */
 	public static function make(mixed $value): static
 	{
+		if ($value instanceof static) {
+			return $value;
+		}
+
 		if ($case = static::tryFrom($value)) {
 			return $case;
 		}

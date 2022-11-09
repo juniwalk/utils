@@ -48,6 +48,7 @@ final class Arrays
 
 	public static function unflatten(iterable $items): iterable
 	{
+		$items = static::flatten($items);
 		$result = [];
 
 		foreach($items as $key => $value) {

@@ -21,8 +21,12 @@ class NetteEntityListenerResolver implements EntityListenerResolver
     /**
      * @inheritdoc
      */
-	public function clear(string $className): void
+	public function clear(string $className = null): void
 	{
+		if (is_null($className)) {
+			return;
+		}
+
 		$this->container->removeService($className);
 	}
 

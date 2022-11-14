@@ -5,8 +5,10 @@
  * @license   MIT License
  */
 
-namespace App\Entity;
+namespace JuniWalk\Utils\ORM;
 
+use JuniWalk\Utils\Exceptions\EntityNotFoundException;
+use JuniWalk\Utils\Exceptions\EntityNotValidException;
 use Doctrine\ORM\NoResultException;
 
 abstract class UserRepository extends AbstractRepository

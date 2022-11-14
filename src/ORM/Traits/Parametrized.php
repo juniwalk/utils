@@ -15,7 +15,7 @@ use JuniWalk\Utils\Strings;
 trait Parametrized
 {
 	#[ORM\Column(type: 'json')]
-	protected array $params = [];
+	private array $params = [];
 
 
 	/**

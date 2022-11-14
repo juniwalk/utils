@@ -13,7 +13,7 @@ use Stringable;
 trait Hashable
 {
 	#[ORM\Column(type: 'string', length: 8, nullable: true)]
-	private ?string $hash = null;
+	protected ?string $hash = null;
 
 
 	public function getHash(): string

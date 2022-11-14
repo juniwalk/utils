@@ -14,7 +14,7 @@ trait Identifier
 	#[ORM\Column(type: 'integer', unique: true, nullable: false)]
 	#[ORM\GeneratedValue(strategy: 'IDENTITY')]
 	#[ORM\Id]
-	private int $id;
+	protected int $id;
 
 
 	final public function getId(): ?int

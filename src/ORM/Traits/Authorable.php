@@ -13,7 +13,7 @@ use JuniWalk\Utils\ORM\User;
 trait Authorable
 {
 	#[ORM\ManyToOne(targetEntity: User::class)]
-	private ?User $author = null;
+	protected ?User $author = null;
 
 
 	public function setAuthor(?User $author): void

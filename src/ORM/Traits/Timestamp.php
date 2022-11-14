@@ -14,10 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
 trait Timestamp
 {
 	#[ORM\Column(type: 'datetimetz')]
-	private DateTime $created;
+	protected DateTime $created;
 
 	#[ORM\Column(type: 'datetimetz', nullable: true)]
-	private ?DateTime $modified = null;
+	protected ?DateTime $modified = null;
 
 
 	public function getCreated(): DateTime

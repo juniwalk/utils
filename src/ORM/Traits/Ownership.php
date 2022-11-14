@@ -14,7 +14,7 @@ trait Ownership
 {
 	#[ORM\ManyToOne(targetEntity: User::class)]
 	#[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
-	private User $owner;
+	protected User $owner;
 
 
 	public function setOwner(User $owner): void

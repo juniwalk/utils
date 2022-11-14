@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait Activable
 {
 	#[ORM\Column(type: 'boolean', options: ['default' => true])]
-	private bool $isActive = true;
+	protected bool $isActive = true;
 
 
 	public function setActive(bool $active): void

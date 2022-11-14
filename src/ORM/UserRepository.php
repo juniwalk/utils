@@ -9,6 +9,7 @@ namespace JuniWalk\Utils\ORM;
 
 use JuniWalk\Utils\Exceptions\EntityNotFoundException;
 use JuniWalk\Utils\Exceptions\EntityNotValidException;
+use Doctrine\ORM\EntityManagerInterface as EntityManager;
 use Doctrine\ORM\NoResultException;
 
 abstract class UserRepository extends AbstractRepository

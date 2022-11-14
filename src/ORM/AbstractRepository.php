@@ -37,14 +37,24 @@ abstract class AbstractRepository
 	}
 
 
-	public function findBy(callable $where): iterable
+	/**
+	 * @throws NoResultException
+	 */
+	public function getBy(callable $where, ?int $maxResults = null): array
 	{
 		$builder = $this->createQueryBuilder('e', 'e.id');
 		$builder = $where($builder) ?: $builder;
 
+		return $builder->getQuery()
+			->setMaxResults($maxResults)
+			->getResult();
+	}
+
+
+	public function findBy(callable $where, ?int $maxResults = null): array
+	{
 		try {
-			return $builder->getQuery()
-				->getResult();
+			return $this->getBy($where, $maxResults);
 
 		} catch (NoResultException) {
 			return [];
@@ -52,28 +62,28 @@ abstract class AbstractRepository
 	}
 
 
-	public function findOneBy(callable $where): ?object
+	/**
+	 * @throws NoResultException
+	 */
+	public function getOneBy(callable $where): object
 	{
 		$builder = $this->createQueryBuilder('e', 'e.id');
 		$builder = $where($builder) ?: $builder;
 
+		return $builder->getQuery()
+			->setMaxResults(1)
+			->getSingleResult();
+	}
+
+
+	public function findOneBy(callable $where): ?object
+	{
 		try {
-			return $builder->getQuery()
-				->setMaxResults(1)
-				->getSingleResult();
+			return $this->getOneBy($where);
 
 		} catch (NoResultException) {
 			return null;
 		}
-	}
-
-
-	public function findById(int $id): ?object
-	{
-		return $this->findOneBy(function($qb) use ($id) {
-			$qb->setParameter('id', $id);
-			$qb->where('e.id = :id');
-		});
 	}
 
 
@@ -82,11 +92,20 @@ abstract class AbstractRepository
 	 */
 	public function getById(int $id): object
 	{
-		if (!$object = $this->findById($id)) {
-			throw new NoResultException;
-		}
+		return $this->getOneBy(function($qb) use ($id) {
+			$qb->where('e.id = :id')->setParameter('id', $id);
+		});
+	}
 
-		return $object;
+
+	public function findById(int $id): ?object
+	{
+		try {
+			return $this->getById($id);
+
+		} catch (NoResultException) {
+			return null;
+		}
 	}
 
 
@@ -123,9 +142,7 @@ abstract class AbstractRepository
 
 	public function truncateTable(bool $cascade = false, string $entityName = null): void
 	{
-		$tableName = $this->getTableName($entityName);
-
-		$this->query('TRUNCATE TABLE "'.$tableName.'" RESTART IDENTITY'.($cascade == true ? ' CASCADE' : null));
+		$this->query('TRUNCATE TABLE "'.$this->getTableName($entityName).'" RESTART IDENTITY'.($cascade == true ? ' CASCADE' : null));
 	}
 
 

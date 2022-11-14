@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils\ORM\Traits;
 
 use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 trait Timestamp
@@ -25,13 +26,13 @@ trait Timestamp
 	}
 
 
-	public function setModified(?DateTime $modified): void
+	public function setModified(?DateTimeInterface $modified): void
 	{
 		$this->modified = $modified ? clone $modified : new DateTime;
 	}
 
 
-	public function getModified(): ?DateTime
+	public function getModified(): ?DateTimeInterface
 	{
 		if (!$this->modified) {
 			return null;
@@ -41,7 +42,7 @@ trait Timestamp
 	}
 
 
-	public function getTimestamp(): DateTime
+	public function getTimestamp(): DateTimeInterface
 	{
 		return clone ($this->modified ?: $this->created);
 	}

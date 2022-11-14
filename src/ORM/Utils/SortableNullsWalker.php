@@ -5,7 +5,7 @@
  * @license   MIT License
  */
 
-namespace JuniWalk\Utils\ORM;
+namespace JuniWalk\Utils\ORM\Utils;
 
 use Doctrine\ORM\Query\AST\PathExpression;
 use Doctrine\ORM\Query\SqlWalker;

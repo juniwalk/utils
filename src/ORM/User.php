@@ -19,7 +19,7 @@ abstract class User implements Identity, Stringable
 {
 	use Traits\Identifier;
 	use Traits\Activable;
-	use Traits\Parametrized;
+	// use Traits\Parametrized;
 
 	#[ORM\Column(type: 'string', length: 64, nullable: true)]
 	protected ?string $name = null;

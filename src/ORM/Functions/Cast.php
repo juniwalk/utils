@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils\ORM\Functions;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
+use Doctrine\ORM\Query\AST\Literal;
 use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
@@ -26,12 +27,28 @@ final class Cast extends FunctionNode
 	{
 		$parser->match(Lexer::T_IDENTIFIER); // (2)
 		$parser->match(Lexer::T_OPEN_PARENTHESIS); // (3)
+		$lexer = $parser->getLexer();
 
 		$this->column = $parser->StringPrimary(); // (4)
 
-		$parser->match(Lexer::T_COMMA); // (5)
+		switch (true) {
+			case $lexer->isNextToken(Lexer::T_COMMA):
+				$parser->match(Lexer::T_COMMA); // (5)
+				break;
+			case $lexer->isNextToken(Lexer::T_AS):
+				$parser->match(Lexer::T_AS); // (5)
+				break;
+		}
 
-		$this->type = $parser->StringPrimary(); // (6)
+		switch (true) {
+			case $lexer->isNextToken(Lexer::T_STRING):
+				$this->type = $parser->ScalarExpression(); // (6)
+				break;
+			case $lexer->isNextToken(Lexer::T_IDENTIFIER):
+				$parser->match(Lexer::T_IDENTIFIER);
+				$this->type = new Literal(Literal::STRING, $lexer->token['value']); // (6)
+				break;
+		}
 
 		$parser->match(Lexer::T_CLOSE_PARENTHESIS); // (7)
 	}
@@ -42,37 +59,37 @@ final class Cast extends FunctionNode
 	 */
 	public function getSql(SqlWalker $sqlWalker): string
 	{
-        /** @var Node $value */
+		/** @var Node $value */
 		$column = $sqlWalker->walkSimpleArithmeticExpression($this->column);
 		$type = $sqlWalker->walkSimpleArithmeticExpression($this->type);
 
-        $type = trim(strtolower($type), '"\'');
-        if ($type === 'datetime') {
+		$type = trim(strtolower($type), '"\'');
+		if ($type === 'datetime') {
 			return '"timestamp"(' . $column . ')';
-        }
+		}
 
-        if ($type === 'json' && !$sqlWalker->getConnection()->getDatabasePlatform()->hasNativeJsonType()) {
-            $type = 'text';
-        }
+		if ($type === 'json' && !$sqlWalker->getConnection()->getDatabasePlatform()->hasNativeJsonType()) {
+			$type = 'text';
+		}
 
-        if ($type === 'bool') {
-            $type = 'boolean';
-        }
+		if ($type === 'bool') {
+			$type = 'boolean';
+		}
 
-        if ($type === 'binary') {
-            $type = 'bytea';
-        }
+		if ($type === 'binary') {
+			$type = 'bytea';
+		}
 
-        /**
-         * The notations varchar(n) and char(n) are aliases for character varying(n) and character(n), respectively.
-         * character without length specifier is equivalent to character(1). If character varying is used
-         * without length specifier, the type accepts strings of any size. The latter is a PostgreSQL extension.
-         * http://www.postgresql.org/docs/9.2/static/datatype-character.html
-         */
-        if ($type === 'string') {
-            $type = 'varchar';
-        }
+		/**
+		 * The notations varchar(n) and char(n) are aliases for character varying(n) and character(n), respectively.
+		 * character without length specifier is equivalent to character(1). If character varying is used
+		 * without length specifier, the type accepts strings of any size. The latter is a PostgreSQL extension.
+		 * http://www.postgresql.org/docs/9.2/static/datatype-character.html
+		 */
+		if ($type === 'string') {
+			$type = 'varchar';
+		}
 
-        return 'cast(' . $column . ' AS ' . $type . ')';
+		return 'cast(' . $column . ' AS ' . $type . ')';
 	}
 }

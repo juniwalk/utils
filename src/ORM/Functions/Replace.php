@@ -13,7 +13,7 @@ use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
-final class ReplaceFunction extends FunctionNode
+final class Replace extends FunctionNode
 {
 	public Node $column;
 	public Node $from;

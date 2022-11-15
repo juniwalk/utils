@@ -42,7 +42,7 @@ final class Replace extends FunctionNode
 	public function getSql(SqlWalker $sqlWalker): string
 	{
 		return sprintf('REPLACE(%s, %s, %s)',
-			$this->stringPrimary->dispatch($sqlWalker),
+			$this->column->dispatch($sqlWalker),
 			$this->from->dispatch($sqlWalker),
 			$this->to->dispatch($sqlWalker)
 		);

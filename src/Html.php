@@ -91,6 +91,49 @@ final class Html extends NetteHtml
 	}
 
 
+	public static function option(
+		string $label,
+		mixed $value,
+		string $content = null,
+		string $icon = null
+	): self {
+		$option = Html::el('option', static::translate($label))
+			->value($value);
+
+		if (!is_null($icon)) {
+			$option->data('icon', $icon);
+		}
+
+		if (!is_null($content)) {
+			$option->data('content', static::translate($content));
+		}
+
+		return $option;
+	}
+
+
+	public static function status(
+		mixed $status,
+		bool $hasIcons = true,
+		bool $hasContent = true,
+		bool $isInverse = false,
+	): self {
+		$content = $status ? 'web.general.yes' : 'web.general.no';
+		$color = $status && !$isInverse ? Color::Success : Color::Danger;
+		$icon = null;
+
+		if ($hasIcons == true) {
+			$icon = $status && !$isInverse ? 'fa-check' : 'fa-times';
+		}
+
+		if ($hasContent == false) {
+			$content = '';
+		}
+
+		return static::badge($content, $color, $icon);
+	}
+
+
 	public static function enumBadge(LabeledEnum $enum): self
 	{
 		$icon = $enum->icon();
@@ -103,7 +146,7 @@ final class Html extends NetteHtml
 	}
 
 
-	private static function translate(string $content, bool $tryTranslate = true): string
+	private static function translate(?string $content, bool $tryTranslate = true): string
 	{
 		if (!$tryTranslate || !isset(static::$translator)) {
 			return $content;

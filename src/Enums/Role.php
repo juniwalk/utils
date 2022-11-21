@@ -14,18 +14,18 @@ enum Role: string implements IRole, LabeledEnum
 	use Traits\Labeled;
 
 	case Guest = 'guest';
+	case Client = 'client';
 	case User = 'user';
 	case Manager = 'manager';
 	case Admin = 'admin';
 
 
-	/**
-	 * @return string[]
-	 */
 	public static function getMap(): array
 	{
 		return [
 			self::Guest->value => null,
+			self::Client->value => self::Guest->value,
+
 			self::User->value => self::Guest->value,
 			self::Manager->value => self::User->value,
 			self::Admin->value => self::Manager->value,
@@ -37,6 +37,7 @@ enum Role: string implements IRole, LabeledEnum
 	{
 		return match($this) {
 			self::Guest => 'web.enum.role.guest',
+			self::Client => 'web.enum.role.client',
 			self::User => 'web.enum.role.user',
 			self::Manager => 'web.enum.role.manager',
 			self::Admin => 'web.enum.role.admin',
@@ -48,6 +49,7 @@ enum Role: string implements IRole, LabeledEnum
 	{
 		return match($this) {
 			self::Guest => Color::Secondary,
+			self::Client => Color::Info,
 			self::User => Color::Success,
 			self::Manager => Color::Primary,
 			self::Admin => Color::Warning,

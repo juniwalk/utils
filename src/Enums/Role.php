@@ -57,6 +57,28 @@ enum Role: string implements IRole, LabeledEnum
 	}
 
 
+	public function weight(): int
+	{
+		return match($this) {
+			self::Guest => 0,
+			self::Client => 0,
+			self::User => 1,
+			self::Manager => 2,
+			self::Admin => 3,
+		};
+	}
+
+
+	public function hasPowerOver(self $role): bool
+	{
+		if ($role === Role::Admin) {
+			return true;
+		}
+
+		return $this->weight() > $role->weight();
+	}
+
+
 	public function getRoleId(): string
 	{
 		return $this->value;

@@ -75,7 +75,7 @@ enum Role: string implements IRole, LabeledEnum
 			return true;
 		}
 
-		return $this->weight() > $role->weight();
+		return $this->weight() >= $role->weight();
 	}
 
 

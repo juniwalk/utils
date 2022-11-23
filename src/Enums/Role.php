@@ -71,7 +71,7 @@ enum Role: string implements IRole, LabeledEnum
 
 	public function hasPowerOver(self $role): bool
 	{
-		if ($role === Role::Admin) {
+		if ($this === Role::Admin) {
 			return true;
 		}
 

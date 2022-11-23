@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait Timestamp
 {
-	#[ORM\Column(type: 'datetimetz')]
+	#[ORM\Column(type: 'datetimetz', options: ['default' => 'CURRENT_TIMESTAMP'])]
 	private DateTime $created;
 
 	#[ORM\Column(type: 'datetimetz', nullable: true)]

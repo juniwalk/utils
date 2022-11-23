@@ -9,6 +9,7 @@ namespace JuniWalk\Utils\Enums\Traits;
 
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Strings;
+use TypeError;
 use ValueError;
 
 trait Labeled
@@ -30,7 +31,7 @@ trait Labeled
 		try {
 			return static::make($value);
 
-		} catch (ValueError) {}
+		} catch (TypeError|ValueError) {}
 
 		return null;
 	}

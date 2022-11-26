@@ -10,7 +10,6 @@ namespace JuniWalk\Utils\ORM\Traits;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use JsonSerializable;
-use JuniWalk\Utils\Strings;
 
 trait Parametrized
 {
@@ -31,7 +30,6 @@ trait Parametrized
 			return;
 		}
 
-		$key = Strings::lower($key);
 		$this->params[$key] = $value;
 
 		if (is_null($value)) {
@@ -46,7 +44,6 @@ trait Parametrized
 			return null;
 		}
 
-		$key = Strings::lower($key);
 		return $this->params[$key] ?? null;
 	}
 
@@ -59,7 +56,6 @@ trait Parametrized
 
 	public function hasParam(string $key): bool
 	{
-		$key = Strings::lower($key);
 		return isset($this->params[$key]);
 	}
 }

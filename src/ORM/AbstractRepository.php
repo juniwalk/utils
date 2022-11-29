@@ -45,9 +45,13 @@ abstract class AbstractRepository
 		$builder = $this->createQueryBuilder('e', 'e.id');
 		$builder = $where($builder) ?: $builder;
 
-		return $builder->getQuery()
-			->setMaxResults($maxResults)
-			->getResult();
+		$query = $builder->getQuery();
+
+		if (isset($maxResults)) {
+			$query->setMaxResults($maxResults);
+		}
+
+		return $query->getResult();
 	}
 
 

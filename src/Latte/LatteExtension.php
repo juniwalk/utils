@@ -23,7 +23,16 @@ class LatteExtension extends Extension
 		return [
 			'badge' => $this->filterBadge(...),
 			'price' => $this->filterPrice(...),
+			'icon' => $this->filterIcon(...),
 		];
+	}
+
+
+	protected function filterIcon(
+		string $icon,
+		bool $fixedWidth = false,
+	): Html {
+		return Html::icon($icon, $fixedWidth);
 	}
 
 

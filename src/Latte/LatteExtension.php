@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils\Latte;
 
+use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Currency;
 use JuniWalk\Utils\Enums\LabeledEnum;
 use JuniWalk\Utils\Html;

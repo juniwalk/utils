@@ -25,8 +25,7 @@ enum Role: string implements IRole, LabeledEnum
 		return [
 			self::Guest->value => null,
 			self::Client->value => self::Guest->value,
-
-			self::User->value => self::Guest->value,
+			self::User->value => self::Client->value,
 			self::Manager->value => self::User->value,
 			self::Admin->value => self::Manager->value,
 		];

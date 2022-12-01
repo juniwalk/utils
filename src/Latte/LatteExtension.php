@@ -29,7 +29,7 @@ class LatteExtension extends Extension
 
 	protected function filterBadge(
 		string|LabeledEnum $content,
-		string $color = Color::Secondary,
+		string|Color $color = Color::Secondary,
 		string $icon = null,
 	): Html {
 		if ($content instanceof LabeledEnum) {

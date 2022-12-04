@@ -42,16 +42,26 @@ abstract class AbstractRepository
 	 */
 	public function getBy(callable $where, ?int $maxResults = null): array
 	{
-		$builder = $this->createQueryBuilder('e', 'e.id');
-		$builder = $where($builder) ?: $builder;
+		/** @see Hardcoded indexBy might cause issues with entities without $id */
+		$qb = $this->createQueryBuilder('e', 'e.id', $where);
+		$qb->setMaxResults($qb->getMaxResults() ?? $maxResults);
 
-		$query = $builder->getQuery();
+		return $qb->getQuery()
+			->getResult();
+	}
 
-		if ($maxResults && !$query->getMaxResults()) {
-			$query->setMaxResults($maxResults);
-		}
 
-		return $query->getResult();
+	/**
+	 * @throws NoResultException
+	 */
+	public function getOneBy(callable $where): object
+	{
+		/** @see Hardcoded indexBy might cause issues with entities without $id */
+		$qb = $this->createQueryBuilder('e', 'e.id', $where);
+		$qb->setMaxResults(1);
+
+		return $qb->getQuery()
+			->getSingleResult();
 	}
 
 
@@ -63,20 +73,6 @@ abstract class AbstractRepository
 		} catch (NoResultException) {
 			return [];
 		}
-	}
-
-
-	/**
-	 * @throws NoResultException
-	 */
-	public function getOneBy(callable $where): object
-	{
-		$builder = $this->createQueryBuilder('e', 'e.id');
-		$builder = $where($builder) ?: $builder;
-
-		return $builder->getQuery()
-			->setMaxResults(1)
-			->getSingleResult();
 	}
 
 
@@ -113,10 +109,16 @@ abstract class AbstractRepository
 	}
 
 
-	public function createQueryBuilder(string $alias, string $indexBy = null): QueryBuilder
+	public function createQueryBuilder(string $alias, string $indexBy = null, callable $where = null): QueryBuilder
 	{
-		return $this->entityManager->createQueryBuilder()->select($alias)
+		$qb = $this->entityManager->createQueryBuilder()->select($alias)
 			->from($this->entityName, $alias, $indexBy);
+
+		if ($where) {
+			$qb = $where($qb) ?: $qb;
+		}
+
+		return $qb;
 	}
 
 

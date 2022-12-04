@@ -47,7 +47,7 @@ abstract class AbstractRepository
 
 		$query = $builder->getQuery();
 
-		if (isset($maxResults)) {
+		if ($maxResults && !$query->getMaxResults()) {
 			$query->setMaxResults($maxResults);
 		}
 

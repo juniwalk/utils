@@ -60,7 +60,7 @@ final class Html extends NetteHtml
 
 	public static function price(float $amount, Currency $unit, int $decimals = 2, bool $isColoredBySign = false): self
 	{
-		$value = Format::price($amount, $unit->label(), $unit->format(), $decimals);
+		$value = Format::price($amount, $unit->label(), $decimals, $unit->format());
 		$color = $unit->color();
 
 		if ($isColoredBySign && $amount > 0) {

@@ -24,7 +24,7 @@ enum Currency: string implements LabeledEnum
 
 	public function format(): string
 	{
-		return '%value% %unit%';
+		return '%1$s %2$s';
 	}
 
 

@@ -9,13 +9,10 @@ namespace JuniWalk\Utils;
 
 final class Format
 {
-	public static function price(float $value, string $unit, string $format, int $decimals = 2): string
+	public static function price(float $value, string $unit, int $decimals = 2, string $format = '%1$s %2$s'): string
 	{
 		$value = number_format($value, $decimals, ',', ' ');
-		return strtr($format, [
-			'%value%' => $value,
-			'%unit%' => $unit,
-		]);
+		return sprintf($format, $value, $unit);
 	}
 
 

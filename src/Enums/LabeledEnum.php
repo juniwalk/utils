@@ -13,12 +13,7 @@ interface LabeledEnum extends BackedEnum
 {
 	public static function getLabels(): iterable;
 
-	
 	public function label(): string;
-
-
 	public function color(): ?Color;
-
-
 	public function icon(): ?string;
 }

@@ -1,6 +1,6 @@
 {var $link = [$control->getParent(), link]}
 
-<ul class="pagination pagination-sm m-0 float-md-right" n:if="$paginator->pageCount > 1">
+<ul class="pagination pagination-sm m-0" n:if="$paginator->pageCount > 1">
 
 	<li n:class="page-item, $paginator->isFirst() ? disabled">
 		<a class="page-link ajax" n:attr="href => $paginator->isFirst() ? '#' : $link('page!', $paginator->page - 1)">{_ublaboo_datagrid.previous|noescape}</a>

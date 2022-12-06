@@ -3,9 +3,9 @@
 
 <form n:name="filter" class="ajax">
 
-	<div class="card-header border-0" n:ifcontent>
-		<h3 class="card-title" n:if="$title">{$title|translate:[name => $controlName]|noescape}</h3>
-		<div class="card-tools btn-toolbar" n:ifcontent>
+	<div class="card-header border-0 py-0 d-flex flex-wrap align-items-center" n:ifcontent>
+		<h3 class="card-title flex-grow-1 py-2" n:if="$title">{$title|translate:[name => $controlName]|noescape}</h3>
+		<div class="card-tools btn-toolbar py-2" n:ifcontent>
 
 			<div class="btn-group mr-2 datagrid-exports" n:if="$exports" n:block="exports" n:inner-foreach="$exports as $export">
 				{$export->render()}
@@ -233,10 +233,10 @@
 	</table>
 	</div>
 
-	<div class="card-footer" n:block="pagination" n:if="($control->isPaginated() || $filter_active) && !$control->isTreeView()">
-	<div class="d-flex flex-wrap" n:snippet="pagination">
+	<div class="card-footer p-1" n:block="pagination" n:if="($control->isPaginated() || $filter_active) && !$control->isTreeView()">
+	<div class="d-md-flex flex-wrap" n:snippet="pagination">
 
-		<div class="flex-grow-1 pb-2 pb-sm-0 px-2 col-items text-muted">
+		<div class="col-items text-muted px-3 py-2">
 
 			<small class="align-middle" n:if="$control->isPaginated()">
 				({var $paginator = $control['paginator']->getPaginator()}
@@ -251,26 +251,29 @@
 
 		</div>
 
-		<div class="pb-2 pb-sm-0 px-2 col-pagination clearfix text-md-right">
+		<div class="col-pagination flex-grow-1 px-3 py-2">
 			{control paginator}
 		</div>
 
-		<div class="pb-2 pb-sm-0 px-2 col-per-page">
-			<a n:href="resetFilter!" n:if="$filter_active" class="ajax btn btn-danger btn-sm reset-filter">{_ublaboo_datagrid.reset_filter}</a>
-			<span class="datagrid-per-page" n:if="$control->isPaginated()">
-				{input $filter['perPage'], data-autosubmit-per-page => true, class => 'form-control form-control-sm', style => 'max-width: 72px;'}
-				{input $filter['perPage_submit'], class => 'btn btn-secondary btn-sm datagrid-per-page-submit'}
-			</span>
+		<div class="col-per-page form-inline flex-nowrap px-3 py-2">
+			<a n:href="resetFilter!" n:if="$filter_active" class="btn btn-danger btn-sm ajax mr-2 reset-filter" style="white-space: nowrap">{_ublaboo_datagrid.reset_filter}</a>
+			<div class="input-group input-group-sm datagrid-per-page" n:if="$control->isPaginated()">
+				<select n:name="$filter['perPage']" class="custom-select" style="min-width: 70px" data-autosubmit-per-page></select>
+				<div class="input-group-append">
+					<button n:name="$filter['perPage_submit']" type="submit" class="btn btn-outline-secondary datagrid-per-page-submit">{_ublaboo_datagrid.per_page_submit}</button>
+				</div>
+			</div>
 		</div>
 
 	</div>
 	</div>
+
+</form>
 
 	<div class="overlay" n:if="$isDisabled">
 		<i class="{$iconPrefix}ban fa-3x text-danger"></i>
 	</div>
 
-</form>
 {/snippetArea}
 </div>
 

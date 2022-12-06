@@ -7,26 +7,10 @@
 
 namespace JuniWalk\Utils;
 
+use JuniWalk\Utils\Enums\Currency;
+
 final class Format
 {
-	public static function price(float $value, string $unit, int $decimals = 2, string $format = '%1$s %2$s'): string
-	{
-		$value = number_format($value, $decimals, ',', ' ');
-		return sprintf($format, $value, $unit);
-	}
-
-
-	public static function number(float $value, int $decimals = 2, string $format = '%g%s'): string
-	{
-		$size = ['', 'k', 'M', 'B', 'T', 'Q', 'S', 'O', 'N'];
-		$factor = floor((strlen((string) intval($value)) - 1) / 3);
-
-		$value = $value / pow(1000, $factor);
-		$value = round($value, $decimals);
-		return sprintf($format, $value, $size[$factor]);
-	}
-
-
 	public static function size(int $bytes, int $decimals = 2): string
 	{
 		$size = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -36,9 +20,38 @@ final class Format
 			$decimals = 0;
 		}
 
-		return sprintf(
-			'%.'.$decimals.'f '.$size[$factor],
-			$bytes / pow(1024, $factor)
+		return static::value(
+			$bytes / pow(1024, $factor),
+			$size[$factor],
+			$decimals,
+			'%1$s%2$s',
 		);
+	}
+
+
+	public static function number(float $value, int $decimals = 2): string
+	{
+		$size = ['', 'k', 'M', 'B', 'T', 'Q', 'S', 'O', 'N'];
+		$factor = floor((strlen((string) intval($value)) - 1) / 3);
+
+		return static::value(
+			$value / pow(1000, $factor),
+			$size[$factor],
+			$decimals,
+			'%1$s%2$s',
+		);
+	}
+
+
+	public static function currency(float $value, Currency $unit, int $decimals = 2): string
+	{
+		return static::value($value, $unit->label(), $decimals, $unit->format());
+	}
+
+
+	public static function value(float $value, string $unit, int $decimals = 2, string $format = '%1$s %2$s'): string
+	{
+		$value = number_format($value, $decimals, ',', ' ');
+		return sprintf($format, $value, $unit);
 	}
 }

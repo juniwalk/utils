@@ -43,7 +43,7 @@
 	</div>
 
 	<div n:class="$control->hasCollapsibleOuterFilters() ? collapse, $hasFiltersAlwaysShown || $filter_active ? show" id="datagrid-{$controlName}-row-filters" n:if="$control->hasOuterFilterRendering()">
-	<div class="card-body datagrid-filters py-0 pt-3" n:block="outer-filters">
+	<div class="card-body datagrid-filters py-0 pt-3" n:block="outer-filters" n:ifcontent>
 
 		<div class="row" n:foreach="array_chunk($filters, $control->getOuterFilterColumnsCount(), true) as $items">
 			{var $items = array_pad($items, $control->getOuterFilterColumnsCount(), null)}

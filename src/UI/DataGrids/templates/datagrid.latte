@@ -234,13 +234,13 @@
 	</div>
 
 	<div class="card-footer p-1" n:block="pagination" n:if="($control->isPaginated() || $filter_active) && !$control->isTreeView()">
-	<div class="d-md-flex flex-wrap" n:snippet="pagination">
+	<div class="d-md-flex flex-wrap justify-content-end" n:snippet="pagination">
 
-		<div class="col-pagination flex-grow-1 px-3 py-2">
+		<div class="col-pagination flex-grow-1 px-3 py-2" n:ifcontent>
 			{control paginator}
 		</div>
 
-		<div class="col-items col-per-page form-inline flex-nowrap px-3 py-2">
+		<div class="col-items col-per-page form-inline flex-nowrap px-3 py-2" n:ifcontent>
 
 			<a n:href="resetFilter!" n:if="$filter_active" class="btn btn-danger btn-sm ajax text-nowrap reset-filter">{_ublaboo_datagrid.reset_filter}</a>
 

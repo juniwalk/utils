@@ -85,12 +85,12 @@ enum Color: string
 	public function foreground(): string
 	{
 		return match ($this) {
-			self::Warning => self::Dark->value,
-			self::Light => self::Dark->value,
-			self::Teal => self::Dark->value,
-			self::Lime => self::Dark->value,
-			self::Orange => self::Dark->value,
-			default => self::Light->value,
+			self::Warning => self::Dark->hex(),
+			self::Light => self::Dark->hex(),
+			self::Teal => self::Dark->hex(),
+			self::Lime => self::Dark->hex(),
+			self::Orange => self::Dark->hex(),
+			default => self::Light->hex(),
 		};
 	}
 

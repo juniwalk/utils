@@ -9,6 +9,8 @@ namespace JuniWalk\Utils\Enums;
 
 enum Color: string implements LabeledEnum
 {
+	use Traits\Labeled;
+
 	/** Basic Bootstrap colors */
 	case Primary = 'primary';
 	case Secondary = 'secondary';

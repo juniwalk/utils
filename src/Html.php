@@ -65,6 +65,7 @@ final class Html extends NetteHtml
 	): self {
 		if ($icon = $enum->icon()) {
 			$icon = static::icon($icon)->getClass();
+			$icon = implode(' ', array_keys($icon));
 		}
 
 		return static::badge(

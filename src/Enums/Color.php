@@ -48,6 +48,53 @@ enum Color: string
 	}
 
 
+	public function hex(): string
+	{
+		return match($this) {
+			/** Basic Bootstrap colors */
+			self::Primary => '#007bff',
+			self::Secondary => '#6c757d',
+			self::Info => '#17a2b8',
+			self::Success => '#28a745',
+			self::Warning => '#ffc107',
+			self::Danger => '#dc3545',
+			self::Light => '#f8f9fa',
+			self::Dark => '#343a40',
+
+			/** Extended AdminLTE colors */
+			self::Indigo => '#6610f2',
+			self::LightBlue => '#3c8dbc',
+			self::Navy => '#001f3f',
+			self::Purple => '#6f42c1',
+			self::Fuchsia => '#f012be',
+			self::Pink => '#e83e8c',
+			self::Maroon => '#d81b60',
+			self::Orange => '#fd7e14',
+			self::Lime => '#01ff70',
+			self::Teal => '#20c997',
+			self::Olive => '#3d9970',
+		
+			/** Black & White AdminLTE colors */
+			self::Black => '#000000',
+			self::GrayDark => '#343a40',
+			self::Gray => '#6c757d',
+		};
+	}
+
+
+	public function foreground(): string
+	{
+		return match ($this) {
+			self::Warning => self::Dark->value,
+			self::Light => self::Dark->value,
+			self::Teal => self::Dark->value,
+			self::Lime => self::Dark->value,
+			self::Orange => self::Dark->value,
+			default => self::Light->value,
+		};
+	}
+
+
 	private function isBasicColor(): bool
 	{
 		return match($this) {

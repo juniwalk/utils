@@ -7,6 +7,9 @@
 
 namespace JuniWalk\Utils\Enums;
 
+use JuniWalk\Utils\Arrays;
+use JuniWalk\Utils\Strings;
+
 enum Color: string implements LabeledEnum
 {
 	use Traits\Labeled;
@@ -51,7 +54,7 @@ enum Color: string implements LabeledEnum
 
 	public function for(string $type): string
 	{
-		if (!$this->isBasicColor() && $type <> 'text') {
+		if ($type <> 'text' && !$this->isBasicColor()) {
 			$type = 'bg';
 		}
 
@@ -86,11 +89,9 @@ enum Color: string implements LabeledEnum
 
 	public function foreground(): string
 	{
-		return match ($this) {
-			self::Warning, self::Teal,
-			self::Lime, self::Orange => '#343a40',
-			default => '#f8f9fa',
-		};
+		return $this->luminosity() > 0.5
+			? '#343a40'		// Dark
+			: '#f8f9fa';	// Light
 	}
 
 
@@ -102,5 +103,17 @@ enum Color: string implements LabeledEnum
 			self::Warning, self::Danger => true,
 			default => false,
 		};
+	}
+
+
+	private function luminosity(): float
+	{
+		$mod = [0.2126, 0.7152, 0.0722];
+		$hex = Strings::split($this->hex(), '/\#?([a-f0-9]{2})/', PREG_SPLIT_NO_EMPTY);
+		$rgb = Arrays::map($hex, function(string $v, int $k) use ($mod): float {
+			return (hexdec($v) / 255) * $mod[$k];
+		});
+
+		return array_sum($rgb);
 	}
 }

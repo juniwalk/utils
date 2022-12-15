@@ -58,8 +58,37 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function price(float $amount, Currency $unit, int $decimals = 2, bool $isColoredBySign = false): self
+	public static function badgeEnum(
+		LabeledEnum $enum,
+		bool $tryTranslate = true,
+		bool $isPill = false
+	): self {
+		$icon = $enum->icon();
+
+		if ($icon && !Strings::match($icon, '/^fa-/i')) {
+			$icon = 'fa-'.$icon;
+		}
+
+		return static::badge($enum->label(), $enum->color(), $icon, $tryTranslate, $isPill);
+	}
+
+
+	/**
+	 * @deprecated
+	 */
+	public static function enumBadge(LabeledEnum $enum): self
 	{
+		trigger_error('Method '.__METHOD__.' is deprecated use badgeEnum instead', E_USER_DEPRECATED);
+		return static::badgeEnum($enum);
+	}
+
+
+	public static function price(
+		float $amount,
+		Currency $unit,
+		int $decimals = 2,
+		bool $isColoredBySign = false
+	): self {
 		$value = Format::currency($amount, $unit, $decimals);
 		$color = $unit->color();
 
@@ -95,20 +124,28 @@ final class Html extends NetteHtml
 		string $label,
 		mixed $value,
 		string $content = null,
-		string $icon = null
+		string $icon = null,
+		Color $color = null,
+		bool $tryTranslate = true,
 	): self {
-		$option = Html::el('option', static::translate($label))
-			->value($value);
+		$content = static::translate($content, $tryTranslate);
+		$label = static::translate($label, $tryTranslate);
 
-		if (!is_null($icon)) {
-			$option->data('icon', $icon);
-		}
+		return Html::el('option', $label)->value($value)
+			->data('color', $color?->for('text'))
+			->data('content', $content)
+			->data('icon', $icon);
+	}
 
-		if (!is_null($content)) {
-			$option->data('content', static::translate($content));
-		}
 
-		return $option;
+	public static function optionEnum(LabeledEnum $enum, bool $tryTranslate = true): self {
+		return Html::option(
+			value: $enum->value,
+			label: $enum->label(),
+			icon: $enum->icon(),
+			color: $enum->color(),
+			tryTranslate: $tryTranslate,
+		);
 	}
 
 
@@ -134,21 +171,9 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function enumBadge(LabeledEnum $enum): self
+	private static function translate(?string $content, bool $tryTranslate = true): ?string
 	{
-		$icon = $enum->icon();
-
-		if ($icon && !Strings::match($icon, '/^fa-/i')) {
-			$icon = 'fa-'.$icon;
-		}
-
-		return static::badge($enum->label(), $enum->color(), $icon);
-	}
-
-
-	private static function translate(?string $content, bool $tryTranslate = true): string
-	{
-		if (!$tryTranslate || !isset(static::$translator)) {
+		if (!$content || !$tryTranslate || !isset(static::$translator)) {
 			return $content;
 		}
 

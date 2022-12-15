@@ -89,7 +89,7 @@ abstract class AbstractGrid extends Control
 			return $this->grid->addColumnText($name, $title)->setAlign('right')
 				->setRenderer(function($item) use ($name): Html {
 					$enum = $item->{'get'.$name}();
-					return Html::enumBadge($enum);
+					return Html::badgeEnum($enum);
 				});
 		}
 
@@ -103,11 +103,7 @@ abstract class AbstractGrid extends Control
 		};
 
 		foreach ($enum::cases() as $item) {
-			$class = Color::Secondary->for('btn');
-
-			if (method_exists($item, 'color')) {
-				$class = $item->color()->for('btn');
-			}
+			$class = ($item->color() ?? Color::Secondary)->for('btn');
 
 			if ($hasBlockButtons == true) {
 				$class .= ' btn-block text-left';
@@ -116,8 +112,9 @@ abstract class AbstractGrid extends Control
 			$option = $column->addOption($item->value, $item->label())
 				->setClass($class);
 
-			if (method_exists($item, 'icon') && $icon = $item->icon()) {
-				$option->setIcon($icon)->setIconSecondary($icon);
+			if ($icon = $item->icon()) {
+				$option->setIcon($icon)
+					->setIconSecondary($icon);
 			}
 
 			$option->endOption();

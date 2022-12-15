@@ -7,7 +7,7 @@
 
 namespace JuniWalk\Utils\Enums;
 
-enum Color: string
+enum Color: string implements LabeledEnum
 {
 	/** Basic Bootstrap colors */
 	case Primary = 'primary';
@@ -36,6 +36,24 @@ enum Color: string
 	case Black = 'black';
 	case GrayDark = 'gray-dark';
 	case Gray = 'gray';
+
+
+	public function label(): string
+	{
+		return 'web.enum.color.'.$this->name;
+	}
+
+
+	public function color(): Color
+	{
+		return $this;
+	}
+
+
+	public function icon(): ?string
+	{
+		return 'fas fa-droplet';
+	}
 
 
 	public function for(string $type): string

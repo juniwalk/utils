@@ -27,7 +27,7 @@ enum Color: string implements LabeledEnum
 	case Navy = 'navy';
 	case Purple = 'purple';
 	case Fuchsia = 'fuchsia';
-	case Pink = 'ping';
+	case Pink = 'pink';
 	case Maroon = 'maroon';
 	case Orange = 'orange';
 	case Lime = 'lime';

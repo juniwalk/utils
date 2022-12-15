@@ -60,7 +60,7 @@ enum Color: string implements LabeledEnum
 
 	public function for(string $type): string
 	{
-		if (!$this->isBasicColor()) {
+		if (!$this->isBasicColor() && $type <> 'text') {
 			$type = 'bg';
 		}
 

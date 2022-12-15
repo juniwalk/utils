@@ -42,7 +42,7 @@ enum Color: string implements LabeledEnum
 
 	public function label(): string
 	{
-		return 'web.enum.color.'.$this->name;
+		return 'web.enum.color.'.$this->value;
 	}
 
 

@@ -63,13 +63,17 @@ final class Html extends NetteHtml
 		bool $tryTranslate = true,
 		bool $isPill = false
 	): self {
-		$icon = $enum->icon();
-
-		if ($icon && !Strings::match($icon, '/^fa-/i')) {
-			$icon = 'fa-'.$icon;
+		if ($icon = $enum->icon()) {
+			$icon = static::icon($icon)->getClass();
 		}
 
-		return static::badge($enum->label(), $enum->color(), $icon, $tryTranslate, $isPill);
+		return static::badge(
+			$enum->label(),
+			$enum->color(),
+			$icon,
+			$tryTranslate,
+			$isPill
+		);
 	}
 
 

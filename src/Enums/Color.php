@@ -45,7 +45,7 @@ enum Color: string implements LabeledEnum
 
 	public function icon(): ?string
 	{
-		return 'fa-solid fa-droplet';
+		return 'fa-droplet fas';
 	}
 
 

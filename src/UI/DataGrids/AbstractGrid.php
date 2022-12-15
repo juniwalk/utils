@@ -98,6 +98,7 @@ abstract class AbstractGrid extends Control
 		}
 
 		$column = $this->grid->addColumnStatus($name, $title)->setAlign('right');
+		$column->setTemplate(__DIR__.'/templates/datagrid_column_status.latte');
 		$column->onChange[] = function($id, $value) use ($signalMethod, $enum): void {
 			$this->$signalMethod((int) $id, $enum::tryFrom($value));
 		};

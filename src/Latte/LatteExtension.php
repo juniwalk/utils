@@ -42,7 +42,7 @@ class LatteExtension extends Extension
 		string $icon = null,
 	): Html {
 		if ($content instanceof LabeledEnum) {
-			return Html::enumBadge($content);
+			return Html::badgeEnum($content);
 		}
 
 		return Html::badge($content, Color::make($color), $icon);

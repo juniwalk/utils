@@ -65,7 +65,7 @@
 	</div>
 
 	<div class="card-body p-0 table-responsive">
-	<table class="table table-sm table-striped table-hover" n:snippet="table" n:block="data">
+	<table n:class="table, table-sm, table-striped, $rows ? table-hover" n:snippet="table" n:block="data">
 
 		<thead n:block="header">
 			<tr n:block="header-column-row">
@@ -216,9 +216,9 @@
 
 			{block noItems}
 				<tr n:if="!$rows">
-					<td colspan="{$control->getColumnsCount()}">
+					<td colspan="{$control->getColumnsCount()}" class="py-2 text-muted font-italic">
 						{if $filter_active}
-							{_ublaboo_datagrid.no_item_found_reset} <a class="link ajax" n:href="resetFilter!">{_ublaboo_datagrid.here}</a>.
+							{_ublaboo_datagrid.no_item_found_reset} <a n:href="resetFilter!" class="link ajax">{_ublaboo_datagrid.here}</a>.
 						{else}
 							{_ublaboo_datagrid.no_item_found}
 						{/if}

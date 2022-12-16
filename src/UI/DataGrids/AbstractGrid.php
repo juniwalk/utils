@@ -14,6 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
 use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
 
 abstract class AbstractGrid extends Control
 {
@@ -162,6 +163,11 @@ abstract class AbstractGrid extends Control
 	abstract protected function createComponentGrid(): DataGrid;
 
 
+	protected function dataLoaded(array $items): void
+	{
+	}
+
+
 	final protected function createDataGrid(bool $rememberState = true, string $primaryKey = null): DataGrid
 	{
 		$grid = $this->grid = new DataGrid;
@@ -186,6 +192,10 @@ abstract class AbstractGrid extends Control
 		}
 
 		DataGrid::$iconPrefix = 'fas fa-fw fa-';
+
+		if (($dataSource = $grid->getDataSource()) instanceof DoctrineDataSource) {
+			$dataSource->onDataLoaded[] = $this->dataLoaded(...);
+		}
 
 		return $grid;
 	}

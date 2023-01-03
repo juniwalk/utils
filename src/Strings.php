@@ -8,9 +8,17 @@
 namespace JuniWalk\Utils;
 
 use Nette\Utils\Strings as NetteStrings;
+use Latte\Essential\Filters as LatteFilters;
+use Latte\Runtime\FilterInfo;
 
 final class Strings extends NetteStrings
 {
+	public static function stripHtml(string $content): string
+	{
+		return LatteFilters::stripHtml(new FilterInfo('html'), $content);
+	}
+
+
 	public static function slugify(string $content, string $lang = null): string
 	{
 		$content = self::transliterate($content, $lang);

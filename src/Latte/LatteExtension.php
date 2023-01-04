@@ -29,10 +29,14 @@ class LatteExtension extends Extension
 
 
 	protected function filterIcon(
-		string $icon,
+		?string $icon,
 		bool $fixedWidth = false,
 		string ...$classes,
-	): Html {
+	): ?Html {
+		if (!isset($icon)) {
+			return null;
+		}
+
 		return Html::icon($icon, $fixedWidth)->addClass($classes);
 	}
 

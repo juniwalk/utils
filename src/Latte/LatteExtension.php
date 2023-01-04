@@ -31,8 +31,9 @@ class LatteExtension extends Extension
 	protected function filterIcon(
 		string $icon,
 		bool $fixedWidth = false,
+		string ...$classes,
 	): Html {
-		return Html::icon($icon, $fixedWidth);
+		return Html::icon($icon, $fixedWidth)->addClass($classes);
 	}
 
 
@@ -53,7 +54,7 @@ class LatteExtension extends Extension
 		?float $amount,
 		mixed $currency,
 		bool $isColored = true,
-		string ...$classes
+		string ...$classes,
 	): Html {
 		return Html::price((float) $amount, Currency::make($currency), isColoredBySign: $isColored)->addClass($classes);
 	}

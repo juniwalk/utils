@@ -30,7 +30,7 @@ class LatteExtension extends Extension
 
 	protected function filterIcon(
 		?string $icon,
-		bool $fixedWidth = false,
+		bool $fixedWidth = true,
 		string ...$classes,
 	): ?Html {
 		if (!isset($icon)) {

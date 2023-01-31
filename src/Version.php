@@ -39,30 +39,6 @@ final class Version implements Stringable
 	}
 
 
-	public function advance(Strategy $strategy, ?string $tag = null): static
-	{
-		if (!$tag && $strategy <> Strategy::Build) {
-			$this->build = null;
-			$this->tag = null;
-		}
-
-		$this->{$strategy->value} += 1;
-
-		switch ($strategy) {
-			case Strategy::Major: $this->minor = 0;
-			case Strategy::Minor: $this->patch = 0;
-			case Strategy::Patch: $this->build = null;
-		}
-
-		if ($tag && ($tag <> $this->tag || !$this->build)) {
-			$this->tag = $tag;
-			$this->build = 1;
-		}
-
-		return $this;
-	}
-
-
 	public function parse(self|string $version): static
 	{
 		$parts = Strings::match((string) $version, static::PATTERN);
@@ -94,6 +70,30 @@ final class Version implements Stringable
 		]);
 
 		return trim($version, '+.-');
+	}
+
+
+	public function advance(Strategy $strategy, ?string $tag = null): static
+	{
+		if (!$tag && $strategy <> Strategy::Build) {
+			$this->build = null;
+			$this->tag = null;
+		}
+
+		$this->{$strategy->value} += 1;
+
+		switch ($strategy) {
+			case Strategy::Major: $this->minor = 0;
+			case Strategy::Minor: $this->patch = 0;
+			case Strategy::Patch: $this->build = null;
+		}
+
+		if ($tag && ($tag <> $this->tag || !$this->build)) {
+			$this->tag = $tag;
+			$this->build = 1;
+		}
+
+		return $this;
 	}
 
 

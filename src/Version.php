@@ -45,9 +45,16 @@ final class Version implements Stringable
 	}
 
 
+	// /**
+	//  * @throws VersionInvalidException
+	//  */
 	public function parse(self|string $version): static
 	{
 		$parts = Strings::match((string) $version, static::PATTERN);
+
+		// if (empty($parts)) {
+		// 	throw new VersionInvalidException;
+		// }
 
 		foreach ($parts ?: [] as $part => $value) {
 			if (!is_string($part) || !property_exists($this, $part)) {
@@ -58,7 +65,7 @@ final class Version implements Stringable
 				$value = (int) $value;
 			}
 
-			$this->$part = $value;
+			$this->$part = $value !== '' ? $value : null;
 		}
 
 		return $this;

@@ -10,6 +10,7 @@ namespace JuniWalk\Utils;
 use JuniWalk\Utils\Enums\Strategy;
 use JuniWalk\Utils\Exceptions\VersionInvalidException;
 use Stringable;
+use ValueError;
 
 /**
  * @link https://semver.org/
@@ -44,8 +45,17 @@ final class Version implements Stringable
 	}
 
 
+	/**
+	 * @throws VersionInvalidException
+	 */
 	public function __construct(?string $version = null)
 	{
+		try {
+			Strategy::from($version);
+			$version = null;
+
+		} catch (ValueError) {}
+
 		$version && $this->parse($version);
 	}
 

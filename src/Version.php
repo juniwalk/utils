@@ -39,6 +39,12 @@ final class Version implements Stringable
 	}
 
 
+	public function isPreRelease(): bool
+	{
+		return isset($this->tag) || $this->build > 0;
+	}
+
+
 	public function parse(self|string $version): static
 	{
 		$parts = Strings::match((string) $version, static::PATTERN);

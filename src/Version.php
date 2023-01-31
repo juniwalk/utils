@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils;
 
 use JuniWalk\Utils\Enums\Strategy;
+use JuniWalk\Utils\Exceptions\VersionInvalidException;
 use Stringable;
 
 /**
@@ -45,18 +46,18 @@ final class Version implements Stringable
 	}
 
 
-	// /**
-	//  * @throws VersionInvalidException
-	//  */
+	/**
+	 * @throws VersionInvalidException
+	 */
 	public function parse(self|string $version): static
 	{
 		$parts = Strings::match((string) $version, static::PATTERN);
 
-		// if (empty($parts)) {
-		// 	throw new VersionInvalidException;
-		// }
+		if (empty($parts)) {
+			throw new VersionInvalidException;
+		}
 
-		foreach ($parts ?: [] as $part => $value) {
+		foreach ($parts as $part => $value) {
 			if (!is_string($part) || !property_exists($this, $part)) {
 				continue;
 			}

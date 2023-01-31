@@ -28,6 +28,22 @@ final class Version implements Stringable
 	private ?string $tag = null;
 
 
+	/**
+	 * @throws VersionInvalidException
+	 */
+	public static function fromFile(string $file): static
+	{
+		try {
+			$result = Json::decodeFile($file);
+
+		} catch (Throwable) {
+			throw new VersionInvalidException;
+		}
+
+		return new static($result->tag);
+	}
+
+
 	public function __construct(?string $version = null)
 	{
 		$version && $this->parse($version);

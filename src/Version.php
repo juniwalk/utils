@@ -15,7 +15,7 @@ use Stringable;
  */
 final class Version implements Stringable
 {
-	private const string PATTERN = '/(?<version>v(?<major>\d+)\.?(?<minor>\d+)?\.?(?<patch>\d+)?)\-?(?<dev>(?<tag>alpha|beta|dev|rc)?\.?(?<build>\d+)?)?/i';
+	private const PATTERN = '/v?(?<major>\d+)\.(?<minor>\d+)\.?(?<patch>\d+)?\-?(?<tag>\w+)?\.?(?<build>\d+)?/i';
 
 	final public const SEMVER = '%M.%m.%p-%t.%b';
 	final public const TAG = 'v%M.%m.%p-%t.%b';

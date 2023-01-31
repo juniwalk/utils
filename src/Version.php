@@ -65,11 +65,7 @@ final class Version implements Stringable
 
 	public function parse(self|string $version): static
 	{
-		if ($version instanceof static) {
-			$version = $version->format(static::TAG);
-		}
-
-		$parts = Strings::match($version, static::PATTERN, PREG_UNMATCHED_AS_NULL);
+		$parts = Strings::match((string) $version, static::PATTERN);
 
 		foreach ($parts ?: [] as $part => $value) {
 			if (!is_string($part) || !property_exists($this, $part)) {

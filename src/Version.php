@@ -10,10 +10,15 @@ namespace JuniWalk\Utils;
 use JuniWalk\Utils\Enums\Strategy;
 use Stringable;
 
+/**
+ * @link https://semver.org/
+ */
 final class Version implements Stringable
 {
-	private const PATTERN = '/(?<version>v(?<major>\d+)\.?(?<minor>\d+)?\.?(?<patch>\d+)?)\-?(?<dev>(?<tag>alpha|beta|dev|rc)?\.?(?<build>\d+)?)?/i';
-	private const STRUCTURE = 'vmajor.minor.patch-tag.build';
+	private const string PATTERN = '/(?<version>v(?<major>\d+)\.?(?<minor>\d+)?\.?(?<patch>\d+)?)\-?(?<dev>(?<tag>alpha|beta|dev|rc)?\.?(?<build>\d+)?)?/i';
+
+	final public const SEMVER = '%M.%m.%p-%t.%b';
+	final public const TAG = 'v%M.%m.%p-%t.%b';
 
 	private ?int $major = null;
 	private ?int $minor = null;
@@ -30,7 +35,7 @@ final class Version implements Stringable
 
 	public function __toString(): string
 	{
-		return $this->build();
+		return $this->format(static::TAG);
 	}
 
 
@@ -61,7 +66,7 @@ final class Version implements Stringable
 	public function parse(self|string $version): static
 	{
 		if ($version instanceof static) {
-			$version = $version->build();
+			$version = $version->format(static::TAG);
 		}
 
 		$parts = Strings::match($version, static::PATTERN, PREG_UNMATCHED_AS_NULL);
@@ -82,22 +87,26 @@ final class Version implements Stringable
 	}
 
 
-	public function build(): string
+	public function format(string $format): string
 	{
-		$version = strtr(static::STRUCTURE, [
-			'major' => $this->major,
-			'minor' => $this->minor,
-			'patch' => $this->patch,
-			'build' => $this->build,
-			'tag' => $this->tag,
+		$version = strtr($format, [
+			'%M' => $this->major,
+			'%m' => $this->minor,
+			'%p' => $this->patch,
+			'%b' => $this->build,
+			'%t' => $this->tag,
 		]);
 
-		return trim($version, '-.');
+		return trim($version, '+.-');
 	}
 
 
 	public function compare(self $version, ?string $operator = null): bool|int
 	{
-		return version_compare($this->build(), $version->build(), $operator);
+		return version_compare(
+			$this->format(static::SEMVER),
+			$version->format(static::SEMVER),
+			$operator
+		);
 	}
 }

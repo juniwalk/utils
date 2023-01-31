@@ -137,11 +137,15 @@ final class Version implements Stringable
 	}
 
 
-	public function compare(self $version, ?string $operator = null): bool|int
+	public function compare(self|string $version, ?string $operator = null): bool|int
 	{
+		if ($version instanceof static) {
+			$version = $version->format(static::SEMVER);
+		}
+
 		return version_compare(
 			$this->format(static::SEMVER),
-			$version->format(static::SEMVER),
+			$version,
 			$operator
 		);
 	}

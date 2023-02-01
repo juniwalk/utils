@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils\Exceptions;
 
+use JuniWalk\Utils\Enums\Strategy;
 use JuniWalk\Utils\Version;
 
 final class VersionInvalidException extends \RuntimeException

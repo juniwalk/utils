@@ -17,28 +17,32 @@ use ValueError;
  */
 final class Version implements Stringable
 {
-	private const PATTERN = '/^v?(?<major>[0-9]+).(?<minor>[0-9]+).?(?<patch>[0-9]*)[+.-]*(?<tag>[a-z]*[a-z0-9]*).?(?<build>[0-9]*)$/i';
+	private const PATTERN = '/^v?(?<major>[0-9]+).(?<minor>[0-9]+).?(?<patch>[0-9]*)[+.-]*(?<preRelease>[a-z]*[a-z0-9]*).?(?<build>[0-9]*)$/i';
 
-	final public const SEMVER = '%M.%m.%p-%t.%b';
-	final public const TAG = 'v%M.%m.%p-%t.%b';
+	final public const SEMVER = '%M.%m.%p-%r.%b';
+	final public const TAG = 'v%M.%m.%p-%r.%b';
 
+	private ?string $preRelease = null;
 	private ?int $major = null;
 	private ?int $minor = null;
 	private ?int $patch = null;
 	private ?int $build = null;
-	private ?string $tag = null;
 
 
 	/**
 	 * @throws VersionInvalidException
 	 */
-	public static function fromFile(string $file): static
+	public static function fromFile(string $file): ?static
 	{
 		try {
 			$result = Json::decodeFile($file);
 
 		} catch (Throwable) {
-			throw new VersionInvalidException;
+			throw VersionInvalidException::fromFile($file);
+		}
+
+		if (!$result->tag) {
+			return null;
 		}
 
 		return new static($result->tag);
@@ -48,10 +52,10 @@ final class Version implements Stringable
 	/**
 	 * @throws VersionInvalidException
 	 */
-	public function __construct(?string $version = null)
+	public function __construct(?string $version)
 	{
 		try {
-			Strategy::from($version);
+			$version && Strategy::from($version);
 			$version = null;
 
 		} catch (ValueError) {}
@@ -68,19 +72,19 @@ final class Version implements Stringable
 
 	public function isPreRelease(): bool
 	{
-		return isset($this->tag) || $this->build > 0;
+		return isset($this->preRelease) || $this->build > 0;
 	}
 
 
 	/**
 	 * @throws VersionInvalidException
 	 */
-	public function parse(self|string $version): static
+	public function parse(self|string $version = null): static
 	{
 		$parts = Strings::match((string) $version, static::PATTERN);
 
-		if (empty($parts)) {
-			throw new VersionInvalidException;
+		if (!$version || empty($parts)) {
+			throw VersionInvalidException::fromVersion($version);
 		}
 
 		foreach ($parts as $part => $value) {
@@ -102,22 +106,22 @@ final class Version implements Stringable
 	public function format(string $format): string
 	{
 		$version = strtr($format, [
+			'%r' => $this->preRelease,
 			'%M' => $this->major,
 			'%m' => $this->minor,
 			'%p' => $this->patch,
 			'%b' => $this->build,
-			'%t' => $this->tag,
 		]);
 
 		return trim($version, '+.-');
 	}
 
 
-	public function advance(Strategy $strategy, ?string $tag = null): static
+	public function advance(Strategy $strategy, ?string $preRelease = null): static
 	{
-		if (!$tag && $strategy <> Strategy::Build) {
+		if (!$preRelease && $strategy <> Strategy::Build) {
+			$this->preRelease = null;
 			$this->build = null;
-			$this->tag = null;
 		}
 
 		$this->{$strategy->value} += 1;
@@ -128,8 +132,8 @@ final class Version implements Stringable
 			case Strategy::Patch: $this->build = null;
 		}
 
-		if ($tag && ($tag <> $this->tag || !$this->build)) {
-			$this->tag = $tag;
+		if ($preRelease && ($preRelease <> $this->preRelease || !$this->build)) {
+			$this->preRelease = $preRelease;
 			$this->build = 1;
 		}
 

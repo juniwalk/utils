@@ -5,7 +5,7 @@
  * @license   MIT License
  */
 
-namespace JuniWalk\Utils\Exception;
+namespace JuniWalk\Utils\Exceptions;
 
 final class VersionNotFoundException extends \RuntimeException
 {

@@ -12,10 +12,26 @@ use Nette\Application\UI\Presenter;
 
 final class Parse
 {
+	private const Arguments = '(?:,?\s(?<arguments>(?:(?:[a-z0-9]+)\s?(?::|=>?)?\s?(?:[a-z0-9]+)?(?:&|,)?\s?)+)?)?';
+	private const NetteControl = [
+		'name' => '(?<name>[a-z][a-z0-9]+)',
+		'type' => '(?::(?<type>[a-z][a-z0-9]+))?',
+		'args' => self::Arguments,
+	];
 	private const NetteLink = [
 		'link' => '(?<link>(?:\/\/)?+(?:[^!?#\s]++)(?:!)?+(?<query>\?[^#]*)?+(?:\#[^\s]*)?+)',
-		'args' => '(?:,?\s(?<arguments>(?:(?:[a-z0-9]+)\s?(?::|=>?)?\s?(?:[a-z0-9]+)?(?:&|,)?\s?)+)?)?',
+		'args' => self::Arguments,
 	];
+
+
+	public static function control(string $value): ?object
+	{
+		$match = Strings::match($value, '/^'.implode('', static::NetteControl).'$/i');
+		$match['args'] = static::arguments($match['args'] ?? '');
+		$match['type'] ??= null;
+
+		return (object) $match;
+	}
 
 
 	public static function link(string $link): ?object

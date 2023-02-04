@@ -24,7 +24,7 @@ final class Parse
 			$match = Strings::match($link, '/^'.implode('', static::NetteLink).'$/i');
 
 			$parts = Presenter::parseDestination($match['link']);
-			$parts['path'] = str_replace($match['query'], '', $match['link']);
+			$parts['path'] = str_replace($match['query'] ?? '', '', $match['link']);
 			$parts['args'] = array_merge(
 				static::arguments($match['arguments'] ?? ''),
 				$parts['args'] ?? [],

@@ -12,7 +12,7 @@ use Nette\Application\UI\Presenter;
 
 final class Parse
 {
-	private const Arguments = '(?:,?\s(?<args>(?:(?:[a-z0-9]+)\s?(?::|=>?)?\s?(?:[a-z0-9]+)?(?:&|,)?\s?)+)?)?';
+	private const Arguments = '(?:,?\s(?<args>(?:(?:(?:[a-z][a-z0-9]*)\s?(?::|=>?)\s?)?(?:[^&,}]+)(?:(?:&|,)\s?)?)+))?';
 	private const NetteControl = [
 		'name' => '(?<name>[a-z][a-z0-9]+)',
 		'type' => '(?::(?<type>[a-z][a-z0-9]+))?',

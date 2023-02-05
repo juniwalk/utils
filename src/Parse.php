@@ -12,7 +12,7 @@ use Nette\Application\UI\Presenter;
 
 final class Parse
 {
-	private const Arguments = '(?:,?\s(?<arguments>(?:(?:[a-z0-9]+)\s?(?::|=>?)?\s?(?:[a-z0-9]+)?(?:&|,)?\s?)+)?)?';
+	private const Arguments = '(?:,?\s(?<args>(?:(?:[a-z0-9]+)\s?(?::|=>?)?\s?(?:[a-z0-9]+)?(?:&|,)?\s?)+)?)?';
 	private const NetteControl = [
 		'name' => '(?<name>[a-z][a-z0-9]+)',
 		'type' => '(?::(?<type>[a-z][a-z0-9]+))?',
@@ -42,7 +42,7 @@ final class Parse
 			$parts = Presenter::parseDestination($match['link']);
 			$parts['path'] = str_replace($match['query'] ?? '', '', $match['link']);
 			$parts['args'] = array_merge(
-				static::arguments($match['arguments'] ?? ''),
+				static::arguments($match['args'] ?? ''),
 				$parts['args'] ?? [],
 			);
 

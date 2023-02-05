@@ -9,6 +9,7 @@ namespace JuniWalk\Utils;
 
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use ValueError;
 
 final class Parse
 {
@@ -24,9 +25,15 @@ final class Parse
 	];
 
 
+	/**
+	 * @throws ValueError
+	 */
 	public static function control(string $value): ?object
 	{
-		$match = Strings::match($value, '/^'.implode('', static::NetteControl).'$/i');
+		if (!$match = Strings::match($value, '/^'.implode('', static::NetteControl).'$/i')) {
+			throw new ValueError('Unable to parse control from: '.$value);
+		}
+
 		$match['args'] = static::arguments($match['args'] ?? '');
 		$match['type'] ??= null;
 
@@ -34,11 +41,16 @@ final class Parse
 	}
 
 
-	public static function link(string $link): ?object
+	/**
+	 * @throws ValueError
+	 */
+	public static function link(string $value): ?object
 	{
-		try {
-			$match = Strings::match($link, '/^'.implode('', static::NetteLink).'$/i');
+		if (!$match = Strings::match($value, '/^'.implode('', static::NetteLink).'$/i')) {
+			throw new ValueError('Unable to parse link from: '.$link);
+		}
 
+		try {
 			$parts = Presenter::parseDestination($match['link']);
 			$parts['path'] = str_replace($match['query'] ?? '', '', $match['link']);
 			$parts['args'] = array_merge(

@@ -15,7 +15,7 @@ final class Parse
 {
 	private const Arguments = '(?:,?\s(?<args>(?:(?:(?:[a-z][a-z0-9]*)\s?(?::|=>?)\s?)?(?:[^&,}]+)(?:(?:&|,)\s?)?)+))?';
 	private const HelpKeyword = [
-		'name' => '(?<name>(([a-z][a-z0-9]+).?[^.,]*)+)',
+		'name' => '(?<name>(?:(?:[a-z][a-z0-9]+).?)+[^.,\s]+)',
 		'args' => self::Arguments,
 	];
 	private const HelpControl = [

@@ -14,13 +14,17 @@ use ValueError;
 final class Parse
 {
 	private const Arguments = '(?:,?\s(?<args>(?:(?:(?:[a-z][a-z0-9]*)\s?(?::|=>?)\s?)?(?:[^&,}]+)(?:(?:&|,)\s?)?)+))?';
-	private const NetteControl = [
+	private const HelpKeyword = [
+		'name' => '(?<name>(([a-z][a-z0-9]+).?[^.,]*)+)',
+		'args' => self::Arguments,
+	];
+	private const HelpControl = [
 		'name' => '(?<name>[a-z][a-z0-9]+)',
 		'type' => '(?::(?<type>[a-z][a-z0-9]+))?',
 		'args' => self::Arguments,
 	];
-	private const NetteLink = [
-		'link' => '(?<link>(?:\/\/)?+(?:[^!?#\s]++)(?:!)?+(?<query>\?[^#]*)?+(?:\#[^\s]*)?+)',
+	private const HelpLink = [
+		'link' => '(?<link>(?:\/\/)?+(?:[^!?#,\s]++)(?:!)?+(?<query>\?[^#]*)?+(?:\#[^\s]*)?+)',
 		'args' => self::Arguments,
 	];
 
@@ -28,9 +32,24 @@ final class Parse
 	/**
 	 * @throws ValueError
 	 */
+	public static function keyword(string $value): ?object
+	{
+		if (!$match = Strings::match($value, '/^'.implode('', static::HelpKeyword).'$/i')) {
+			throw new ValueError('Unable to parse keyword from: '.$value);
+		}
+
+		$match['args'] = static::arguments($match['args'] ?? '');
+
+		return (object) $match;
+	}
+
+
+	/**
+	 * @throws ValueError
+	 */
 	public static function control(string $value): ?object
 	{
-		if (!$match = Strings::match($value, '/^'.implode('', static::NetteControl).'$/i')) {
+		if (!$match = Strings::match($value, '/^'.implode('', static::HelpControl).'$/i')) {
 			throw new ValueError('Unable to parse control from: '.$value);
 		}
 
@@ -46,7 +65,7 @@ final class Parse
 	 */
 	public static function link(string $value): ?object
 	{
-		if (!$match = Strings::match($value, '/^'.implode('', static::NetteLink).'$/i')) {
+		if (!$match = Strings::match($value, '/^'.implode('', static::HelpLink).'$/i')) {
 			throw new ValueError('Unable to parse link from: '.$link);
 		}
 

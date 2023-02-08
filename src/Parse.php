@@ -95,7 +95,13 @@ final class Parse
 		$args = Arrays::map($args, function(mixed $arg): array {
 			$pair = Strings::split($arg, '/\s*(?::|=>?)\s*/');
 			$pair = array_pad($pair, -2, 0);
-			return [$pair[0] => $pair[1]];
+
+			return [$pair[0] => match(Strings::lower($pair[1])) {
+				default => $pair[1],
+				'false' => false,	
+				'true' => true,	
+				'null' => null,
+			}];
 		});
 
 		return array_merge(... $args);

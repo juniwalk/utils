@@ -29,7 +29,7 @@ final class Arrays
 	}
 
 
-	public static function flatten(iterable $items, string $prefix = null): iterable
+	public static function flatten(iterable $items, string $prefix = null): array
 	{
 		$result = [];
 
@@ -46,7 +46,7 @@ final class Arrays
 	}
 
 
-	public static function unflatten(iterable $items): iterable
+	public static function unflatten(iterable $items): array
 	{
 		$items = static::flatten($items);
 		$result = [];
@@ -66,7 +66,7 @@ final class Arrays
 	}
 
 
-	public static function tokenize(iterable $items): iterable
+	public static function tokenize(iterable $items, string $token = '{%s}'): array
 	{
 		$result = [];
 
@@ -75,7 +75,7 @@ final class Arrays
 				continue;
 			}
 
-			$result['{'.$key.'}'] = $value;
+			$result[sprintf($token, $key)] = $value;
 		}
 
 		return $result;

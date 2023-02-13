@@ -70,7 +70,7 @@ final class Arrays
 	{
 		$result = [];
 
-		foreach($items as $key => $value) {
+		foreach(static::flatten($items) as $key => $value) {
 			if (!is_scalar($value) && !$value instanceof Stringable) {
 				continue;
 			}

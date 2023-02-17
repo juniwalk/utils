@@ -48,7 +48,7 @@ final class Arrays
 				continue;
 			}
 
-			$items[$key] = $merge($values, $data);
+			$items[$key] = $callback($values, $data);
 		}
 
 		return $items;

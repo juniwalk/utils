@@ -29,6 +29,32 @@ final class Arrays
 	}
 
 
+	public static function intersect(array $items, array $array, bool $isRecursive = true): iterable
+	{
+		$callback = function(array $a1, array $a2): array {
+			$a1 = array_intersect_key($a1, $a2);
+			$a1 = array_merge($a2, $a1);
+			return $a1;
+		};
+
+		$items = $callback($items, $array);
+
+		if (!$isRecursive) {
+			return $items;
+		}
+
+		foreach ($items as $key => $values) {
+			if (!$data = $array[$key] ?? null) {
+				continue;
+			}
+
+			$items[$key] = $merge($values, $data);
+		}
+
+		return $items;
+	}
+
+
 	public static function flatten(iterable $items, string $prefix = null): array
 	{
 		$result = [];

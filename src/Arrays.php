@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils;
 
+use Generator;
 use Stringable;
 
 final class Arrays
@@ -26,6 +27,21 @@ final class Arrays
 		}
 
 		return $items;
+	}
+
+
+	public static function walk(array $items, callable $callback): array
+	{
+		$callback = fn(mixed $value, mixed $key): Generator => yield from $callback($value, $key);
+		$result = [];
+
+		foreach ($items as $key => $value) {
+			$result += iterator_to_array(
+				$callback($value, $key)
+			);
+		}
+
+		return $result;
 	}
 
 

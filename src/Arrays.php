@@ -36,9 +36,11 @@ final class Arrays
 		$result = [];
 
 		foreach ($items as $key => $value) {
-			$result += iterator_to_array(
+			$value = iterator_to_array(
 				$callback($value, $key)
 			);
+
+			$result = array_merge($result, $value);
 		}
 
 		return $result;

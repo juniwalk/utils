@@ -23,7 +23,7 @@
 			{var $confirmationDialog = $option->getConfirmationDialog($row)}
 
 			<a
-				class="{$option->getClassInDropdown()}"
+				n:class="$option->getClassInDropdown(), $option == $activeOption ? active"
 				n:href="changeStatus!, id => $row->getId(), key => $status->getKey(), value => $option->getValue()"
 				{if $confirmationDialog}
 					data-{Ublaboo\DataGrid\Column\Action::$dataConfirmAttributeName}={$confirmationDialog}

@@ -7,7 +7,9 @@
 
 namespace JuniWalk\Utils\Enums;
 
-enum Role: string implements Interfaces\PoweredRole, LabeledEnum
+use JuniWalk\Utils\Enums\Interfaces\PoweredRole;
+
+enum Role: string implements PoweredRole, LabeledEnum
 {
 	use Traits\Labeled;
 
@@ -66,7 +68,7 @@ enum Role: string implements Interfaces\PoweredRole, LabeledEnum
 	}
 
 
-	public function hasPowerOver(self $role): bool
+	public function hasPowerOver(PoweredRole $role): bool
 	{
 		if ($this === Role::Admin) {
 			return true;

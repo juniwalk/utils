@@ -9,7 +9,7 @@ namespace JuniWalk\Utils;
 
 use Iterator;
 use Stringable;
-use UnexpectedValueException
+use UnexpectedValueException;
 
 final class Arrays
 {

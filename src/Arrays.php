@@ -7,8 +7,9 @@
 
 namespace JuniWalk\Utils;
 
-use Generator;
+use Iterator;
 use Stringable;
+use UnexpectedValueException
 
 final class Arrays
 {

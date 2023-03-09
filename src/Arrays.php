@@ -30,17 +30,25 @@ final class Arrays
 	}
 
 
+	/**
+	 * @throws UnexpectedValueException
+	 */
 	public static function walk(array $items, callable $callback): array
 	{
-		$callback = fn(mixed $value, mixed $key): Generator => yield from $callback($value, $key);
+		$callback = function(mixed $value, mixed $key) use ($callback): array {
+			$items = $callback($value, $key);
+
+			if (!$items instanceof Iterator) {
+				throw new UnexpectedValueException('Callback is expected to return instance of Iterator');
+			}
+
+			return iterator_to_array($items);
+		};
+
 		$result = [];
 
 		foreach ($items as $key => $value) {
-			$value = iterator_to_array(
-				$callback($value, $key)
-			);
-
-			$result = array_merge($result, $value);
+			$result += $callback($value, $key);
 		}
 
 		return $result;

@@ -7,9 +7,7 @@
 
 namespace JuniWalk\Utils\Enums;
 
-use Nette\Security\Role as IRole;
-
-enum Role: string implements IRole, LabeledEnum
+enum Role: string implements Interfaces\PoweredRole, LabeledEnum
 {
 	use Traits\Labeled;
 
@@ -56,7 +54,7 @@ enum Role: string implements IRole, LabeledEnum
 	}
 
 
-	public function weight(): int
+	public function power(): int
 	{
 		return match($this) {
 			self::Guest => 0,
@@ -74,7 +72,7 @@ enum Role: string implements IRole, LabeledEnum
 			return true;
 		}
 
-		return $this->weight() >= $role->weight();
+		return $this->power() >= $role->power();
 	}
 
 

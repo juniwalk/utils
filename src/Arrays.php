@@ -13,7 +13,13 @@ use UnexpectedValueException;
 
 final class Arrays
 {
-	public static function map(iterable $items, callable $callback, bool $isRecursive = true): iterable
+	public static function mapRecursive(iterable $items, callable $callback): iterable
+	{
+		return static::map($items, $callback, true);
+	}
+
+
+	public static function map(iterable $items, callable $callback, bool $isRecursive = false): iterable
 	{
 		$callback = function(mixed $value, mixed $key) use ($callback, $isRecursive) {
 			if (!$isRecursive || !is_iterable($value)) {

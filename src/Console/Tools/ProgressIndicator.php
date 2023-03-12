@@ -105,9 +105,9 @@ final class ProgressIndicator
 	{
 		$this->progress->setFormat("\n %percent:3s%% [%bar%] %current%/%max%\n %message%\n");
 		$this->setMessage('<info>Preparing...</>', 'message');
-        $this->progress->start(is_countable($values) ? count($values) : null);
+		$this->progress->start(is_countable($values) ? count($values) : null);
 
-        foreach ($values as $key => $value) {
+		foreach ($values as $key => $value) {
 			try {
 				if ($callback($this, $value, $key) === false) {
 					break;
@@ -117,8 +117,8 @@ final class ProgressIndicator
 				$this->render($e);
 			}
 
-            $this->progress->advance();
-        }
+			$this->progress->advance();
+		}
 
 		$this->setMessage('<info>Process has finished</>');
 		$this->progress->finish();
@@ -188,13 +188,11 @@ final class ProgressIndicator
 		$line = '';
 
 		foreach (preg_split('//u', $utf8String) as $char) {
-			// test if $char could be appended to current line
 			if (Helper::width($line.$char) <= $width) {
 				$line .= $char;
 				continue;
 			}
 
-			// if not, push current line to array and make new line
 			$lines[] = str_pad($line, $width);
 			$line = $char;
 		}

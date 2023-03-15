@@ -11,7 +11,7 @@ use JuniWalk\Utils\Enums\Currency;
 
 final class Format
 {
-	public static function phoneNumber(?string $phone): ?string
+	public static function phoneNumber(?string $value): ?string
 	{
 		static $formats = [
 			['+420', '(\d{3})(\d{3})(\d{3})', '%s %s %s %s'],	// Czechia
@@ -20,18 +20,16 @@ final class Format
 			['', '(\d{3})(\d{3})(\d+)', '%s%s %s %s'],			// default
 		];
 
-		if (!$phone || !$phone = str_replace(' ', '', $phone)) {
+		if (!$value = Sanitize::phoneNumber($value)) {
 			return null;
 		}
 
 		foreach ($formats as [$prefix, $pattern, $format]) {
-			if (!Strings::startsWith($phone, $prefix)) {
+			if (!Strings::startsWith($value, $prefix)) {
 				continue;
 			}
 
-			$quote = preg_quote($prefix);
-
-			if (!$params = Strings::match($phone, '/^'.$quote.$pattern.'$/')) {
+			if (!$params = Strings::match($value, '/^'.preg_quote($prefix).$pattern.'$/')) {
 				continue;
 			}
 
@@ -40,7 +38,7 @@ final class Format
 			return sprintf($format, ... $params);
 		}
 
-		return $phone;
+		return $value;
 	}
 
 

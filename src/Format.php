@@ -11,9 +11,42 @@ use JuniWalk\Utils\Enums\Currency;
 
 final class Format
 {
+	public function phoneNumber(?string $phone): ?string
+	{
+		static $formats = [
+			['+420', '(\d{3})(\d{3})(\d{3})', '%s %d %d %d'],	// Czechia
+			['+421', '(\d{4})(\d{3})(\d{3})', '%s %d %d %d'],	// Slovakia
+			['+49', '(0?\d{3})(\d{7})', '%s %d %d'],			// Germany
+			[null, '(\d{3})(\d{3})(\d+)', '%s%d %d %d'],		// default
+		];
+
+		if (!$phone || !$phone = str_replace(' ', '', $phone)) {
+			return null;
+		}
+
+		foreach ($formats as [$prefix, $pattern, $format]) {
+			if ($prefix && !Strings::startsWith($phone, $prefix)) {
+				continue;
+			}
+
+			$quote = preg_quote($prefix);
+
+			if (!$params = Strings::match($phone, '/^'.$quote.$pattern.'$/')) {
+				continue;
+			}
+
+			$params[0] = $prefix;
+
+			return sprintf($format, ... $params);
+		}
+
+		return $phone;
+	}
+
+
 	public static function size(int $bytes, int $decimals = 2): string
 	{
-		$size = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+		static $size = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 		$factor = floor((strlen((string) $bytes) - 1) / 3);
 
 		if ($factor <= 0) {
@@ -31,7 +64,7 @@ final class Format
 
 	public static function number(float $value, int $decimals = 2): string
 	{
-		$size = ['', 'k', 'M', 'B', 'T', 'Q', 'S', 'O', 'N'];
+		static $size = ['', 'k', 'M', 'B', 'T', 'Q', 'S', 'O', 'N'];
 		$factor = floor((strlen((string) intval($value)) - 1) / 3);
 
 		return static::value(

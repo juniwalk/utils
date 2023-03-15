@@ -11,7 +11,7 @@ use JuniWalk\Utils\Enums\Currency;
 
 final class Format
 {
-	public function phoneNumber(?string $phone): ?string
+	public static function phoneNumber(?string $phone): ?string
 	{
 		static $formats = [
 			['+420', '(\d{3})(\d{3})(\d{3})', '%s %d %d %d'],	// Czechia

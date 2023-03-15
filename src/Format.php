@@ -14,10 +14,10 @@ final class Format
 	public static function phoneNumber(?string $phone): ?string
 	{
 		static $formats = [
-			['+420', '(\d{3})(\d{3})(\d{3})', '%s %d %d %d'],	// Czechia
-			['+421', '(\d{4})(\d{3})(\d{3})', '%s %d %d %d'],	// Slovakia
-			['+49', '(0?\d{3})(\d{7})', '%s %d %d'],			// Germany
-			['', '(\d{3})(\d{3})(\d+)', '%s%d %d %d'],			// default
+			['+420', '(\d{3})(\d{3})(\d{3})', '%s %s %s %s'],	// Czechia
+			['+421', '(\d{4})(\d{3})(\d{3})', '%s %s %s %s'],	// Slovakia
+			['+49', '(0?\d{3})(\d{7})', '%s %s %s'],			// Germany
+			['', '(\d{3})(\d{3})(\d+)', '%s%s %s %s'],			// default
 		];
 
 		if (!$phone || !$phone = str_replace(' ', '', $phone)) {

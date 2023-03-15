@@ -17,7 +17,7 @@ final class Format
 			['+420', '(\d{3})(\d{3})(\d{3})', '%s %d %d %d'],	// Czechia
 			['+421', '(\d{4})(\d{3})(\d{3})', '%s %d %d %d'],	// Slovakia
 			['+49', '(0?\d{3})(\d{7})', '%s %d %d'],			// Germany
-			[null, '(\d{3})(\d{3})(\d+)', '%s%d %d %d'],		// default
+			['', '(\d{3})(\d{3})(\d+)', '%s%d %d %d'],			// default
 		];
 
 		if (!$phone || !$phone = str_replace(' ', '', $phone)) {
@@ -25,7 +25,7 @@ final class Format
 		}
 
 		foreach ($formats as [$prefix, $pattern, $format]) {
-			if ($prefix && !Strings::startsWith($phone, $prefix)) {
+			if (!Strings::startsWith($phone, $prefix)) {
 				continue;
 			}
 

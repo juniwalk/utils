@@ -10,6 +10,7 @@ namespace JuniWalk\Utils\Latte;
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Currency;
 use JuniWalk\Utils\Enums\LabeledEnum;
+use JuniWalk\Utils\Format;
 use JuniWalk\Utils\Html;
 use Latte\Extension;
 
@@ -21,10 +22,18 @@ class LatteExtension extends Extension
 	public function getFilters(): array
 	{
 		return [
+			'phone' => $this->filterPhone(...),
 			'badge' => $this->filterBadge(...),
 			'price' => $this->filterPrice(...),
 			'icon' => $this->filterIcon(...),
 		];
+	}
+
+
+	protected function filterPhone(
+		?string $phone,
+	): ?string {
+		return Format::phoneNumber($phone);
 	}
 
 

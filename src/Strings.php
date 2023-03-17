@@ -10,9 +10,25 @@ namespace JuniWalk\Utils;
 use Nette\Utils\Strings as NetteStrings;
 use Latte\Essential\Filters as LatteFilters;
 use Latte\Runtime\FilterInfo;
+use ReflectionClass;
+use Throwable;
 
 final class Strings extends NetteStrings
 {
+	public static function webalizeClassName(object $object): string
+	{
+		$name = (new ReflectionClass($object))->getShortName();
+
+		if ($object instanceof Throwable) {
+			$name = static::replace($name, '/Exception$/', '');
+		}
+
+		$name = static::replace($name, '/[A-Z]/', ' $0');
+		return static::webalize($name);
+	}
+
+
+
 	public static function stripHtml(string $content): string
 	{
 		return LatteFilters::stripHtml(new FilterInfo('html'), $content);

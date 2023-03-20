@@ -18,20 +18,17 @@
 	{else}
 		{$row->getValue($status->getColumn())}
 	{/if}
-	<ul class="dropdown-menu">
-		<li n:foreach="$status->getOptions() as $option">
-			{var $confirmationDialog = $option->getConfirmationDialog($row)}
-
-			<a
-				n:class="$option->getClassInDropdown(), $option == $activeOption ? active"
-				n:href="changeStatus!, id => $row->getId(), key => $status->getKey(), value => $option->getValue()"
-				{if $confirmationDialog}
-					data-{Ublaboo\DataGrid\Column\Action::$dataConfirmAttributeName}={$confirmationDialog}
-				{/if}
-			>
-				{if $option->getIconSecondary()}<i class="datagrid-column-status-option-icon {$iconPrefix}{$option->getIconSecondary()}"></i> {/if}
-				{$option->getText()|translate}
-			</a>
-		</li>
-	</ul>
+	<div class="dropdown-menu" n:inner-foreach="$status->getOptions() as $option">
+		{var $confirmationDialog = $option->getConfirmationDialog($row)}
+		<a
+			n:href="changeStatus!, id => $row->getId(), key => $status->getKey(), value => $option->getValue()"
+			n:class="dropdown-item, $option->getClassInDropdown(), $option == $activeOption ? active"
+			{if $confirmationDialog}
+				data-{Ublaboo\DataGrid\Column\Action::$dataConfirmAttributeName}={$confirmationDialog}
+			{/if}
+		>
+			{if $option->getIconSecondary()}<i class="datagrid-column-status-option-icon {$iconPrefix}{$option->getIconSecondary()}"></i> {/if}
+			{$option->getText()|translate}
+		</a>
+	</div>
 </div>

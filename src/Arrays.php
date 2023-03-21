@@ -36,6 +36,7 @@ final class Arrays
 	 */
 	public static function walk(array $items, callable $callback): array
 	{
+		$result = [];
 		$callback = function(mixed $value, mixed $key) use ($callback): array {
 			$items = $callback($value, $key);
 
@@ -46,10 +47,15 @@ final class Arrays
 			return iterator_to_array($items);
 		};
 
-		$result = [];
-
 		foreach ($items as $key => $value) {
-			$result = array_merge($result, $callback($value, $key));
+			$yield = $callback($value, $key);
+
+			if (!key($yield)) {
+				$result[] = current($yield);
+				continue;
+			}
+
+			$result = $result + $yield;
 		}
 
 		return $result;

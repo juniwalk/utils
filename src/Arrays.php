@@ -49,7 +49,7 @@ final class Arrays
 		$result = [];
 
 		foreach ($items as $key => $value) {
-			$result += $callback($value, $key);
+			$result = array_merge($result, $callback($value, $key));
 		}
 
 		return $result;

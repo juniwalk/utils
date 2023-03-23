@@ -22,8 +22,10 @@ class DateTime extends NetteDate
 	}
 
 
-	public function copyTime(DateTimeInterface $date): static
+	public function timeFrom(?DateTimeInterface $date): static
 	{
+		$date ??= static::from('00:00:00');
+
 		return $this->setTime(
 			(int) $date->format('H'),
 			(int) $date->format('i'),

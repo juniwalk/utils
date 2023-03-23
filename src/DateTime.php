@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils;
 
+use DateTimeInterface;
 use Nette\Utils\DateTime as NetteDate;
 
 class DateTime extends NetteDate
@@ -18,5 +19,16 @@ class DateTime extends NetteDate
 		}
 
 		return static::from($time);
+	}
+
+
+	public function copyTime(DateTimeInterface $date): static
+	{
+		return $this->setTime(
+			(int) $date->format('H'),
+			(int) $date->format('i'),
+			(int) $date->format('s'),
+			(int) $date->format('u'),
+		);
 	}
 }

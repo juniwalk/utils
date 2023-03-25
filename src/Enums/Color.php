@@ -110,10 +110,7 @@ enum Color: string implements LabeledEnum
 	{
 		$mod = [0.2126, 0.7152, 0.0722];
 		$hex = Strings::split($this->hex(), '/\#?([a-f0-9]{2})/', PREG_SPLIT_NO_EMPTY);
-		$rgb = Arrays::map($hex, function(string $v, int $k) use ($mod): float {
-			return (hexdec($v) / 255) * $mod[$k];
-		});
-
+		$rgb = Arrays::map($hex, fn(string $v, int $k): float => (hexdec($v) / 255) * $mod[$k]);
 		return array_sum($rgb);
 	}
 }

@@ -84,7 +84,7 @@
 					</a>
 				</th>
 
-				<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-right">
+				<th n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-right text-nowrap">
 					{_ublaboo_datagrid.action}
 				</th>
 
@@ -150,7 +150,7 @@
 									{include column-value, column => $column, row => $row, key => $key}
 								{$td->endTag()|noescape}
 							{/foreach}
-							<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-right">
+							<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-right text-nowrap">
 								<span class="handle-sort btn btn-xs btn-secondary" n:if="$control->isSortable()">
 									<i n:block="icon-arrows-v" class="{$iconPrefix}arrows-v {$iconPrefix}arrows-alt-v"></i>
 								</span>
@@ -302,7 +302,7 @@
 		{$td->endTag()|noescape}
 	{/foreach}
 
-	<td class="col-action col-action-inline-edit">
+	<td class="col-action text-nowrap col-action-inline-edit">
 		<button n:name="$filter['inline_add']['submit']" type="submit" class="btn btn-xs btn-primary">
 			<i class="fas fa-fw fa-save"></i>
 		</button>

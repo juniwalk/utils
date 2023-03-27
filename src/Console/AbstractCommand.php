@@ -51,6 +51,7 @@ abstract class AbstractCommand extends Command
 
 			if ($answer === false) {
 				$this->terminate();
+				break;
 			}
 		}
 	}

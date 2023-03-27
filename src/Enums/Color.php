@@ -89,7 +89,7 @@ enum Color: string implements LabeledEnum
 
 	public function foreground(): string
 	{
-		return $this->luminosity() > 0.5
+		return Parse::luminosity($this->hex()) > 0.5
 			? '#343a40'		// Dark
 			: '#f8f9fa';	// Light
 	}
@@ -103,14 +103,5 @@ enum Color: string implements LabeledEnum
 			self::Warning, self::Danger => true,
 			default => false,
 		};
-	}
-
-
-	private function luminosity(): float
-	{
-		$mod = [0.2126, 0.7152, 0.0722];
-		$hex = Strings::split($this->hex(), '/\#?([a-f0-9]{2})/', PREG_SPLIT_NO_EMPTY);
-		$rgb = Arrays::map($hex, fn(string $v, int $k): float => (hexdec($v) / 255) * $mod[$k]);
-		return array_sum($rgb);
 	}
 }

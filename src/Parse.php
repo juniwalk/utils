@@ -29,6 +29,15 @@ final class Parse
 	];
 
 
+	public static function luminosity(string $hex): float
+	{
+		$mod = [0.2126, 0.7152, 0.0722];
+		$hex = Strings::split($hex, '/\#?([a-f0-9]{2})/', PREG_SPLIT_NO_EMPTY);
+		$rgb = Arrays::map($hex, fn(string $v, int $k): float => (hexdec($v) / 255) * $mod[$k]);
+		return array_sum($rgb);
+	}
+
+
 	/**
 	 * @throws ValueError
 	 */

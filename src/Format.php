@@ -11,34 +11,67 @@ use JuniWalk\Utils\Enums\Currency;
 
 final class Format
 {
-	public static function phoneNumber(?string $value): ?string
+	public static function phoneNumber(?string $value, bool $clearUnmatched = false): ?string
 	{
 		static $formats = [
-			['+420', '(\d{3})(\d{3})(\d{3})', '%s %s %s %s'],	// Czechia
-			['+421', '(\d{4})(\d{3})(\d{3})', '%s %s %s %s'],	// Slovakia
-			['+49', '(0?\d{3})(\d{7})', '%s %s %s'],			// Germany
-			['', '(\d{3})(\d{3})(\d+)', '%s%s %s %s'],			// default
+			'de' => ['+49', '(0?\d{2,3})(\d{4})(\d{4})', '%s %s %s', '{10,11}'],
+			'pl' => ['+48', '(\d{3})(\d{3})(\d{3})', '%s %s %s', '{9}'],
+			'se' => ['+46', '(0?\d{2,3})(\d{3})(\d{2,3})', '%s %s %s', '{7,13}'],
+			'at' => ['+43', '(\d{3})(\d{4})(\d{0,4})', '%s %s %s', '{7,13}'],
+			'sk' => ['+421', '0?(\d{3})(\d{3})(\d{3})', '%s %s %s', '{9}'],
+			'cz' => ['+420', '(\d{3})(\d{3})(\d{3})', '%s %s %s', '{9}'],
+			'it' => ['+39', '(0\d{1}|3\d{2})(\d{4})(\d{3,4})', '%s %s %s', '{9,10}'],
+			'lt' => ['+370', '8?(\d{1,3})(\d{1,3})(\d{4})', '%s %s%s', '{8}'],
+			'fr' => ['+33', '0?([1-9])(\d{2})(\d{2})(\d{2})(\d{2})', '%s %s %s %s %s', '{9}'],
+			'be' => ['+32', '0?([^4]\d{0,1}|[4]\d{2})(\d{2,3})(\d{2})(\d{2})', '%s %s %s %s', '{9,10}'],
+			'nl' => ['+31', '0?([6]|\d{2})(\d{4})(\d{3,4})', '%s %s %s', '{9}'],
+			null => ['', '([2-7]\d{2})(\d{3})(\d{3})', '%s %s %s', '{9}'],
 		];
+
+		foreach ($formats as [$area]) {
+			$value = static::areaCode($value, $area) ?? $value;
+		}
 
 		if (!$value = Sanitize::phoneNumber($value)) {
 			return null;
 		}
 
-		foreach ($formats as [$prefix, $pattern, $format]) {
-			if (!Strings::startsWith($value, $prefix)) {
+		foreach ($formats as [$area, $pattern, $format, $length]) {
+			if (!$params = Strings::match($value, '/^'.preg_quote($area).$pattern.'(?:.*)$/')) {
 				continue;
 			}
 
-			if (!$params = Strings::match($value, '/^'.preg_quote($prefix).$pattern.'$/')) {
+			unset($params[0]);
+
+			$number = sprintf($format, ... $params);
+			$phone = Sanitize::phoneNumber($number);
+
+			if (!Strings::match($phone, '/^[0-9]'.$length.'$/')) {
 				continue;
 			}
 
-			$params[0] = $prefix;
+			$area = $area ?: $formats['cz'][0];
+			return $area.' '.$number;
+		}
 
-			return sprintf($format, ... $params);
+		if ($clearUnmatched) {
+			return null;
 		}
 
 		return $value;
+	}
+
+
+	public static function areaCode(?string $value, string $area): ?string
+	{
+		$pattern = sprintf('/^(00%1$s|\(%1$s\))/', trim($area, '+'));
+		$params = Strings::match($value ?? '', $pattern);
+
+		if (!$params || !$area) {
+			return null;
+		}
+
+		return str_replace($params[0], $area, $value);
 	}
 
 

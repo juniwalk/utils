@@ -68,4 +68,61 @@ final class Sanitize
 
 		return $value;
 	}
+
+
+	/**
+	 * @see https://en.wikipedia.org/wiki/VAT_identification_number
+	 */
+	public static function vatNumber(?string $value, bool $clearUnmatched = false): ?string
+	{
+		static $formats = [
+			'at' => 'U[0-9]{8}',
+			'be' => '0[0-9]{9}',
+			'bg' => '[0-9]{9,10}',
+			'ch' => 'E?([0-9]{6}|[0-9]{9})(MWST|TVA|IVA)?',
+			'cy' => '[0-9]{8}[a-z]',
+			'cz' => '[0-9]{8,10}',
+			'de' => '[0-9]{9}',
+			'dk' => '[0-9]{8}',
+			'ee' => '[0-9]{9}',
+			'el' => '[0-9]{9}',
+			'es' => '[0-9a-z][0-9]{7}[0-9a-z]',
+			'eu' => '[0-9]{9}',
+			'fi' => '[0-9]{8}',
+			'fr' => '[0-9a-z][0-9a-z][0-9]{9}',	// No O / I
+			'hr' => '[0-9]{11}',
+			'hu' => '[0-9]{8}',
+			'gb' => '[0-9]{9}',
+			'ie' => '[0-9]{7}[a-z]{1,2}',
+			'it' => '[0-9]{11}',
+			'lt' => '[0-9]{9}|[0-9]{12}',
+			'lu' => '[0-9]{8}',
+			'lv' => '[0-9]{11}',
+			'mt' => '[0-9]{8}',
+			'nl' => '[0-9]{9}B[0-9]{2}',
+			'no' => '[0-9]{9}(MVA)?',
+			'pl' => '[0-9]{10}',
+			'pt' => '[0-9]{9}',
+			'ro' => '[0-9]{2,10}',
+			'se' => '[0-9]{10}01',
+			'si' => '[0-9]{8}',
+			'sk' => '[0-9]{10}',
+		];
+
+		$value = Strings::replace($value, '/[^a-z0-9]/i');
+
+		foreach ($formats as $code => $regex) {
+			if (!$match = Strings::match($value, '/^('.$code.'('.$regex.'))$/i')) {
+				continue;
+			}
+
+			return Strings::upper($match[1]);
+		}
+
+		if ($clearUnmatched) {
+			return null;
+		}
+
+		return $value;
+	}
 }

@@ -20,4 +20,25 @@ final class Sanitize
 
 		return ($hasPrefix ? '+' : null).$value;
 	}
+
+
+	public static function emailAddress(?string $value): ?string
+	{
+		$regex = '/^(?:[^\<\[@]*)\s*(?:\<|\[)([^\>\]]+)(?:\>|\])$/iu';
+		$match = Strings::match($value, $regex);
+		$groups = Strings::split(
+			Strings::toAscii($match[1] ?? $value),
+			'/([^\s]+)\s*[;\/,]\s*([^\s]+)/i',
+			PREG_SPLIT_NO_EMPTY
+		);
+
+		$regex = '/^[a-z0-9.!#$%&’*+\/\=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)*$/i';
+		$value = $groups[0] ?? $value;
+
+		if (!$value || !Strings::match($value, $regex)) {
+			return null;
+		}
+
+		return Strings::lower($value);
+	}
 }

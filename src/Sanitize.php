@@ -25,7 +25,7 @@ final class Sanitize
 	public static function emailAddress(?string $value): ?string
 	{
 		$regex = '/^(?:[^\<\[@]*)\s*(?:\<|\[)([^\>\]]+)(?:\>|\])$/iu';
-		$match = Strings::match($value, $regex);
+		$match = Strings::match($value ?: '', $regex);
 		$groups = Strings::split(
 			Strings::toAscii($match[1] ?? $value),
 			'/([^\s]+)\s*[;\/,]\s*([^\s]+)/i',

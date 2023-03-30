@@ -36,14 +36,14 @@ final class Format
 			return null;
 		}
 
-		foreach ($formats as [$area, $pattern, $format, $length]) {
-			if (!$params = Strings::match($value, '/^'.preg_quote($area).$pattern.'(?:.*)$/')) {
+		foreach ($formats as [$area, $regex, $format, $length]) {
+			if (!$match = Strings::match($value, '/^'.preg_quote($area).$regex.'(?:.*)$/')) {
 				continue;
 			}
 
-			unset($params[0]);
+			unset($match[0]);
 
-			$number = sprintf($format, ... $params);
+			$number = sprintf($format, ... $match);
 			$phone = Sanitize::phoneNumber($number);
 
 			if (!Strings::match($phone, '/^[0-9]'.$length.'$/')) {
@@ -64,14 +64,13 @@ final class Format
 
 	public static function areaCode(?string $value, string $area): ?string
 	{
-		$pattern = sprintf('/^(00%1$s|\(%1$s\))/', trim($area, '+'));
-		$params = Strings::match($value ?? '', $pattern);
+		$regex = sprintf('/^(00%1$s|\(%1$s\))/', trim($area, '+'));
 
-		if (!$params || !$area) {
+		if (!$area || !$match = Strings::match($value ?? '', $regex)) {
 			return null;
 		}
 
-		return str_replace($params[0], $area, $value);
+		return str_replace($match[0], $area, $value);
 	}
 
 

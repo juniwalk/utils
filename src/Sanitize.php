@@ -41,4 +41,31 @@ final class Sanitize
 
 		return Strings::lower($value);
 	}
+
+
+	public static function corporateId(?string $value, bool $clearInvalid = false): ?string
+	{
+		$isValid = function(string $cid, int $c = 0): bool {
+			for ($n = 0; $n < 7; $n++) {
+				$c += $cid[$n] * (8 - $n);
+			}
+
+			return (int) $cid[7] === (11 - ($c % 11)) % 10;
+		};
+
+		$value = Strings::replace($value ?: '', '/[^0-9]/');
+		$value = Strings::padLeft($value, 8, '0');
+
+		if (!($match = Strings::match($value, '/^[0-9]{8}/')) && !$clearInvalid) {
+			return null;
+		}
+
+		$value = $match[0] ?? $value;
+
+		if ($clearInvalid && !$isValid($value)) {
+			return null;
+		}
+
+		return $value;
+	}
 }

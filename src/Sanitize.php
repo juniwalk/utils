@@ -109,7 +109,7 @@ final class Sanitize
 			'sk' => '[0-9]{10}',
 		];
 
-		$value = Strings::replace($value, '/[^a-z0-9]/i');
+		$value = Strings::replace($value ?: '', '/[^a-z0-9]/i');
 
 		foreach ($formats as $code => $regex) {
 			if (!$match = Strings::match($value, '/^('.$code.'('.$regex.'))$/i')) {

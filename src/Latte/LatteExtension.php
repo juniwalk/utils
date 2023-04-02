@@ -9,7 +9,7 @@ namespace JuniWalk\Utils\Latte;
 
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Currency;
-use JuniWalk\Utils\Enums\LabeledEnum;
+use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
 use JuniWalk\Utils\Format;
 use JuniWalk\Utils\Html;
 use Latte\Extension;

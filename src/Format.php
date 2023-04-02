@@ -7,7 +7,7 @@
 
 namespace JuniWalk\Utils;
 
-use JuniWalk\Utils\Enums\Currency;
+use JuniWalk\Utils\Enums\Interfaces\Currency;
 
 final class Format
 {

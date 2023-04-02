@@ -7,13 +7,9 @@
 
 namespace JuniWalk\Utils\Enums;
 
-use BackedEnum;
-
-interface LabeledEnum extends BackedEnum
+/**
+ * @deprecated
+ */
+interface LabeledEnum extends Interfaces\LabeledEnum
 {
-	public static function getLabels(): iterable;
-
-	public function label(): string;
-	public function color(): ?Color;
-	public function icon(): ?string;
 }

@@ -10,7 +10,7 @@ namespace JuniWalk\Utils\Enums;
 use JuniWalk\Utils\Arrays;
 use JuniWalk\Utils\Strings;
 
-enum Color: string implements LabeledEnum
+enum Color: string implements Interfaces\LabeledEnum
 {
 	use Traits\Labeled;
 

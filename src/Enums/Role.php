@@ -7,9 +7,7 @@
 
 namespace JuniWalk\Utils\Enums;
 
-use JuniWalk\Utils\Enums\Interfaces\PoweredRole;
-
-enum Role: string implements PoweredRole, LabeledEnum
+enum Role: string implements Interfaces\PoweredRole, Interfaces\LabeledEnum
 {
 	use Traits\Labeled;
 

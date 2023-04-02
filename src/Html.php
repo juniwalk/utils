@@ -8,8 +8,8 @@
 namespace JuniWalk\Utils;
 
 use JuniWalk\Utils\Enums\Color;
-use JuniWalk\Utils\Enums\Currency;
-use JuniWalk\Utils\Enums\LabeledEnum;
+use JuniWalk\Utils\Enums\Interfaces\Currency;
+use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
 use Nette\Localization\Translator;
 use Nette\Utils\Html as NetteHtml;
 

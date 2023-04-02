@@ -7,10 +7,11 @@
 
 namespace JuniWalk\Utils\Enums\Interfaces;
 
-use BackedEnum;
+// use BackedEnum;
 use JuniWalk\Utils\Enums\Color;
+use JuniWalk\Utils\Enums\LabeledEnum as DeprecatedLabeledEnum;
 
-interface LabeledEnum extends BackedEnum
+interface LabeledEnum extends DeprecatedLabeledEnum	// BackedEnum
 {
 	public static function getLabels(): iterable;
 

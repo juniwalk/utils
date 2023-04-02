@@ -7,9 +7,11 @@
 
 namespace JuniWalk\Utils\Enums;
 
+use BackedEnum;
+
 /**
  * @deprecated
  */
-interface LabeledEnum extends Interfaces\LabeledEnum
+interface LabeledEnum extends BackedEnum
 {
 }

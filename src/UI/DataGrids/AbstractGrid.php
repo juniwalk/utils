@@ -8,7 +8,7 @@
 namespace JuniWalk\Utils\UI\DataGrids;
 
 use JuniWalk\Utils\Enums\Color;
-use JuniWalk\Utils\Enums\LabeledEnum;
+use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
 use JuniWalk\Utils\Html;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;

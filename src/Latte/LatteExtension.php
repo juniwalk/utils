@@ -9,6 +9,7 @@ namespace JuniWalk\Utils\Latte;
 
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Currency;
+use JuniWalk\Utils\Enums\Interfaces\CurrencyInterface;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
 use JuniWalk\Utils\Format;
 use JuniWalk\Utils\Html;
@@ -69,6 +70,10 @@ class LatteExtension extends Extension
 		bool $isColored = true,
 		string ...$classes,
 	): Html {
-		return Html::price((float) $amount, Currency::make($currency), isColoredBySign: $isColored)->addClass($classes);
+		if (!$currency instanceof CurrencyInterface) {
+			$currency = Currency::make($currency);
+		}
+
+		return Html::price((float) $amount, $currency, isColoredBySign: $isColored)->addClass($classes);
 	}
 }

@@ -10,6 +10,7 @@ namespace JuniWalk\Utils\UI\DataGrids;
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
 use JuniWalk\Utils\Html;
+use JuniWalk\Utils\Strings;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
 use Ublaboo\DataGrid\Column\Column;
@@ -115,8 +116,9 @@ abstract class AbstractGrid extends Control
 				->setClass($class);
 
 			if ($icon = $item->icon()) {
-				$option->setIcon($icon)
-					->setIconSecondary($icon);
+				$icon = Strings::replace($icon, '/^fa-/i');
+				$option->setIconSecondary($icon)
+					->setIcon($icon);
 			}
 
 			$option->endOption();

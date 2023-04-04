@@ -34,6 +34,13 @@ final class Html extends NetteHtml
 	}
 
 
+	public static function subtext(string $content, bool $tryTranslate = true): self
+	{
+		$content = static::translate($content, $tryTranslate);
+		return static::el('i class="text-muted"', $content);
+	}
+
+
 	public static function badge(
 		string $content,
 		Color $color = Color::Secondary,

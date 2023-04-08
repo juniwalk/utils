@@ -14,6 +14,7 @@ use JuniWalk\Utils\Strings;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
 use Ublaboo\DataGrid\Column\Column;
+use Ublaboo\DataGrid\Column\ColumnDateTime;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
 
@@ -144,7 +145,17 @@ abstract class AbstractGrid extends Control
 
 	final public function render()
 	{
-		$gridTemplate = $this->getComponent('grid')->getTemplate();
+		$grid = $this->getComponent('grid');
+
+		foreach ($grid->getColumns() as $column) {
+			if (!$column instanceof ColumnDateTime) {
+				continue;
+			}
+
+			$column->addCellAttributes(['class' => 'text-nowrap']);
+		}
+
+		$gridTemplate = $grid->getTemplate();
 		$gridTemplate->controlName = $this->getName();
 		$gridTemplate->hasFiltersAlwaysShown = $this->hasFiltersAlwaysShown;
 		$gridTemplate->isDisabled = $this->isDisabled;

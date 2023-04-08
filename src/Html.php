@@ -34,10 +34,17 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function subtext(string $content, bool $tryTranslate = true): self
+	public static function highlight(mixed $content, Color $color = Color::Primary, bool $tryTranslate = true): self
 	{
-		$content = static::translate($content, $tryTranslate);
-		return static::el('i class="text-muted"', $content);
+		return static::el('strong')->addText(static::translate($content, $tryTranslate))
+			->addClass($color->for('text'));
+	}
+
+
+	public static function subtext(mixed $content, Color $color = Color::Secondary, bool $tryTranslate = true): self
+	{
+		return static::el('i')->addText(static::translate($content, $tryTranslate))
+			->addClass($color->for('text'));
 	}
 
 
@@ -183,10 +190,10 @@ final class Html extends NetteHtml
 	}
 
 
-	private static function translate(?string $content, bool $tryTranslate = true): ?string
+	private static function translate(mixed $content, bool $tryTranslate = true): ?string
 	{
 		if (!$content || !$tryTranslate || !isset(static::$translator)) {
-			return $content;
+			return (string) $content;
 		}
 
 		return static::$translator->translate($content);

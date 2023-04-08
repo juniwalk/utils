@@ -90,9 +90,14 @@ abstract class AbstractGrid extends Control
 
 		if (!method_exists($this, $signalMethod)) {
 			return $this->grid->addColumnText($name, $title)->setAlign('right')
-				->setRenderer(function($item) use ($name): Html {
-					$enum = $item->{'get'.$name}();
-					return Html::badgeEnum($enum);
+				->setRenderer(function($item) use ($name, $hasBlockButtons): Html {
+					$enum = Html::badgeEnum($item->{'get'.$name}());
+
+					if ($hasBlockButtons) {
+						$enum->addClass('d-block text-left');
+					}
+
+					return $enum;
 				});
 		}
 

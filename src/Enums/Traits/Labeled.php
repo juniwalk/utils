@@ -26,42 +26,41 @@ trait Labeled
 	}
 
 
+	/**
+	 * @deprecated
+	 */
 	public static function tryMake(mixed $value): ?static
 	{
-		try {
-			return static::make($value);
-
-		} catch (TypeError|ValueError) {}
-
-		return null;
+		// todo add hard deprecate in future versions
+		return static::make($value, false);
 	}
 
 
 	/**
 	 * @throws ValueError
 	 */
-	public static function make(mixed $value): static
+	public static function make(mixed $value, bool $required = true): ?static
 	{
 		if ($value instanceof static) {
 			return $value;
 		}
 
-		if ($case = static::tryFrom($value)) {
-			return $case;
-		}
-
-		$lower = Strings::lower((string) $value);
-
-		if ($case = static::tryFrom($lower)) {
-			return $case;
-		}
+		$value = (string) $value;
 
 		foreach (static::cases() as $case) {
-			if ($case->name == $value) {
+			if (Strings::compare((string) $case->value, $value)) {
+				return $case;
+			}
+
+			if (Strings::compare($case->name, $value)) {
 				return $case;
 			}
 
 			continue;
+		}
+
+		if (!$required) {
+			return null;
 		}
 
 		throw new ValueError('"'.$value.'" is not a valid backing value for enum "'.static::class.'"');

@@ -66,8 +66,8 @@ final class Arrays
 	{
 		$callback = function(array $a1, array $a2): array {
 			$a1 = array_intersect_key($a1, $a2);
-			$a1 = array_merge($a2, $a1);
-			return $a1;
+			$a1 = array_diff_key($a1, $a2);
+			return array_merge($a2, $a1);
 		};
 
 		$items = $callback($items, $array);
@@ -77,11 +77,11 @@ final class Arrays
 		}
 
 		foreach ($items as $key => $values) {
-			if (!$data = $array[$key] ?? null) {
+			if (!is_array($values) || !$data = $array[$key] ?? null) {
 				continue;
 			}
 
-			$items[$key] = $callback($values, $data);
+			$items[$key] = static::intersect($values, $data, $isRecursive);
 		}
 
 		return $items;

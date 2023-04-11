@@ -125,4 +125,12 @@ final class Sanitize
 
 		return $value;
 	}
+
+
+	public static function float(mixed $value): ?float
+	{
+		$value = Strings::replace((string) $value, '/^e0-9\.\,/');
+		$value = (float) str_replace(',', '.', $value);
+		return $value ?? null;
+	}
 }

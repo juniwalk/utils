@@ -66,8 +66,12 @@ final class Arrays
 	{
 		$callback = function(array $a1, array $a2): array {
 			$a1 = array_intersect_key($a1, $a2);
-			$a1 = array_diff_key($a1, $a2);
-			return array_merge($a2, $a1);
+
+			foreach ($a2 as $key => $value) {
+				$a1[$key] ??= $value;
+			}
+
+			return $a1;
 		};
 
 		$items = $callback($items, $array);

@@ -66,12 +66,7 @@ final class Arrays
 	{
 		$callback = function(array $a1, array $a2): array {
 			$a1 = array_intersect_key($a1, $a2);
-
-			foreach ($a2 as $key => $value) {
-				$a1[$key] ??= $value;
-			}
-
-			return $a1;
+			return static::walk($a2, fn($v, $k) => yield $k => $a1[$k] ?? $v);
 		};
 
 		$items = $callback($items, $array);

@@ -23,6 +23,7 @@ abstract class AbstractGrid extends Control
 	protected DataGrid $grid;
 	protected Translator $translator;
 	protected bool $hasFiltersAlwaysShown = true;
+	protected bool $hasColumnsFixedWidth = true;
 	protected bool $isDisabled = false;
 	protected ?string $title = null;
 
@@ -54,6 +55,18 @@ abstract class AbstractGrid extends Control
 	public function hasFiltersAlwaysShown(): bool
 	{
 		return $this->hasFiltersAlwaysShown;
+	}
+
+
+	public function setColumnsFixedWidth(bool $columnsFixedWidth = true): void
+	{
+		$this->hasColumnsFixedWidth = $columnsFixedWidth;
+	}
+
+
+	public function hasColumnsFixedWidth(): bool
+	{
+		return $this->hasColumnsFixedWidth;
 	}
 
 
@@ -153,7 +166,7 @@ abstract class AbstractGrid extends Control
 		$grid = $this->getComponent('grid');
 
 		foreach ($grid->getColumns() as $column) {
-			if (!$column instanceof ColumnDateTime) {
+			if (!$this->hasColumnsFixedWidth && !$column instanceof ColumnDateTime) {
 				continue;
 			}
 

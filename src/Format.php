@@ -11,6 +11,18 @@ use JuniWalk\Utils\Enums\Interfaces\Currency;
 
 final class Format
 {
+	public static function snakeCase(string $value): string
+	{
+		return strtolower(preg_replace('/[A-Z]/', '_$0', $value));
+	}
+
+
+	public static function camelCase(string $value): string
+	{
+		return lcfirst(implode('', array_map('ucfirst', explode('_', $value))));
+	}
+
+
 	public static function phoneNumber(?string $value, bool $clearUnmatched = false): ?string
 	{
 		static $formats = [

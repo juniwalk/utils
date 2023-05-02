@@ -104,7 +104,7 @@ final class Format
 	}
 
 
-	public static function number(float $value, int $decimals = 2): string
+	public static function number(float|int $value, int $decimals = 2): string
 	{
 		static $size = ['', 'k', 'M', 'B', 'T', 'Q', 'S', 'O', 'N'];
 		$factor = floor((strlen((string) intval($value)) - 1) / 3);
@@ -118,13 +118,23 @@ final class Format
 	}
 
 
-	public static function currency(float $value, Currency $unit, int $decimals = 2): string
+	public static function price(float|int $value, Currency $unit, int $decimals = 2): string
 	{
 		return static::value($value, $unit->label(), $decimals, $unit->format());
 	}
 
 
-	public static function value(float $value, string $unit, int $decimals = 2, string $format = '%1$s %2$s'): string
+	/**
+	 * @deprecated
+	 */
+	public static function currency(float $value, Currency $unit, int $decimals = 2): string
+	{
+		trigger_error('Method '.__METHOD__.' is deprecated use price instead', E_USER_DEPRECATED);
+		return static::price($value, $unit, $decimals);
+	}
+
+
+	public static function value(float|int $value, string $unit, int $decimals = 2, string $format = '%1$s %2$s'): string
 	{
 		$value = number_format($value, $decimals, ',', ' ');
 		return sprintf($format, $value, $unit);

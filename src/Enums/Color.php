@@ -8,9 +8,10 @@
 namespace JuniWalk\Utils\Enums;
 
 use JuniWalk\Utils\Arrays;
+use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
 use JuniWalk\Utils\Strings;
 
-enum Color: string implements Interfaces\LabeledEnum
+enum Color: string implements LabeledEnum
 {
 	use Traits\Labeled;
 

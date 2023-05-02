@@ -15,7 +15,10 @@ use Nette\Utils\Html as NetteHtml;
 
 final class Html extends NetteHtml
 {
-	private static Translator $translator;
+	public const TRANSLATION_REGEX = '/^(?:[a-z][a-z0-9-_]+\.){1,}(?:[a-z][a-z0-9-_]+)$/i';
+
+	public static bool $disableTranslation = false;
+	private static ?Translator $translator = null;
 
 
 	public static function setTranslator(Translator $translator): void
@@ -24,10 +27,10 @@ final class Html extends NetteHtml
 	}
 
 
-	public function addText($text, mixed ... $args): static
+	public function addText($text, mixed ...$args): static
 	{
 		if (is_string($text) && sizeof($args) > 0) {
-			$text = sprintf($text, ... $args);
+			$text = sprintf($text, ...$args);
 		}
 
 		return parent::addText($text);
@@ -103,12 +106,12 @@ final class Html extends NetteHtml
 
 
 	public static function price(
-		float $amount,
+		float|int $amount,
 		Currency $unit,
 		int $decimals = 2,
 		bool $isColoredBySign = false
 	): self {
-		$value = Format::currency($amount, $unit, $decimals);
+		$value = Format::price($amount, $unit, $decimals);
 		$color = $unit->color();
 
 		if ($isColoredBySign && $amount > 0) {
@@ -190,12 +193,16 @@ final class Html extends NetteHtml
 	}
 
 
-	private static function translate(mixed $content, bool $tryTranslate = true): ?string
+	private static function translate(mixed $text, bool $tryTranslate = true): ?string
 	{
-		if (!$content || !$tryTranslate || !isset(static::$translator)) {
-			return (string) $content;
+		if (!$tryTranslate || !static::$disableTranslation || !static::$translator) {
+			return (string) $text;
 		}
 
-		return static::$translator->translate($content);
+		if (!$text || !Strings::match($text, static::TRANSLATION_REGEX)) {
+			return (string) $text;
+		}
+
+		return static::$translator->translate($text);
 	}
 }

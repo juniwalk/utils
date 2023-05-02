@@ -7,7 +7,7 @@
 
 namespace JuniWalk\Utils\Enums;
 
-use JuniWalk\Utils\Enums\Interfaces\CurrencyInterface;
+use JuniWalk\Utils\Enums\Interfaces\Currency as CurrencyInterface;
 
 enum Currency: string implements CurrencyInterface
 {

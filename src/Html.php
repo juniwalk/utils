@@ -195,7 +195,7 @@ final class Html extends NetteHtml
 
 	private static function translate(mixed $text, bool $tryTranslate = true): ?string
 	{
-		if (!$tryTranslate || !static::$disableTranslation || !static::$translator) {
+		if (!$tryTranslate || static::$disableTranslation || !static::$translator) {
 			return (string) $text;
 		}
 

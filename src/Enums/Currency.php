@@ -11,9 +11,9 @@ enum Currency: string implements Interfaces\Currency
 {
 	use Traits\Labeled;
 
+	case CZK = 'czk';
 	case EUR = 'eur';
 	case USD = 'usd';
-	case CZK = 'czk';
 
 
 	public function label(): string

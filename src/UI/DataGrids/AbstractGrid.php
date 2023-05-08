@@ -23,7 +23,7 @@ abstract class AbstractGrid extends Control
 	protected DataGrid $grid;
 	protected Translator $translator;
 	protected bool $hasFiltersAlwaysShown = true;
-	protected bool $hasColumnsFixedWidth = true;
+	protected bool $hasColumnsFixedWidth = false;
 	protected bool $isDisabled = false;
 	protected ?string $title = null;
 

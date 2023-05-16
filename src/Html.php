@@ -10,6 +10,7 @@ namespace JuniWalk\Utils;
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Interfaces\Currency;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
+use Nette\Application\UI\Link;
 use Nette\Localization\Translator;
 use Nette\Utils\Html as NetteHtml;
 
@@ -168,6 +169,20 @@ final class Html extends NetteHtml
 			color: $enum->color(),
 			tryTranslate: $tryTranslate,
 		);
+	}
+
+
+	public static function link(string $label, Link $href, ?string $icon = null, bool $tryTranslate = true): self
+	{
+		$label = static::translate($label, $tryTranslate);
+		$link = static::el('a')->setHref($href);
+
+		if (!empty($icon)) {
+			$icon = static::icon($icon, true);
+			$link->addHtml($icon)->addText(' ');
+		}
+
+		return $link->addHtml($label);
 	}
 
 

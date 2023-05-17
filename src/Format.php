@@ -23,7 +23,7 @@ final class Format
 	}
 
 
-	public static function phoneNumber(?string $value, bool $clearUnmatched = false): ?string
+	public static function phoneNumber(?string $value, bool $clearUnmatched = false, bool $clearAreaCode = false): ?string
 	{
 		static $formats = [
 			'de' => ['+49', '(0?\d{2,3})(\d{4})(\d{4})', '%s %s %s', '{10,11}'],
@@ -60,6 +60,10 @@ final class Format
 
 			if (!Strings::match($phone, '/^[0-9]'.$length.'$/')) {
 				continue;
+			}
+
+			if ($clearAreaCode) {
+				return $number;
 			}
 
 			$area = $area ?: $formats['cz'][0];

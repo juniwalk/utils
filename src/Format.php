@@ -122,9 +122,12 @@ final class Format
 	}
 
 
-	public static function price(float|int $value, Currency $unit, int $decimals = 2): string
+	public static function price(float|int $value, Currency $unit, int $decimals = 2, bool $localeAware = false): string
 	{
-		return static::value($value, $unit->label(), $decimals, $unit->format());
+		return static::value($value, $unit->label(), $decimals, $localeAware
+			? $unit->formatInLocale()
+			: $unit->format()
+		);
 	}
 
 

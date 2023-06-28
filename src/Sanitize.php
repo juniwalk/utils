@@ -127,10 +127,15 @@ final class Sanitize
 	}
 
 
-	public static function float(mixed $value): ?float
+	public static function float(mixed $value, int $precision = null): ?float
 	{
 		$value = Strings::replace((string) $value, '/^e0-9\.\,/');
 		$value = (float) str_replace(',', '.', $value);
+
+		if ($precision) {
+			$value = round($value, $precision);
+		}
+
 		return $value ?? null;
 	}
 }

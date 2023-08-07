@@ -186,6 +186,23 @@ final class Html extends NetteHtml
 	}
 
 
+	public static function code(string $content, string $title = null, bool $allowCopy = false): self
+	{
+		$code = static::el('code', $content);
+
+		if ($allowCopy) {
+			$code->data('copy', $content);
+		}
+
+		if (!empty($title)) {
+			$code->setTitle($content);
+			$code->setText($title);
+		}
+
+		return $code;
+	}
+
+
 	public static function status(
 		mixed $status,
 		bool $hasIcons = true,

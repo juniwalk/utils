@@ -37,7 +37,7 @@ final class Strings extends NetteStrings
 	}
 
 
-	public static function shorten(string $content, int $length = 6, string $token = '...'): string
+	public static function shorten(string $content, int $length = 6, string $token = '…'): string
 	{
 		if (static::length($content) < $length * 2) {
 			return $content;

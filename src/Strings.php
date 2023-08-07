@@ -43,6 +43,19 @@ final class Strings extends NetteStrings
 	}
 
 
+	public static function shorten(string $content, int $length = 6, string $token = '...'): string
+	{
+		if (static::length($content) > $length * 2) {
+			return $content;
+		}
+
+		$start = static::substring($content, 0, $length);
+		$end = static::substring($content, $length * -1);
+
+		return $start.$token.$end;
+	}
+
+
 	private static function transliterate(string $string, string $lang = null): string
 	{
 		switch($lang) {

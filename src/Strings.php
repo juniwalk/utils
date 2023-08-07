@@ -55,6 +55,6 @@ final class Strings extends NetteStrings
 		return match($lang) {
 			'ru' => transliterator_transliterate('Russian-Latin/BGN', $string),
 			default => $string,
-		}
+		};
 	}
 }

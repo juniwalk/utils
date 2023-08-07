@@ -10,23 +10,17 @@ namespace JuniWalk\Utils;
 use Nette\Utils\Strings as NetteStrings;
 use Latte\Essential\Filters as LatteFilters;
 use Latte\Runtime\FilterInfo;
-use ReflectionClass;
-use Throwable;
 
 final class Strings extends NetteStrings
 {
+	/**
+	 * @deprecated
+	 */
 	public static function webalizeClassName(object $object): string
 	{
-		$name = (new ReflectionClass($object))->getShortName();
-
-		if ($object instanceof Throwable) {
-			$name = static::replace($name, '/Exception$/', '');
-		}
-
-		$name = static::replace($name, '/[A-Z]/', ' $0');
-		return static::webalize($name);
+		trigger_error('Method '.__METHOD__.' is deprecated use '.Format::class.'::className instead', E_USER_DEPRECATED);
+		return Format::className($object);
 	}
-
 
 
 	public static function stripHtml(string $content): string
@@ -58,12 +52,9 @@ final class Strings extends NetteStrings
 
 	private static function transliterate(string $string, string $lang = null): string
 	{
-		switch($lang) {
-			case 'ru':
-				return transliterator_transliterate('Russian-Latin/BGN', $string);
-			break;
+		return match($lang) {
+			'ru' => transliterator_transliterate('Russian-Latin/BGN', $string),
+			default => $string,
 		}
-
-		return $string;
 	}
 }

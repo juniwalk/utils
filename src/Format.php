@@ -8,9 +8,24 @@
 namespace JuniWalk\Utils;
 
 use JuniWalk\Utils\Enums\Interfaces\Currency;
+use ReflectionClass;
+use Throwable;
 
 final class Format
 {
+	public static function className(object $class): string
+	{
+		$name = (new ReflectionClass($class))->getShortName();
+
+		if ($object instanceof Throwable) {
+			$name = Strings::replace($name, '/Exception$/', '');
+		}
+
+		$name = Strings::replace($name, '/[A-Z]/', ' $0');
+		return Strings::webalize($name);
+	}
+
+
 	public static function snakeCase(string $value): string
 	{
 		return strtolower(preg_replace('/[A-Z]/', '_$0', $value));

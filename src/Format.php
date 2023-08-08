@@ -105,35 +105,27 @@ final class Format
 	}
 
 
-	public static function size(int $bytes, int $decimals = 2): string
+	public static function size(int $bytes, int $decimals = 2, string $format = '%1$s%2$s'): string
 	{
-		static $size = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+		static $unit = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 		$factor = floor((strlen((string) $bytes) - 1) / 3);
+		$value = $bytes / pow(1024, $factor);
 
 		if ($factor <= 0) {
 			$decimals = 0;
 		}
 
-		return static::value(
-			$bytes / pow(1024, $factor),
-			$size[$factor],
-			$decimals,
-			'%1$s%2$s',
-		);
+		return static::value($value, $unit[$factor], $decimals, $format);
 	}
 
 
 	public static function number(float|int $value, int $decimals = 2, string $format = '%1$s%2$s'): string
 	{
-		static $size = ['', 'k', 'M', 'B', 'T', 'Q', 'S', 'O', 'N'];
+		static $unit = ['', 'k', 'M', 'B', 'T', 'Q', 'S', 'O', 'N'];
 		$factor = floor((strlen((string) intval($value)) - 1) / 3);
+		$value = $value / pow(1000, $factor);
 
-		return static::value(
-			$value / pow(1000, $factor),
-			$size[$factor],
-			$decimals,
-			$format,
-		);
+		return static::value($value, $unit[$factor], $decimals, $format);
 	}
 
 

@@ -123,7 +123,7 @@ final class Format
 	}
 
 
-	public static function number(float|int $value, int $decimals = 2): string
+	public static function number(float|int $value, int $decimals = 2, string $format = '%1$s%2$s'): string
 	{
 		static $size = ['', 'k', 'M', 'B', 'T', 'Q', 'S', 'O', 'N'];
 		$factor = floor((strlen((string) intval($value)) - 1) / 3);
@@ -132,7 +132,7 @@ final class Format
 			$value / pow(1000, $factor),
 			$size[$factor],
 			$decimals,
-			'%1$s%2$s',
+			$format,
 		);
 	}
 

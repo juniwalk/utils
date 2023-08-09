@@ -125,6 +125,10 @@ final class Format
 		$factor = floor((strlen((string) intval($value)) - 1) / 3);
 		$value = $value / pow(1000, $factor);
 
+		if ($value == intval($value)) {
+			$decimals = 0;
+		}
+
 		return static::value($value, $unit[$factor], $decimals, $format);
 	}
 

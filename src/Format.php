@@ -17,7 +17,7 @@ final class Format
 	{
 		$name = (new ReflectionClass($class))->getShortName();
 
-		if ($object instanceof Throwable) {
+		if ($class instanceof Throwable) {
 			$name = Strings::replace($name, '/Exception$/', '');
 		}
 

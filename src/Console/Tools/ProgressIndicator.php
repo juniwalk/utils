@@ -25,13 +25,14 @@ final class ProgressIndicator
 
 	private OutputInterface $errorOutput;
 	private ProgressBar $progress;
-	private bool $throwExceptions = false;
-	private bool $isHideOnFinish = true;
-	private bool $logExceptions = true;
 
-
-	public function __construct(OutputInterface $output, int $max = 0)
-	{
+	public function __construct(
+		OutputInterface $output,
+		int $max = 0,
+		private bool $throwExceptions = false,
+		private bool $hideOnFinish = true,
+		private bool $logExceptions = true,
+	) {
 		$this->errorOutput = $output->getErrorOutput();
 		$this->progress = new ProgressBar($output->section(), $max);
 	}
@@ -51,7 +52,7 @@ final class ProgressIndicator
 
 	public function setHideOnFinish(bool $hideOnFinish = true): void
 	{
-		$this->isHideOnFinish = $hideOnFinish;
+		$this->hideOnFinish = $hideOnFinish;
 	}
 
 
@@ -123,7 +124,7 @@ final class ProgressIndicator
 		$this->setMessage('<info>Process has finished</>');
 		$this->progress->finish();
 
-		if ($this->isHideOnFinish) {
+		if ($this->hideOnFinish) {
 			$this->progress->clear();
 		}
 	}

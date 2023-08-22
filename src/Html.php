@@ -153,6 +153,7 @@ final class Html extends NetteHtml
 	): self {
 		$content = static::translate($content, $tryTranslate);
 		$label = static::translate($label, $tryTranslate);
+		$label = Strings::stripHtml($label);
 
 		return Html::el('option', $label)->value($value)
 			->data('color', $color?->for('text'))

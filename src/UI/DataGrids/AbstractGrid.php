@@ -40,12 +40,6 @@ abstract class AbstractGrid extends Control
 	}
 
 
-	public function setFilter(iterable $filter): void
-	{
-		$this->grid->setFilter($filter);
-	}
-
-
 	public function setFiltersAlwaysShown(bool $filtersAlwaysShown = true): void
 	{
 		$this->hasFiltersAlwaysShown = $filtersAlwaysShown;
@@ -144,6 +138,12 @@ abstract class AbstractGrid extends Control
 		}
 
 		return $column;
+	}
+
+
+	final public function setFilter(array $filter): void
+	{
+		$this->getComponent('grid')->setFilter($filter);
 	}
 
 

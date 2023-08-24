@@ -29,6 +29,7 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 	private QueryWrapper $result;
 	private readonly NettePages $pages;
 	private readonly Translator $translator;
+	private bool $isAjax = true;
 	private array $perPages = [10, 20, 50];
 
 	public function __construct(int $page, int $perPage, Translator $translator)
@@ -73,6 +74,12 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 	}
 
 
+	public function setAjax(bool $ajax): void
+	{
+		$this->isAjax = $ajax;
+	}
+
+
 	public function getIterator(): Traversable
 	{
 		return $this->result?->getIterator();
@@ -105,6 +112,7 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 		$template->setFile(__DIR__.'/templates/pages.latte');
 
 		$template->add('link', $this->link(...));
+		$template->add('isAjax', $this->isAjax);
 		$template->add('pages', $this->pages);
 		$template->add('steps', range(
 			$this->pages->getFirstPage(),
@@ -122,6 +130,7 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 
 		$template->add('perPages', $this->perPages);
 		$template->add('pages', $this->pages);
+		$template->add('isAjax', $this->isAjax);
 
 		$template->render();
 	}

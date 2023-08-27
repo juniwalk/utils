@@ -153,7 +153,7 @@ final class Html extends NetteHtml
 	): self {
 		$content = static::translate($content, $tryTranslate);
 		$labelHtml = static::translate($label, $tryTranslate);
-		$label = Strings::stripHtml($label);
+		$label = Strings::stripHtml($labelHtml);
 
 		if (!$content && $label <> $labelHtml) {
 			$content = $labelHtml;

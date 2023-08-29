@@ -5,7 +5,7 @@
  * @license   MIT License
  */
 
-namespace JuniWalk\Utils\UI\Presenter;
+namespace JuniWalk\Utils\UI\Traits;
 
 use JuniWalk\Utils\Strings;
 use JuniWalk\Utils\UI\Modal;

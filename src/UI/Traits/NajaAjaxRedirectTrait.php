@@ -5,7 +5,7 @@
  * @license   MIT License
  */
 
-namespace JuniWalk\Utils\UI\Presenter;
+namespace JuniWalk\Utils\UI\Traits;
 
 trait NajaAjaxRedirectTrait
 {

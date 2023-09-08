@@ -23,11 +23,19 @@ class LatteExtension extends Extension
 	public function getFilters(): array
 	{
 		return [
+			'status' => $this->filterStatus(...),
 			'phone' => $this->filterPhone(...),
 			'badge' => $this->filterBadge(...),
 			'price' => $this->filterPrice(...),
 			'icon' => $this->filterIcon(...),
 		];
+	}
+
+
+	protected function filterStatus(
+		?bool $status,
+	): Html {
+		return Html::status($status);
 	}
 
 

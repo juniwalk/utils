@@ -9,6 +9,15 @@ namespace JuniWalk\Utils\UI\Traits;
 
 trait NajaAjaxRedirectTrait
 {
+	public function redirect(string $dest, mixed ...$args): void
+	{
+		unset($this->payload->postGet);
+		unset($this->payload->url);
+
+		parent::redirect($dest, ...$args);
+	}
+
+
 	public function redirectAjax(string $dest, mixed ...$args): void
 	{
 		if (!$this->isAjax()) {

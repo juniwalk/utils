@@ -93,13 +93,19 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function execShell(string ... $command): int
+	protected function createProcess(string $command, int $timeout = null): Process
 	{
-		$command = implode(' ', $command);
-
 		$process = Process::fromShellCommandline($command);
 		$process->setTty(Process::isTtySupported());
+		$process->setTimeout($timeout);
 
+		return $process;
+	}
+
+
+	protected function execShell(string ...$command): int
+	{
+		$process = $this->createProcess(implode(' ', $command));
 		return $process->run(function($type, $buffer) {
 			$this->output->write($buffer);
 		});

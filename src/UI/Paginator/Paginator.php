@@ -31,6 +31,7 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 	private readonly Translator $translator;
 	private bool $isAjax = true;
 	private array $perPages = [10, 20, 50];
+	private int $maxPages = 9;
 
 	public function __construct(int $page, int $perPage, Translator $translator)
 	{
@@ -38,6 +39,12 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 		$this->pages = new NettePages;
 		$this->pages->setItemsPerPage($perPage);
 		$this->pages->setPage($page);
+	}
+
+
+	public function setMaxPages(int $maxPages): void
+	{
+		$this->maxPages = $maxPages;
 	}
 
 
@@ -110,14 +117,12 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 	{
 		$template = $this->createTemplate();
 		$template->setFile(__DIR__.'/templates/pages.latte');
-
-		$template->add('link', $this->link(...));
-		$template->add('isAjax', $this->isAjax);
-		$template->add('pages', $this->pages);
-		$template->add('steps', range(
-			$this->pages->getFirstPage(),
-			$this->pages->getPageCount(),
-		));
+		$template->setParameters([
+			'steps' => $this->createSteps(),
+			'link' => $this->link(...),
+			'isAjax' => $this->isAjax,
+			'pages' => $this->pages,
+		]);
 
 		$template->render();
 	}
@@ -127,10 +132,11 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 	{
 		$template = $this->createTemplate();
 		$template->setFile(__DIR__.'/templates/perpage.latte');
-
-		$template->add('perPages', $this->perPages);
-		$template->add('pages', $this->pages);
-		$template->add('isAjax', $this->isAjax);
+		$template->setParameters([
+			'isAjax' => $this->isAjax,
+			'pages' => $this->pages,
+			'perPages' => $this->perPages,
+		]);
 
 		$template->render();
 	}
@@ -152,5 +158,51 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 		};
 
 		return $form;
+	}
+
+
+	protected function createSteps(): array
+	{
+		$pageCount = $this->pages->getPageCount();
+		$page = $this->pages->getPage();
+
+		if ($pageCount <= 1) {
+			return [];
+		}
+
+		if ($pageCount <= $this->maxPages) {
+			return range(
+				$this->pages->getFirstPage(),
+				$pageCount,
+			);
+		}
+
+		$slidingStart = min(
+			$pageCount - $this->maxPages + 2,
+			$page - floor(($this->maxPages - 3) / 2),
+		);
+
+		if ($slidingStart < 2) $slidingStart = 2;
+
+		$slidingEnd = min(
+			$slidingStart + $this->maxPages - 3,
+			$pageCount - 1,
+		);
+
+		$pages = [1];
+
+		if ($slidingStart > 2) {
+			$pages[] = null;
+		}
+
+		$pages = array_merge($pages, range($slidingStart, $slidingEnd));
+
+		if ($slidingEnd < $pageCount - 1) {
+			$pages[] = null;
+		}
+
+		$pages[] = $pageCount;
+
+		return $pages;
 	}
 }

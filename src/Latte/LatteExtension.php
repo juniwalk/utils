@@ -13,6 +13,7 @@ use JuniWalk\Utils\Enums\Interfaces\Currency as CurrencyInterface;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
 use JuniWalk\Utils\Format;
 use JuniWalk\Utils\Html;
+use JuniWalk\Utils\Json;
 use Latte\Extension;
 
 class LatteExtension extends Extension
@@ -28,6 +29,7 @@ class LatteExtension extends Extension
 			'badge' => $this->filterBadge(...),
 			'price' => $this->filterPrice(...),
 			'icon' => $this->filterIcon(...),
+			'readableJson' => $this->filterReadableJson(...),
 		];
 	}
 
@@ -83,5 +85,12 @@ class LatteExtension extends Extension
 		}
 
 		return Html::price((float) $amount, $currency, isColoredBySign: $isColored)->addClass($classes);
+	}
+
+
+	protected function filterReadableJson(
+		mixed $value,
+	): string {
+		return Json::encode($value, Json::PRETTY);
 	}
 }

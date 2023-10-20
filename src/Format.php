@@ -34,7 +34,7 @@ final class Format
 
 	public static function camelCase(string $value): string
 	{
-		return lcfirst(implode('', array_map('ucfirst', explode('_', $value))));
+		return lcfirst(implode('', array_map('ucfirst', preg_split('/[_-]/', $value))));
 	}
 
 

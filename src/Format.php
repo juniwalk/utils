@@ -7,9 +7,14 @@
 
 namespace JuniWalk\Utils;
 
+use DateTimeInterface;
+use JsonSerializable;
 use JuniWalk\Utils\Enums\Interfaces\Currency;
 use ReflectionClass;
+use stdClass;
+use Stringable;
 use Throwable;
+use UnitEnum;
 
 final class Format
 {
@@ -35,6 +40,36 @@ final class Format
 	public static function camelCase(string $value): string
 	{
 		return lcfirst(implode('', array_map('ucfirst', preg_split('/[_-]/', $value))));
+	}
+
+
+	public static function scalarize(mixed $value): mixed
+	{
+		if (!is_object($value) || $value instanceof stdClass) {
+			return $value;
+		}
+
+		if ($value instanceof DateTimeInterface) {
+			return $value->format('c');
+		}
+
+		if ($value instanceof JsonSerializable) {
+			return $value->jsonSerialize();
+		}
+
+		if ($value instanceof Stringable) {
+			return $value->__toString();
+		}
+
+		if ($value instanceof UnitEnum) {
+			return $value->value ?? $value->name;
+		}
+
+		if (method_exists($value, 'getId')) {
+			return (int) $value->getId();
+		}
+
+		return null;
 	}
 
 

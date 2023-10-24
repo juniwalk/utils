@@ -18,7 +18,10 @@ use UnitEnum;
 
 final class Format
 {
-	public static function className(object $class): string
+	/**
+	 * @throws ReflectionException
+	 */
+	public static function className(object|string $class): string
 	{
 		$name = (new ReflectionClass($class))->getShortName();
 

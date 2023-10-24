@@ -46,14 +46,7 @@ final class Json
 			return NetteJson::encode($content, $flags);
 		}
 
-		$content = Arrays::map($content, function(mixed $value): mixed {
-			if (!$value instanceof Stringable) {
-				return $value;
-			}
-
-			return (string) $value;
-		});
-
+		$content = Arrays::map($content, fn($v) => Format::scalarize($v));
 		$json = NetteJson::encode($content, $flags);
 
 		if (!($flags & static::PRETTY)) {

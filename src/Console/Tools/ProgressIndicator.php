@@ -34,7 +34,7 @@ final class ProgressIndicator
 		private bool $logExceptions = true,
 	) {
 		$this->errorOutput = $output->getErrorOutput();
-		$this->progress = new ProgressBar($output->section(), $max);
+		$this->progress = new ProgressBar($output, $max);
 	}
 
 

@@ -27,14 +27,14 @@ final class ProgressIndicator
 	private ProgressBar $progress;
 
 	public function __construct(
-		OutputInterface $output,
+		private OutputInterface $output,
 		int $max = 0,
 		private bool $throwExceptions = false,
 		private bool $hideOnFinish = true,
 		private bool $logExceptions = true,
 	) {
-		$this->errorOutput = $output->getErrorOutput();
 		$this->progress = new ProgressBar($output, $max);
+		$this->errorOutput = $output->getErrorOutput();
 	}
 
 
@@ -78,7 +78,7 @@ final class ProgressIndicator
 
 	public function execute(string $message, callable $callback): mixed
 	{
-		$this->progress->setFormat("[%status%] %message%");
+		$this->progress->setFormat("[%status%] %message%\n");
 		$this->setMessage($this::WORKING, 'status');
 		$this->setMessage($message, 'message');
 		$this->progress->start();
@@ -104,7 +104,7 @@ final class ProgressIndicator
 
 	public function iterate(iterable $values, callable $callback): void
 	{
-		$this->progress->setFormat("\n %percent:3s%% [%bar%] %current%/%max%\n %message%\n");
+		$this->progress->setFormat("\n %percent:3s%% [%bar%] %current%/%max%\n %message%\n\n");
 		$this->setMessage('<info>Preparing...</>', 'message');
 		$this->progress->start(is_countable($values) ? count($values) : null);
 

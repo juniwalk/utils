@@ -114,6 +114,13 @@ final class Arrays
 			$current = &$result;
 
 			foreach($parts as $part) {
+				// ? Ignore unflattening if destination exists
+				// ? but it is not an array to write into
+				if (!is_array($current[$part] ?? [])) {
+					$result[$key] = $value;
+					continue 2;
+				}
+
 				$current = &$current[$part];
 			}
 

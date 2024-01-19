@@ -177,13 +177,16 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function link(string $label, Link|string $href = null, ?string $icon = null, bool $tryTranslate = true): self
+	public static function link(string $label, Link|string $href = null, Html|string $icon = null, bool $tryTranslate = true): self
 	{
 		$label = static::translate($label, $tryTranslate);
 		$link = static::el('a')->setHref($href);
 
 		if (!empty($icon)) {
-			$icon = static::icon($icon, true);
+			if (!$icon instanceof static) {
+				$icon = static::icon($icon, true);
+			}
+
 			$link->addHtml($icon)->addText(' ');
 		}
 

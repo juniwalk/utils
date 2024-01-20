@@ -127,9 +127,10 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function icon(string $icon, bool $fixedWidth = false): self
+	public static function icon(string $icon, bool $fixedWidth = false, Color $color = null): self
 	{
 		$html = static::el('i');
+		$html->addClass($color?->for('text'));
 
 		if (!Strings::match($icon, '/fas|fab|far/i')) {
 			$html->addClass('fas');

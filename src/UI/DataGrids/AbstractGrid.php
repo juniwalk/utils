@@ -194,8 +194,12 @@ abstract class AbstractGrid extends Control
 	abstract protected function createComponentGrid(): DataGrid;
 
 
-	protected function dataLoaded(array $items): void
+	protected function onDataLoaded(array $items): void
 	{
+		if (method_exists($this, 'dataLoaded')) {
+			trigger_error(E_USER_DEPRECATED, 'Method dataLoaded is deprecated, use onDataLoaded instead');
+			$this->dataLoaded($items);
+		}
 	}
 
 
@@ -225,9 +229,16 @@ abstract class AbstractGrid extends Control
 		DataGrid::$iconPrefix = 'fas fa-fw fa-';
 
 		if (($dataSource = $grid->getDataSource()) instanceof DoctrineDataSource) {
-			$dataSource->onDataLoaded[] = $this->dataLoaded(...);
+			$dataSource->onDataLoaded[] = $this->onDataLoaded(...);
 		}
 
+		$grid->setRowCallback($this->onRowRender(...));
+
 		return $grid;
+	}
+
+
+	protected function onRowRender(mixed $item, object $html): void
+	{
 	}
 }

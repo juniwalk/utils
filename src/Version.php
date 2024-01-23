@@ -70,6 +70,30 @@ final class Version implements Stringable
 	}
 
 
+	public function getMajor(): ?int
+	{
+		return $this->major;
+	}
+
+
+	public function getMinor(): ?int
+	{
+		return $this->minor;
+	}
+
+
+	public function getPatch(): ?int
+	{
+		return $this->patch;
+	}
+
+
+	public function getBuild(): ?int
+	{
+		return $this->build;
+	}
+
+
 	public function isPreRelease(): bool
 	{
 		return isset($this->preRelease) || $this->build > 0;

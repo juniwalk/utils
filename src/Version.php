@@ -17,10 +17,10 @@ use ValueError;
  */
 final class Version implements Stringable
 {
-	private const PATTERN = '/^v?(?<major>[0-9]+).(?<minor>[0-9]+).?(?<patch>[0-9]*)[+.-]*(?<preRelease>[a-z]*[a-z0-9]*).?(?<build>[0-9]*)$/i';
+	private const Pattern = '/^v?(?<major>[0-9]+).(?<minor>[0-9]+).?(?<patch>[0-9]*)[+.-]*(?<preRelease>[a-z]*[a-z0-9]*).?(?<build>[0-9]*)$/i';
 
-	final public const SEMVER = '%M.%m.%p-%r.%b';
-	final public const TAG = 'v%M.%m.%p-%r.%b';
+	final public const SemVer = '%M.%m.%p-%r.%b';
+	final public const Tag = 'v%M.%m.%p-%r.%b';
 
 	private ?string $preRelease = null;
 	private ?int $major = null;
@@ -66,7 +66,7 @@ final class Version implements Stringable
 
 	public function __toString(): string
 	{
-		return $this->format(static::TAG);
+		return $this->format(static::Tag);
 	}
 
 
@@ -105,7 +105,7 @@ final class Version implements Stringable
 	 */
 	public function parse(self|string $version = null): static
 	{
-		$parts = Strings::match((string) $version, static::PATTERN);
+		$parts = Strings::match((string) $version, static::Pattern);
 
 		if (!$version || empty($parts)) {
 			throw VersionInvalidException::fromVersion($version);
@@ -168,11 +168,11 @@ final class Version implements Stringable
 	public function compare(self|string $version, ?string $operator = null): bool|int
 	{
 		if ($version instanceof static) {
-			$version = $version->format(static::SEMVER);
+			$version = $version->format(static::SemVer);
 		}
 
 		return version_compare(
-			$this->format(static::SEMVER),
+			$this->format(static::SemVer),
 			$version,
 			$operator
 		);

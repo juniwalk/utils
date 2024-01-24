@@ -17,6 +17,8 @@ use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Column\ColumnDateTime;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
+use Ublaboo\DataGrid\Row;
+use UnexpectedValueException;
 
 abstract class AbstractGrid extends Control
 {
@@ -88,17 +90,28 @@ abstract class AbstractGrid extends Control
 	}
 
 
+	public function getRow(mixed $item): Row
+	{
+		return new Row($this->grid, $item, $this->grid->getPrimaryKey());
+	}
+
+
 	/**
 	 * @throws UnexpectedValueException
 	 */
 	public function addColumnEnum(string $name, string $title, string $enum, bool $hasBlockButtons = false): Column
 	{
+		if (!enum_exists($enum) || !is_a($enum, LabeledEnum::class, true)) {
+			throw new UnexpectedValueException('$enum has to be instance of '.LabeledEnum::class);
+		}
+
 		$signalMethod = $this->formatSignalMethod($name);
 
 		if (!method_exists($this, $signalMethod)) {
 			return $this->grid->addColumnText($name, $title)->setAlign('right')
-				->setRenderer(function($item) use ($name, $hasBlockButtons): Html {
-					$enum = Html::badgeEnum($item->{'get'.$name}());
+				->setRenderer(function($item) use ($name, $enum, $hasBlockButtons): Html {
+					$value = $this->getRow($item)->getValue($name);
+					$enum = Html::badgeEnum($enum::tryMake($value));
 
 					if ($hasBlockButtons) {
 						$enum->addClass('d-block text-left');
@@ -108,15 +121,9 @@ abstract class AbstractGrid extends Control
 				});
 		}
 
-		if (!enum_exists($enum) || !is_a($enum, LabeledEnum::class, true)) {
-			throw new \UnexpectedValueException('$enum has to be instance of '.LabeledEnum::class);
-		}
-
 		$column = $this->grid->addColumnStatus($name, $title)->setAlign('right');
 		$column->setTemplate(__DIR__.'/templates/datagrid_column_status.latte');
-		$column->onChange[] = function($id, $value) use ($signalMethod, $enum): void {
-			$this->$signalMethod((int) $id, $enum::tryFrom($value));
-		};
+		$column->onChange[] = fn($id, $value) => $this->$signalMethod((int) $id, $enum::tryMake($value));
 
 		foreach ($enum::cases() as $item) {
 			$class = ($item->color() ?? Color::Secondary)->for('btn');
@@ -130,8 +137,7 @@ abstract class AbstractGrid extends Control
 
 			if ($icon = $item->icon()) {
 				$icon = Strings::replace($icon, '/^fa-/i');
-				$option->setIconSecondary($icon)
-					->setIcon($icon);
+				$option->setIcon($icon)->setIconSecondary($icon);
 			}
 
 			$option->endOption();
@@ -197,7 +203,7 @@ abstract class AbstractGrid extends Control
 	protected function onDataLoaded(array $items): void
 	{
 		if (method_exists($this, 'dataLoaded')) {
-			trigger_error(E_USER_DEPRECATED, 'Method dataLoaded is deprecated, use onDataLoaded instead');
+			trigger_error('Method dataLoaded is deprecated, use onDataLoaded instead', E_USER_DEPRECATED);
 			$this->dataLoaded($items);
 		}
 	}

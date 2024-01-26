@@ -38,16 +38,16 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function highlight(mixed $content, Color $color = Color::Primary, bool $tryTranslate = true): self
+	public static function highlight(mixed $content, Color $color = Color::Primary, bool $translate = true): self
 	{
-		return static::el('strong')->addText(static::translate($content, $tryTranslate))
+		return static::el('strong')->addText(static::translate($content, $translate))
 			->addClass($color->for('text'));
 	}
 
 
-	public static function subtext(mixed $content, Color $color = Color::Secondary, bool $tryTranslate = true): self
+	public static function subtext(mixed $content, Color $color = Color::Secondary, bool $translate = true): self
 	{
-		return static::el('i')->addText(static::translate($content, $tryTranslate))
+		return static::el('i')->addText(static::translate($content, $translate))
 			->addClass($color->for('text'));
 	}
 
@@ -56,10 +56,10 @@ final class Html extends NetteHtml
 		string $content,
 		Color $color = Color::Secondary,
 		string $icon = null,
-		bool $tryTranslate = true,
+		bool $translate = true,
 		bool $isPill = false
 	): self {
-		$content = static::translate($content, $tryTranslate);
+		$content = static::translate($content, $translate);
 		$badge = static::el('span class="badge"')
 			->addClass($color->for('badge'));
 
@@ -78,7 +78,7 @@ final class Html extends NetteHtml
 
 	public static function badgeEnum(
 		LabeledEnum $enum,
-		bool $tryTranslate = true,
+		bool $translate = true,
 		bool $isPill = false
 	): self {
 		if ($icon = $enum->icon()) {
@@ -90,19 +90,9 @@ final class Html extends NetteHtml
 			$enum->label(),
 			$enum->color(),
 			$icon,
-			$tryTranslate,
+			$translate,
 			$isPill
 		);
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public static function enumBadge(LabeledEnum $enum): self
-	{
-		trigger_error('Method '.__METHOD__.' is deprecated use badgeEnum instead', E_USER_DEPRECATED);
-		return static::badgeEnum($enum);
 	}
 
 
@@ -123,7 +113,7 @@ final class Html extends NetteHtml
 			$color = Color::Danger;
 		}
 
-		return self::badge($value, $color, isPill: true, tryTranslate: false);
+		return self::badge($value, $color, isPill: true, translate: false);
 	}
 
 
@@ -150,10 +140,10 @@ final class Html extends NetteHtml
 		string $content = null,
 		string $icon = null,
 		Color $color = null,
-		bool $tryTranslate = true,
+		bool $translate = true,
 	): self {
-		$content = static::translate($content, $tryTranslate);
-		$labelHtml = static::translate($label, $tryTranslate);
+		$content = static::translate($content, $translate);
+		$labelHtml = static::translate($label, $translate);
 		$label = Strings::stripHtml($labelHtml);
 
 		if (!$content && $label <> $labelHtml) {
@@ -167,26 +157,28 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function optionEnum(LabeledEnum $enum, bool $tryTranslate = true, bool $includeBadge = false): self {
+	public static function optionEnum(LabeledEnum $enum, bool $badge = false, bool $translate = true): self
+	{
 		$option = Html::option(
 			value: $enum->value,
 			label: $enum->label(),
 			icon: $enum->icon(),
 			color: $enum->color(),
-			tryTranslate: $tryTranslate,
+			translate: $translate,
 		);
 
-		if ($includeBadge) {
-			$option->data('content', Html::badgeEnum($enum));
+		if ($badge === true) {
+			$badge = Html::badgeEnum($enum, $translate);
+			$option->data('content', $badge);
 		}
 
 		return $option;
 	}
 
 
-	public static function link(string $label, Link|string $href = null, self|string $icon = null, bool $tryTranslate = true): self
+	public static function link(string $label, Link|string $href = null, self|string $icon = null, bool $translate = true): self
 	{
-		$label = static::translate($label, $tryTranslate);
+		$label = static::translate($label, $translate);
 		$link = static::el('a')->setHref($href);
 
 		if (!empty($icon)) {
@@ -240,9 +232,9 @@ final class Html extends NetteHtml
 	}
 
 
-	private static function translate(mixed $text, bool $tryTranslate = true): ?string
+	private static function translate(mixed $text, bool $translate = true): ?string
 	{
-		if (!$tryTranslate || static::$disableTranslation || !static::$translator) {
+		if (!$translate || static::$disableTranslation || !static::$translator) {
 			return (string) $text;
 		}
 

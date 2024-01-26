@@ -167,14 +167,20 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function optionEnum(LabeledEnum $enum, bool $tryTranslate = true): self {
-		return Html::option(
+	public static function optionEnum(LabeledEnum $enum, bool $tryTranslate = true, bool $includeBadge = false): self {
+		$option = Html::option(
 			value: $enum->value,
 			label: $enum->label(),
 			icon: $enum->icon(),
 			color: $enum->color(),
 			tryTranslate: $tryTranslate,
 		);
+
+		if ($includeBadge) {
+			$option->data('content', Html::badgeEnum($enum));
+		}
+
+		return $option;
 	}
 
 

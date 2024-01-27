@@ -232,6 +232,19 @@ final class Html extends NetteHtml
 	}
 
 
+	public static function progressBar(float $percent, Color $color): self
+	{
+		$percent = max(0, min(100, round($percent, 0)));
+
+		$progressBar = static::el('div class="progress-bar progress-bar-striped"')
+			->addStyle('width: '.$percent.'%')
+			->addClass($color->for('bg'));
+
+		return static::el('div class="progress"')
+			->addHtml($progressBar);
+	}
+
+
 	private static function translate(mixed $text, bool $translate = true): ?string
 	{
 		if (!$translate || static::$disableTranslation || !static::$translator) {

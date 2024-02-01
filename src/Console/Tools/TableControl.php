@@ -25,14 +25,14 @@ final class TableControl
 	}
 
 
-	public function setHeaders(string ... $columns): void
+	public function setHeaders(string ...$columns): void
 	{
 		$this->table->setHeaders($columns);
 		$this->columns = sizeof($columns);
 	}
 
 
-	public function setRow(int $id, mixed ... $columns): void
+	public function setRow(int $id, mixed ...$columns): void
 	{
 		$this->rows[$id] = $columns;
 	}
@@ -44,7 +44,7 @@ final class TableControl
 	}
 
 
-	public function setSummary(string $message, mixed ... $columns): void
+	public function setSummary(string $message, mixed ...$columns): void
 	{
 		$span = $this->columns - sizeof($columns);
 

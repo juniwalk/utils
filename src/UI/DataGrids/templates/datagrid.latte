@@ -13,21 +13,21 @@
 
 			<div class="btn-group mr-2" n:if="$control->hasOuterFilterRendering() && $filters && !$hasFiltersAlwaysShown">
 				<a href="#" class="btn bg-info btn-sm" data-toggle="collapse" data-target="#datagrid-{$controlName}-row-filters">
-					<i class="{$iconPrefix}filter"></i> {_ublaboo_datagrid.show_filter}
+					<i class="fas fa-filter"></i> {_ublaboo_datagrid.show_filter}
 				</a>
 			</div>
 
 			<div class="btn-group mr-2" n:if="$control->canHideColumns()">
-				<a href="#" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="{$iconPrefix}cog"></i></a>
+				<a href="#" class="btn btn-sm btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cog"></i></a>
 				<div class="dropdown-menu dropdown-menu-right">
 
-					<a n:href="showAllColumns!" class="dropdown-item ajax"><i class="{$iconPrefix}eye"></i> {_ublaboo_datagrid.show_all_columns}</a>
-					<a n:href="showDefaultColumns!" class="dropdown-item ajax" n:if="$control->hasSomeColumnDefaultHide()"><i class="{$iconPrefix}redo"></i>{_ublaboo_datagrid.show_default_columns}</a>
+					<a n:href="showAllColumns!" class="dropdown-item ajax"><i class="fas fa-eye"></i> {_ublaboo_datagrid.show_all_columns}</a>
+					<a n:href="showDefaultColumns!" class="dropdown-item ajax" n:if="$control->hasSomeColumnDefaultHide()"><i class="fas fa-redo"></i>{_ublaboo_datagrid.show_default_columns}</a>
 
 					<div class="dropdown-divider"></div>
 
 					<a n:foreach="$columnsVisibility as $key => $vis" class="ajax dropdown-item" href="{if $vis[visible]}{link hideColumn! $key}{else}{link showColumn! $key}{/if}">
-						<i n:class="$iconPrefix.($vis['visible'] ? check-square : square)"></i>
+						<i n:class="$vis['visible'] ? 'fas fa-check-square' : 'far fa-square'"></i>
 						{include #column-header, column => $vis['column']}
 					</a>
 
@@ -73,14 +73,14 @@
 				<th n:foreach="$columns as $key => $column" n:attr="$column->getElementForRender('th', $key)->attrs">
 					<a n:href="sort! $control->getSortNext($column)" n:class="ajax, $column->isSortedBy() ? sort" id="datagrid-sort-{$key}" n:tag-if="$column->isSortable()">
 						<span n:if="$column->isSortable()">
-							<i class="{$iconPrefix}caret-up" n:if="$column->isSortedBy() && $column->isSortAsc()"></i>
-							<i class="{$iconPrefix}caret-down" n:if="$column->isSortedBy() && !$column->isSortAsc()"></i>
-							<i class="{$iconPrefix}sort" n:if="!$column->isSortedBy()"></i>
+							<i class="fas fa-caret-up" n:if="$column->isSortedBy() && $column->isSortAsc()"></i>
+							<i class="fas fa-caret-down" n:if="$column->isSortedBy() && !$column->isSortAsc()"></i>
+							<i class="fas fa-sort" n:if="!$column->isSortedBy()"></i>
 						</span>
 						{include #column-header, column => $column}
 					</a>
 					<a n:href="resetColumnFilter! $key" data-datagrid-reset-filter-by-column="{$key}" class="text-danger ajax float-right" title="{_ublaboo_datagrid.reset_filter}" n:if="$control->hasColumnReset() && isset($filters[$key]) && $filters[$key]->isValueSet()">
-						<i class="{$iconPrefix}times"></i>
+						<i class="fas fa-times"></i>
 					</a>
 				</th>
 
@@ -152,7 +152,7 @@
 							{/foreach}
 							<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-right text-nowrap">
 								<span class="handle-sort btn btn-xs btn-secondary" n:if="$control->isSortable()">
-									<i n:block="icon-arrows-v" class="{$iconPrefix}arrows-v {$iconPrefix}arrows-alt-v"></i>
+									<i n:block="icon-arrows-v" class="fas fa-arrows-up-down"></i>
 								</span>
 								{if $inlineEdit && $row->hasInlineEdit()}
 									{$inlineEdit->renderButton($row)|noescape}
@@ -273,7 +273,7 @@
 </form>
 
 	<div class="overlay" n:if="$isDisabled">
-		<i class="{$iconPrefix}ban fa-3x text-danger"></i>
+		<i class="fa-ban fa-3x text-danger"></i>
 	</div>
 
 {/snippetArea}

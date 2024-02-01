@@ -136,7 +136,6 @@ abstract class AbstractGrid extends Control
 				->setClass($class);
 
 			if ($icon = $item->icon()) {
-				$icon = Strings::replace($icon, '/^fa-/i');
 				$option->setIcon($icon)->setIconSecondary($icon);
 			}
 
@@ -200,6 +199,7 @@ abstract class AbstractGrid extends Control
 	abstract protected function createComponentGrid(): DataGrid;
 
 
+	/** @deprecated */
 	protected function onDataLoaded(array $items): void
 	{
 		if (method_exists($this, 'dataLoaded')) {
@@ -232,6 +232,7 @@ abstract class AbstractGrid extends Control
 			$grid->setTranslator($this->translator);
 		}
 
+		// TODO: Remove in the future as this is in the template
 		DataGrid::$iconPrefix = 'fas fa-fw fa-';
 
 		if (($dataSource = $grid->getDataSource()) instanceof DoctrineDataSource) {

@@ -152,7 +152,7 @@
 							{/foreach}
 							<td n:if="$actions || $control->isSortable() || $itemsDetail || $inlineEdit || $inlineAdd" class="col-action text-right text-nowrap">
 								<span class="handle-sort btn btn-xs btn-secondary" n:if="$control->isSortable()">
-									<i n:block="icon-arrows-v" class="fas fa-arrows-up-down"></i>
+									<i n:block="icon-arrows-v" class="fas fa-arrows-up-down fa-fw"></i>
 								</span>
 								{if $inlineEdit && $row->hasInlineEdit()}
 									{$inlineEdit->renderButton($row)|noescape}

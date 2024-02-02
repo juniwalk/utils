@@ -73,14 +73,14 @@
 				<th n:foreach="$columns as $key => $column" n:attr="$column->getElementForRender('th', $key)->attrs">
 					<a n:href="sort! $control->getSortNext($column)" n:class="ajax, $column->isSortedBy() ? sort" id="datagrid-sort-{$key}" n:tag-if="$column->isSortable()">
 						<span n:if="$column->isSortable()">
-							<i class="fas fa-caret-up" n:if="$column->isSortedBy() && $column->isSortAsc()"></i>
-							<i class="fas fa-caret-down" n:if="$column->isSortedBy() && !$column->isSortAsc()"></i>
-							<i class="fas fa-sort" n:if="!$column->isSortedBy()"></i>
+							<i class="fas fa-caret-up fa-fw" n:if="$column->isSortedBy() && $column->isSortAsc()"></i>
+							<i class="fas fa-caret-down fa-fw" n:if="$column->isSortedBy() && !$column->isSortAsc()"></i>
+							<i class="fas fa-sort fa-fw" n:if="!$column->isSortedBy()"></i>
 						</span>
 						{include #column-header, column => $column}
 					</a>
 					<a n:href="resetColumnFilter! $key" data-datagrid-reset-filter-by-column="{$key}" class="text-danger ajax float-right" title="{_ublaboo_datagrid.reset_filter}" n:if="$control->hasColumnReset() && isset($filters[$key]) && $filters[$key]->isValueSet()">
-						<i class="fas fa-times"></i>
+						<i class="fas fa-times fa-fw"></i>
 					</a>
 				</th>
 

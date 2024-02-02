@@ -9,6 +9,7 @@ namespace JuniWalk\Utils\Console;
 
 use JuniWalk\Utils\Console\Input\ArrayInput;
 use JuniWalk\Utils\Exceptions\CommandFailedException;
+use JuniWalk\Utils\Exceptions\ConfirmationDeniedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -46,10 +47,10 @@ abstract class AbstractCommand extends Command
 		}
 
 		foreach ($this->questions as $question) {
-			$answer = $question($this);
-			$output->writeln('');
+			try {
+				$question($this);
 
-			if ($answer === false) {
+			} catch (ConfirmationDeniedException) {
 				$this->terminate();
 				break;
 			}
@@ -114,16 +115,14 @@ abstract class AbstractCommand extends Command
 
 	protected function terminate(): void
 	{
-		$this->setCode(function(): int {
-			return Command::SUCCESS;
-		});
+		$this->setCode(fn(): int => Command::SUCCESS);
 	}
 
 
 	protected function confirm(string $message, bool $default = true): bool
 	{
 		$question = new ConfirmationQuestion($message.' <comment>[Y,n]</> ', $default);
-		return $this->ask($question);
+		return $this->ask($question, true);
 	}
 
 
@@ -140,9 +139,24 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function ask(Question $question): mixed
+	/**
+	 * @throws ConfirmationDeniedException
+	 */
+	protected function ask(Question $question, bool $throw = false): mixed
 	{
-		return $this->getHelper('question')->ask($this->input, $this->output, $question);
+		$speaker = $this->getHelper('question');
+		$answer = $speaker->ask(
+			$this->input,
+			$this->output,
+			$question,
+		);
+
+		if (!$answer && $throw && $question instanceof ConfirmationQuestion) {
+			throw new ConfirmationDeniedException;
+		}
+
+		$this->output->writeln('');
+		return $answer;
 	}
 
 

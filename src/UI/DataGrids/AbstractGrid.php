@@ -10,7 +10,6 @@ namespace JuniWalk\Utils\UI\DataGrids;
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
 use JuniWalk\Utils\Html;
-use JuniWalk\Utils\Strings;
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
 use Ublaboo\DataGrid\Column\Column;
@@ -99,38 +98,34 @@ abstract class AbstractGrid extends Control
 	/**
 	 * @throws UnexpectedValueException
 	 */
-	public function addColumnEnum(string $name, string $title, string $enum, bool $hasBlockButtons = false): Column
+	public function addColumnEnum(string $name, string $title, string $enum, bool $blockButtons = false): Column
 	{
 		if (!enum_exists($enum) || !is_a($enum, LabeledEnum::class, true)) {
-			throw new UnexpectedValueException('$enum has to be instance of '.LabeledEnum::class);
+			throw new UnexpectedValueException('$enum has to implement '.LabeledEnum::class);
 		}
 
 		$signalMethod = $this->formatSignalMethod($name);
+		$blockButtons = $blockButtons ? null : false;
 
 		if (!method_exists($this, $signalMethod)) {
 			return $this->grid->addColumnText($name, $title)->setAlign('right')
-				->setRenderer(function($item) use ($name, $enum, $hasBlockButtons): Html {
-					$value = $this->getRow($item)->getValue($name);
-					$enum = Html::badgeEnum($enum::tryMake($value));
-
-					if ($hasBlockButtons) {
-						$enum->addClass('d-block text-left');
+				->setRenderer(function($item) use ($name, $enum, $blockButtons): ?Html {
+					if (!$value = $this->getRow($item)->getValue($name)) {
+						return null;
 					}
 
-					return $enum;
+					return Html::badgeEnum($enum::make($value))
+						->addClass($blockButtons ?? 'd-block text-right');
 				});
 		}
 
 		$column = $this->grid->addColumnStatus($name, $title)->setAlign('right');
 		$column->setTemplate(__DIR__.'/templates/datagrid_column_status.latte');
-		$column->onChange[] = fn($id, $value) => $this->$signalMethod((int) $id, $enum::tryMake($value));
+		$column->onChange[] = fn($id, $value) => $this->$signalMethod((int) $id, $enum::make($value));
 
 		foreach ($enum::cases() as $item) {
 			$class = ($item->color() ?? Color::Secondary)->for('btn');
-
-			if ($hasBlockButtons == true) {
-				$class .= ' btn-block text-left';
-			}
+			$class .= $blockButtons ?? ' btn-block text-right';
 
 			$option = $column->addOption($item->value, $item->label())
 				->setClass($class);
@@ -199,7 +194,6 @@ abstract class AbstractGrid extends Control
 	abstract protected function createComponentGrid(): DataGrid;
 
 
-	/** @deprecated */
 	protected function onDataLoaded(array $items): void
 	{
 		if (method_exists($this, 'dataLoaded')) {

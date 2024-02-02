@@ -17,11 +17,17 @@ use Symfony\Component\Console\Terminal;
 
 final class ProgressIndicator
 {
-	public const WORKING = '....';
-	public const SUCCESS = '<info> ok </>';
-	public const WARNING = '<comment>warn</>';
-	public const ERROR = '<fg=red>FAIL</>';
-	public const SKIPPED = '<comment>skip</>';
+	public const Working = '....';
+	public const Success = '<info> ok </>';
+	public const Warning = '<comment>warn</>';
+	public const Error = '<fg=red>FAIL</>';
+	public const Skipped = '<comment>skip</>';
+
+	public const WORKING = self::Working;
+	public const SUCCESS = self::Success;
+	public const WARNING = self::Warning;
+	public const ERROR = self::Error;
+	public const SKIPPED = self::Skipped;
 
 	private OutputInterface $errorOutput;
 	private ProgressBar $progress;
@@ -83,7 +89,7 @@ final class ProgressIndicator
 	public function execute(string $message, callable $callback): mixed
 	{
 		$this->progress->setFormat("[%status%] %message%\n");
-		$this->setMessage($this::WORKING, 'status');
+		$this->setMessage(self::Working, 'status');
 		$this->setMessage($message, 'message');
 		$this->progress->start();
 
@@ -91,12 +97,12 @@ final class ProgressIndicator
 			return $callback($this);
 
 		} catch (Throwable $e) {
-			$this->setMessage($this::ERROR, 'status');
+			$this->setMessage(self::Error, 'status');
 			$this->render($e);
 
 		} finally {
-			if ($this->getMessage('status') === $this::WORKING) {
-				$this->setMessage($this::SUCCESS, 'status');
+			if ($this->getMessage('status') === self::Working) {
+				$this->setMessage(self::Success, 'status');
 			}
 
 			$this->progress->finish();

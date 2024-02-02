@@ -163,9 +163,9 @@ final class ProgressIndicator
 		}
 
 		$messages[] = $emptyLine;
-		$messages[] = PHP_EOL;
+		// $messages[] = PHP_EOL;
 
-		$this->errorOutput->write($messages);
+		$this->errorOutput->writeln($messages);
 
 		if ($this->logExceptions) {
 			Debugger::log($e);

@@ -163,7 +163,7 @@ final class ProgressIndicator
 		}
 
 		$messages[] = $emptyLine;
-		// $messages[] = PHP_EOL;
+		$messages[] = '';
 
 		$this->errorOutput->writeln($messages);
 

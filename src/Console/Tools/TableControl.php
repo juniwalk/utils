@@ -16,6 +16,7 @@ final class TableControl
 {
 	private Table $table;
 	private int $columns = 0;
+	private array $headers = [];
 	private array $rows = [];
 
 
@@ -29,6 +30,7 @@ final class TableControl
 	{
 		$this->table->setHeaders($columns);
 		$this->columns = sizeof($columns);
+		$this->headers = $columns;
 	}
 
 

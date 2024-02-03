@@ -55,6 +55,12 @@ final class TableControl
 	}
 
 
+	public function getRowsWithHeaders(): array
+	{
+		return [$this->headers] + $this->rows;
+	}
+
+
 	public function render(): void
 	{
 		$this->table->setRows($this->rows);

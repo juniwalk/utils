@@ -145,4 +145,21 @@ final class Arrays
 
 		return $result;
 	}
+
+
+	public static function categorize(array $items, callable $callback): array
+	{
+		$result = [];
+
+		foreach ($items as $item) {
+			if (!$category = $callback($item)) {
+				continue;
+			}
+
+			$result[$category][] = $item;
+		}
+
+		ksort($result, SORT_NUMERIC);
+		return $result;
+	}
 }

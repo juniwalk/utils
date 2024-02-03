@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils;
 
 use DateTimeInterface;
+use JuniWalk\Utils\Strings;
 use Nette\Utils\DateTime as NetteDate;
 
 class DateTime extends NetteDate
@@ -19,6 +20,26 @@ class DateTime extends NetteDate
 		}
 
 		return static::from($time);
+	}
+
+
+	public static function fromFileName(string $fileName, string $format = 'YmdHis'): ?static
+	{
+		$fileName = basename($fileName);
+		$pattern = strtr($format, [
+			'Y' => '([0-9]{4})',
+			'm' => '([0-9]{2})',
+			'd' => '([0-9]{2})',
+			'H' => '([0-9]{2})',
+			'i' => '([0-9]{2})',
+			's' => '([0-9]{2})',
+		]);
+
+		if (!$matches = Strings::match($fileName, '/('.$pattern.')/i')) {
+			return null;
+		}
+
+		return static::createFromFormat($format, $matches[0]);
 	}
 
 

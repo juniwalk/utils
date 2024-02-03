@@ -152,11 +152,13 @@ final class Arrays
 		$result = [];
 
 		foreach ($items as $item) {
-			if (!$category = $callback($item)) {
+			$category = $callback($item);
+
+			if (!$key = Format::scalarize($category)) {
 				continue;
 			}
 
-			$result[$category][] = $item;
+			$result[$key][] = $item;
 		}
 
 		ksort($result, SORT_NUMERIC);

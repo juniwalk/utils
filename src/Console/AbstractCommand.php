@@ -116,6 +116,7 @@ abstract class AbstractCommand extends Command
 	protected function terminate(): void
 	{
 		$this->setCode(fn(): int => Command::SUCCESS);
+		$this->input->setInteractive(false);
 	}
 
 

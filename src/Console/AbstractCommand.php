@@ -122,7 +122,7 @@ abstract class AbstractCommand extends Command
 
 	protected function confirm(string $message, bool $default = true): bool
 	{
-		$question = new ConfirmationQuestion($message.' <comment>[Y,n]</> ', $default);
+		$question = new ConfirmationQuestion($message.' <comment>['.($default ? 'Y,n' : 'y,N').']</> ', $default);
 		return $this->ask($question, true);
 	}
 

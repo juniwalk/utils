@@ -62,35 +62,49 @@ abstract class AbstractCommand extends Command
 	 * @throws CommandNotFoundException
 	 * @throws CommandFailedException
 	 */
-	protected function execCommands(array $commandList, callable $callback = null): void
+	protected function execCommands(array $commandList, callable $callback = null, OutputInterface $output = null): void
 	{
-		$application = $this->getApplication();
-
 		if (empty($commandList)) {
 			return;
 		}
 
 		foreach ($commandList as $commandName => $arguments) {
-			$command = $application->get($commandName);
-			$definition = $command->getDefinition();
-
-			if ($definition->hasArgument('command')) {
-				$arguments['command'] = $commandName;
-			}
-
-			$input = new ArrayInput($arguments, $definition);
-			$input->setInteractive(false);
-
-			if ($callback && $callback($command, $input) === false) {
-				continue;
-			}
-
-			$code = $command->run($input, $this->output);
-
-			if ($code === Command::FAILURE) {
-				throw CommandFailedException::fromName($commandName);
-			}
+			$this->execCommand($commandName, $arguments, $callback, $output);
 		}
+	}
+
+
+	/**
+	 * @throws CommandNotFoundException
+	 * @throws CommandFailedException
+	 */
+	protected function execCommand(
+		string $commandName,
+		array $arguments,
+		callable $callback = null,
+		OutputInterface $output = null,
+	): int {
+		$command = $this->getApplication()->get($commandName);
+		$definition = $command->getDefinition();
+
+		if ($definition->hasArgument('command')) {
+			$arguments['command'] = $commandName;
+		}
+
+		$input = new ArrayInput($arguments, $definition);
+		$input->setInteractive(false);
+
+		if ($callback && $callback($command, $input) === false) {
+			return Command::SUCCESS;
+		}
+
+		$code = $command->run($input, $output ?? $this->output);
+
+		if ($code === Command::FAILURE) {
+			throw CommandFailedException::fromName($commandName);
+		}
+
+		return $code ?? Command::SUCCESS;
 	}
 
 

@@ -74,35 +74,47 @@ final class ProgressIndicator
 	}
 
 
-	public function getMessage(string $name = 'message'): ?string
-	{
-		return $this->progress->getMessage($name);
-	}
-
-
 	public function setMessage(string $message, string $name = 'message'): void
 	{
 		$this->progress->setMessage($message, $name);
 	}
 
 
+	public function getMessage(string $name = 'message'): ?string
+	{
+		return $this->progress->getMessage($name);
+	}
+
+
+	public function setStatus(string $message): void
+	{
+		$this->progress->setMessage($message, 'status');
+	}
+
+
+	public function getStatus(): string
+	{
+		return $this->progress->getMessage('status');
+	}
+
+
 	public function execute(string $message, callable $callback): mixed
 	{
 		$this->progress->setFormat("[%status%] %message%\n");
-		$this->setMessage(self::Working, 'status');
 		$this->setMessage($message, 'message');
+		$this->setStatus(self::Working);
 		$this->progress->start();
 
 		try {
 			return $callback($this);
 
 		} catch (Throwable $e) {
-			$this->setMessage(self::Error, 'status');
+			$this->setStatus(self::Error);
 			$this->render($e);
 
 		} finally {
-			if ($this->getMessage('status') === self::Working) {
-				$this->setMessage(self::Success, 'status');
+			if ($this->getStatus() === self::Working) {
+				$this->setStatus(self::Success);
 			}
 
 			$this->progress->finish();

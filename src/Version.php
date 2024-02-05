@@ -17,7 +17,7 @@ use ValueError;
  */
 final class Version implements Stringable
 {
-	private const Pattern = '/^v?(?<major>[0-9]+).(?<minor>[0-9]+).?(?<patch>[0-9]*)[+.-]*(?<preRelease>[a-z]*[a-z0-9]*).?(?<build>[0-9]*)$/i';
+	private const Pattern = '/^v?(?<major>[0-9]+).(?<minor>[0-9]+).?(?<patch>[0-9]*)([+.-]*(?<preRelease>[a-z][a-z0-9]*))?.?(?<build>[0-9]*)$/i';
 
 	final public const SemVer = '%M.%m.%p-%r.%b';
 	final public const Tag = 'v%M.%m.%p-%r.%b';
@@ -137,7 +137,7 @@ final class Version implements Stringable
 			'%b' => $this->build,
 		]);
 
-		return trim($version, '+.-');
+		return str_replace('-.', '.', trim($version, '+.-'));
 	}
 
 

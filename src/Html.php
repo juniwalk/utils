@@ -38,6 +38,15 @@ final class Html extends NetteHtml
 	}
 
 
+	public function hasAnyClassOf(string ...$class): bool
+	{
+		return (bool) array_intersect_key(
+			array_fill_keys($class, true),
+			$this->getClass() ?? [],
+		);
+	}
+
+
 	public static function highlight(mixed $content, Color $color = Color::Primary, bool $translate = true): self
 	{
 		return static::el('strong')->addText(static::translate($content, $translate))
@@ -119,10 +128,12 @@ final class Html extends NetteHtml
 
 	public static function icon(string $icon, bool $fixedWidth = false, Color $color = null): self
 	{
-		$html = static::el('i');
+		static $types = ['fa', 'fas', 'fab', 'far', 'fi'];
+
+		$html = static::el('i')->addClass($icon);
 		$html->addClass($color?->for('text'));
 
-		if (!Strings::match($icon, '/fas|fab|far|fi/i')) {
+		if (!$html->hasAnyClassOf(...$types)) {
 			$html->addClass('fas');
 		}
 
@@ -130,7 +141,7 @@ final class Html extends NetteHtml
 			$html->addClass('fa-fw');
 		}
 
-		return $html->addClass($icon);
+		return $html;
 	}
 
 

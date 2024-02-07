@@ -195,4 +195,10 @@ final class Format
 		$value = number_format($value, $decimals, ',', ' ');
 		return sprintf($format, $value, $unit);
 	}
+
+
+	public static function tokens(string $content, array $params = []): string
+	{
+		return strtr($content, Arrays::tokenize($params));
+	}
 }

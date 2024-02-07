@@ -180,16 +180,6 @@ final class Format
 	}
 
 
-	/**
-	 * @deprecated
-	 */
-	public static function currency(float $value, Currency $unit, int $decimals = 2): string
-	{
-		trigger_error('Method '.__METHOD__.' is deprecated use price instead', E_USER_DEPRECATED);
-		return static::price($value, $unit, $decimals);
-	}
-
-
 	public static function value(float|int $value, string $unit, int $decimals = 2, string $format = '%1$s %2$s'): string
 	{
 		$value = number_format($value, $decimals, ',', ' ');

@@ -13,16 +13,6 @@ use Latte\Runtime\FilterInfo;
 
 final class Strings extends NetteStrings
 {
-	/**
-	 * @deprecated
-	 */
-	public static function webalizeClassName(object $object): string
-	{
-		trigger_error('Method '.__METHOD__.' is deprecated use '.Format::class.'::className instead', E_USER_DEPRECATED);
-		return Format::className($object);
-	}
-
-
 	public static function stripHtml(string $content): string
 	{
 		return LatteFilters::stripHtml(new FilterInfo('html'), $content);

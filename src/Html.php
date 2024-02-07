@@ -122,7 +122,7 @@ final class Html extends NetteHtml
 		$html = static::el('i');
 		$html->addClass($color?->for('text'));
 
-		if (!Strings::match($icon, '/fas|fab|far/i')) {
+		if (!Strings::match($icon, '/fas|fab|far|fi/i')) {
 			$html->addClass('fas');
 		}
 

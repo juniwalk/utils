@@ -133,14 +133,12 @@ final class Arrays
 
 	public static function tokenize(iterable $items, string $token = '{%s}'): array
 	{
+		$chars = str_replace('%s', '', $token);
 		$result = [];
 
 		foreach(static::flatten($items) as $key => $value) {
-			if (!is_scalar($value) && !$value instanceof Stringable) {
-				continue;
-			}
-
-			$result[sprintf($token, $key)] = $value;
+			$key = sprintf($token, trim($key, $chars));
+			$result[$key] = Format::scalarize($value);
 		}
 
 		return $result;

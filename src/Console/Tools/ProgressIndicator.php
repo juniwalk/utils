@@ -35,7 +35,7 @@ final class ProgressIndicator
 	public function __construct(
 		private OutputInterface $output,
 		int $max = 0,
-		private bool $throwExceptions = false,
+		private ?bool $throwExceptions = null,
 		private bool $hideOnFinish = true,
 		private bool $logExceptions = true,
 	) {
@@ -45,6 +45,9 @@ final class ProgressIndicator
 		if (method_exists($output, 'getErrorOutput')) {
 			$this->errorOutput = $output->getErrorOutput();
 		}
+
+		// ? Enable exceptions by default if we are not in CLI mode.
+		$this->throwExceptions ??= php_sapi_name() <> 'cli';
 	}
 
 

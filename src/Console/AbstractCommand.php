@@ -151,7 +151,14 @@ abstract class AbstractCommand extends Command
 
 		$question = new ChoiceQuestion($message.' <comment>['.$choices[$default].']</> ', $choices, $default);
 		$question->setMultiselect($multiple);
-		return $this->ask($question);
+
+		$answer = $this->ask($question);
+
+		if ($multiple) {
+			$answer = (array) $answer;
+		}
+
+		return $answer;
 	}
 
 

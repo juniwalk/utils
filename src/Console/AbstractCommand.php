@@ -33,6 +33,18 @@ abstract class AbstractCommand extends Command
 	}
 
 
+    /** {@inheritDoc} */
+    public function run(InputInterface $input, OutputInterface $output): int
+    {
+		try {
+			return parent::run($input, $output);
+
+		} finally {
+			$this->uninitialize($input, $output);
+		}
+    }
+
+
 	protected function initialize(InputInterface $input, OutputInterface $output): void
 	{
 		$this->output = $output;
@@ -55,6 +67,11 @@ abstract class AbstractCommand extends Command
 				break;
 			}
 		}
+	}
+
+
+	protected function uninitialize(InputInterface $input, OutputInterface $output): void
+	{
 	}
 
 

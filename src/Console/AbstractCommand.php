@@ -158,7 +158,7 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function choose(string $message, array $choices, mixed $default = null, bool $multiple = false): mixed
+	protected function select(string $message, array $choices, mixed $default = null): mixed
 	{
 		$default = $default ?? array_keys($choices)[0];
 
@@ -167,15 +167,38 @@ abstract class AbstractCommand extends Command
 		}
 
 		$question = new ChoiceQuestion($message.' <comment>['.$choices[$default].']</> ', $choices, $default);
-		$question->setMultiselect($multiple);
+		return $this->ask($question);
+	}
 
-		$answer = $this->ask($question);
 
-		if ($multiple) {
-			$answer = (array) $answer;
+	protected function selectMultiple(string $message, array $choices, mixed $default = null): array
+	{
+		$default = $default ?? array_keys($choices)[0];
+
+		if (sizeof($choices) == 1) {
+			return array_values($choices);
 		}
 
-		return $answer;
+		$question = new ChoiceQuestion($message.' <comment>['.$choices[$default].']</> ', $choices, $default);
+		$question->setMultiselect(true);
+
+		return (array) $this->ask($question);
+	}
+
+
+	/** @deprecated */
+	protected function choose(string $message, array $choices, mixed $default = null): mixed
+	{
+		// trigger_error('Choose is deprecated, use Select instead', E_USER_DEPRECATED);
+		return $this->select($message, $choices, $default);
+	}
+
+
+	/** @deprecated */
+	protected function chooseMultiple(string $message, array $choices, mixed $default = null): array
+	{
+		// trigger_error('ChooseMultiple is deprecated, use SelectMultiple instead', E_USER_DEPRECATED);
+		return $this->selectMultiple($message, $choices, $default);
 	}
 
 

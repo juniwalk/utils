@@ -141,7 +141,7 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function choose(string $message, array $choices, mixed $default = null): mixed
+	protected function choose(string $message, array $choices, mixed $default = null, bool $multiple = false): mixed
 	{
 		$default = $default ?? array_keys($choices)[0];
 
@@ -150,6 +150,7 @@ abstract class AbstractCommand extends Command
 		}
 
 		$question = new ChoiceQuestion($message.' <comment>['.$choices[$default].']</> ', $choices, $default);
+		$question->setMultiselect($multiple);
 		return $this->ask($question);
 	}
 

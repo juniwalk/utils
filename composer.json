@@ -18,5 +18,9 @@
 	"require": {
 		"php": ">=8.1",
 		"nette/utils": "^3.0"
+	},
+
+	"suggest": {
+		"scrivo/highlight.php": "For syntaxHighlight latte filter."
 	}
 }

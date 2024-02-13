@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils\Latte;
 
+use Highlight\Highlighter;
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Currency;
 use JuniWalk\Utils\Enums\Interfaces\Currency as CurrencyInterface;
@@ -29,7 +30,11 @@ class LatteExtension extends Extension
 			'badge' => $this->filterBadge(...),
 			'price' => $this->filterPrice(...),
 			'icon' => $this->filterIcon(...),
-			'readableJson' => $this->filterReadableJson(...),
+			'prettyJson' => $this->filterPrettyJson(...),
+			'syntaxHighlight' => $this->filterSyntaxHighlight(...),
+
+			/** @deprecated */
+			'readableJson' => $this->filterPrettyJson(...),
 		];
 	}
 
@@ -88,9 +93,31 @@ class LatteExtension extends Extension
 	}
 
 
-	protected function filterReadableJson(
+	protected function filterPrettyJson(
 		mixed $value,
 	): string {
 		return Json::encode($value, Json::PRETTY);
+	}
+
+
+	protected function filterSyntaxHighlight(
+		?string $code,
+		?string $lang,
+		bool $isBackColored = false,
+	): Html {
+		$html = Html::el('code');
+
+		if ($isBackColored) {
+			$html->addClass('hljs');
+		}
+
+		if (!class_exists(Highlighter::class)) {
+			return $html->setText($code);
+		}
+
+		$highlight = (new Highlighter)->highlight($lang, $code);
+
+		return $html->addClass($highlight->language)
+			->setHtml($highlight->value);
 	}
 }

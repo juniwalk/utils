@@ -17,6 +17,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
+use Throwable;
 
 abstract class AbstractCommand extends Command
 {
@@ -39,8 +40,11 @@ abstract class AbstractCommand extends Command
 		try {
 			return parent::run($input, $output);
 
+		} catch (Throwable $e) {
+			throw $e;
+
 		} finally {
-			$this->uninitialize($input, $output);
+			$this->uninitialize($input, $output, $e ?? null);
 		}
     }
 
@@ -70,7 +74,7 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function uninitialize(InputInterface $input, OutputInterface $output): void
+	protected function uninitialize(InputInterface $input, OutputInterface $output, Throwable $error = null): void
 	{
 	}
 

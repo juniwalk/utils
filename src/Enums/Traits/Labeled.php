@@ -8,21 +8,33 @@
 namespace JuniWalk\Utils\Enums\Traits;
 
 use JuniWalk\Utils\Enums\Color;
+use JuniWalk\Utils\Html;
 use JuniWalk\Utils\Strings;
-use TypeError;
 use ValueError;
 
 trait Labeled
 {
-	public static function getLabels(): iterable
+	public static function getLabels(): array
 	{
-		$labels = [];
+		$items = [];
 
 		foreach (self::cases() as $case) {
-			$labels[$case->value] = $case->label();
+			$items[$case->value] = $case->label();
 		}
 
-		return $labels;
+		return $items;
+	}
+
+
+	public static function getOptions(bool $badge = false): array
+	{
+		$items = [];
+
+		foreach (self::cases() as $case) {
+			$items[$case->value] = Html::optionEnum($case, $badge);
+		}
+
+		return $items;
 	}
 
 
@@ -32,6 +44,7 @@ trait Labeled
 	public static function tryMake(mixed $value): ?static
 	{
 		// todo add hard deprecate in future versions
+		// trigger_error('Use make($value, false) instead', E_USER_DEPRECATED);
 		return static::make($value, false);
 	}
 

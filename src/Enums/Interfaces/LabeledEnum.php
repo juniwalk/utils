@@ -13,7 +13,10 @@ use JuniWalk\Utils\Enums\LabeledEnum as DeprecatedLabeledEnum;
 
 interface LabeledEnum extends DeprecatedLabeledEnum	// BackedEnum
 {
-	public static function getLabels(): iterable;
+	public static function make(mixed $value, bool $required = true): ?static;
+
+	public static function getLabels(): array;
+	public static function getOptions(): array;
 
 	public function label(): string;
 	public function color(): ?Color;

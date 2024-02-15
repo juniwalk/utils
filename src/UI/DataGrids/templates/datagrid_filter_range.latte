@@ -1,16 +1,14 @@
 <div class="form-group row">
-	<div class="col-sm-3 text-sm-right">{label $input['from'], class => 'col-form-label font-weight-normal py-1' /}</div>
-    <div class="col-sm-9">
+	<div class="col-sm-3 text-sm-right">
+		<label n:name="$input['from']" class="col-form-label font-weight-normal py-1">{$input['from']->getCaption()|translate}</label>
+	</div>
+	<div class="col-sm-9">
 		<div class="input-group input-group-sm">
-
-			{input $input['from'], placeholder => ('ublaboo_datagrid.from'|translate)}
-
+			<input n:name="$input['from']" type="text" class="form-control">
 			<div class="input-group-append">
-				<span class="input-group-text border-right-0">-</span>
+				<span class="input-group-text border-right-0">&dash;</span>
 			</div>
-
-			{input $input['to'], placeholder => ('ublaboo_datagrid.to'|translate)}
-
+			<input n:name="$input['to']" type="text" class="form-control">
 		</div>
-    </div>
+	</div>
 </div>

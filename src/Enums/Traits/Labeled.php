@@ -26,7 +26,7 @@ trait Labeled
 	}
 
 
-	public static function getOptions(bool $badge = false): array
+	public static function getOptions(bool $badge = true): array
 	{
 		$items = [];
 

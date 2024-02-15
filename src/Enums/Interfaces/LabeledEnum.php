@@ -16,7 +16,7 @@ interface LabeledEnum extends DeprecatedLabeledEnum	// BackedEnum
 	public static function make(mixed $value, bool $required = true): ?static;
 
 	public static function getLabels(): array;
-	public static function getOptions(): array;
+	public static function getOptions(bool $badge = true): array;
 
 	public function label(): string;
 	public function color(): ?Color;

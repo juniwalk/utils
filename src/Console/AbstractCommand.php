@@ -164,10 +164,10 @@ abstract class AbstractCommand extends Command
 
 	protected function select(string $message, array $choices, mixed $default = null): mixed
 	{
-		$default = $default ?? array_keys($choices)[0];
+		$default ??= array_keys($choices)[0] ?? null;
 
-		if (sizeof($choices) == 1) {
-			return $choices[$default];
+		if (sizeof($choices) <= 1) {
+			return $choices[$default] ?? null;
 		}
 
 		$question = new ChoiceQuestion($message.' <comment>['.$choices[$default].']</> ', $choices, $default);
@@ -177,9 +177,9 @@ abstract class AbstractCommand extends Command
 
 	protected function selectMultiple(string $message, array $choices, mixed $default = null): array
 	{
-		$default = $default ?? array_keys($choices)[0];
+		$default ??= array_keys($choices)[0] ?? null;
 
-		if (sizeof($choices) == 1) {
+		if (sizeof($choices) <= 1) {
 			return array_values($choices);
 		}
 

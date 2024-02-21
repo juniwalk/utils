@@ -72,6 +72,10 @@ final class Format
 			return (int) $value->getId();
 		}
 
+		if (is_bool($value)) {
+			return $value ? 'true' : 'false';
+		}
+
 		return null;
 	}
 

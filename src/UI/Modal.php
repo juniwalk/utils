@@ -12,5 +12,5 @@ use Nette\ComponentModel\IComponent;
 interface Modal extends IComponent
 {
 	public function setModalOpen(bool $open): void;
-	public function renderModal(): void;
+	public function renderModal(bool $keyboard = false, bool|string $backdrop = 'static'): void;
 }

@@ -49,8 +49,6 @@ final class Format
 	public static function scalarize(mixed $value): mixed
 	{
 		return match(true) {
-			is_bool($value) => $value ? 'true' : 'false',
-
 			!is_object($value),
 			$value instanceof stdClass => $value,
 			$value instanceof DateTimeInterface => $value->format('c'),
@@ -60,6 +58,15 @@ final class Format
 
 			method_exists($value, 'getId') => (int) $value->getId(),
 			default => null,
+		};
+	}
+
+
+	public static function stringify(mixed $value): string
+	{
+		return match(true) {
+			is_bool($value) => $value ? 'true' : 'false',
+			default => (string) static::scalarize($value),
 		};
 	}
 

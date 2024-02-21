@@ -48,35 +48,19 @@ final class Format
 
 	public static function scalarize(mixed $value): mixed
 	{
-		if (!is_object($value) || $value instanceof stdClass) {
-			return $value;
-		}
+		return match(true) {
+			is_bool($value) => $value ? 'true' : 'false',
 
-		if ($value instanceof DateTimeInterface) {
-			return $value->format('c');
-		}
+			!is_object($value),
+			$value instanceof stdClass => $value,
+			$value instanceof DateTimeInterface => $value->format('c'),
+			$value instanceof JsonSerializable => $value->jsonSerialize(),
+			$value instanceof Stringable => $value->__toString(),
+			$value instanceof UnitEnum => $value->value ?? $value->name,
 
-		if ($value instanceof JsonSerializable) {
-			return $value->jsonSerialize();
-		}
-
-		if ($value instanceof Stringable) {
-			return $value->__toString();
-		}
-
-		if ($value instanceof UnitEnum) {
-			return $value->value ?? $value->name;
-		}
-
-		if (method_exists($value, 'getId')) {
-			return (int) $value->getId();
-		}
-
-		if (is_bool($value)) {
-			return $value ? 'true' : 'false';
-		}
-
-		return null;
+			method_exists($value, 'getId') => (int) $value->getId(),
+			default => null,
+		};
 	}
 
 
@@ -112,7 +96,7 @@ final class Format
 
 			unset($match[0]);
 
-			$number = sprintf($format, ... $match);
+			$number = sprintf($format, ...$match);
 			$phone = Sanitize::phoneNumber($number);
 
 			if (!Strings::match($phone, '/^[0-9]'.$length.'$/')) {

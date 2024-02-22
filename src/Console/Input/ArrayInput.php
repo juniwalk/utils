@@ -15,6 +15,21 @@ class ArrayInput extends BaseInput
 	/**
 	 * {@inheritdoc}
 	 */
+	public function __toString()
+	{
+		$input = parent::__toString();
+
+		if (!$this->isInteractive()) {
+			$input .= ' --no-interaction';
+		}
+
+		return trim($input);
+	}
+
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function bind(InputDefinition $definition)
 	{
 		$this->definition = $definition;

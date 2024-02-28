@@ -8,8 +8,8 @@
 namespace JuniWalk\Utils\UI\DataGrids\Tools;
 
 use Closure;
+use JuniWalk\ORM\Entity\Interfaces\Sortable;
 use JuniWalk\ORM\Exceptions\EntityNotValidException;
-use JuniWalk\ORM\Interfaces\Sortable;
 use Ublaboo\DataGrid\DataGrid;
 
 class SortableHandler

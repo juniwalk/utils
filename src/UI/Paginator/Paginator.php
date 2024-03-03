@@ -29,9 +29,10 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 	private QueryWrapper $result;
 	private readonly NettePages $pages;
 	private readonly Translator $translator;
-	private bool $isAjax = true;
+	private array $queryHints = [];
 	private array $perPages = [10, 20, 50];
 	private int $maxPages = 9;
+	private bool $isAjax = true;
 
 	public function __construct(int $page, int $perPage, Translator $translator)
 	{
@@ -73,11 +74,26 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 
 	public function setQuery(Query|QueryBuilder $query, bool $fetchJoinCollection = true): void
 	{
+		if ($query instanceof QueryBuilder) {
+			$query = $query->getQuery();
+		}
+
 		$query->setMaxResults($this->pages->getItemsPerPage());
 		$query->setFirstResult($this->pages->getOffset());
 
+		foreach ($this->queryHints as $name => $value) {
+			$query->setHint($name, $value);
+		}
+
 		$this->result = new QueryWrapper($query, $fetchJoinCollection);
+		$this->result->setUseOutputWalkers(!empty($this->queryHints));
 		$this->pages->setItemCount($this->result->count());
+	}
+
+
+	public function setQueryHint(string $name, mixed $value): void
+	{
+		$this->queryHints[$name] = $value;
 	}
 
 

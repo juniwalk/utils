@@ -14,6 +14,7 @@ use ReflectionClass;
 use stdClass;
 use Stringable;
 use Throwable;
+use UnexpectedValueException;
 use UnitEnum;
 
 final class Format
@@ -135,6 +136,23 @@ final class Format
 		}
 
 		return str_replace($match[0], $area, $value);
+	}
+
+
+	/**
+	 * @throws UnexpectedValueException
+	 */
+	public static function bytes(int $number, string $unit): int
+	{
+		return $number * pow(1024, match($unit) {
+			 'B' => 0, 'KB' => 1, 'MB' => 2,
+			'GB' => 3, 'TB' => 4, 'PB' => 5,
+			'EB' => 6, 'ZB' => 7, 'YB' => 8,
+
+			default => throw new UnexpectedValueException(
+				'Unit "'.$unit.'" is not supported.'
+			),
+		});
 	}
 
 

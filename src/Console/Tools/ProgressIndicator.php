@@ -129,7 +129,7 @@ final class ProgressIndicator
 
 	public function iterate(iterable $values, callable $callback): void
 	{
-		$this->progress->setFormat(" %percent:3s%% [%bar%] %current%/%max%\n %message%\n\n");
+		$this->progress->setFormat("\n %percent:3s%% [%bar%] %current%/%max%\n %message%\n\n");
 		$this->setMessage('<info>Preparing...</>', 'message');
 		$this->progress->start(is_countable($values) ? count($values) : null);
 

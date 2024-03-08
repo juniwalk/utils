@@ -35,15 +35,30 @@ final class Format
 	}
 
 
+	/**
+	 * @example snake_case
+	 */
 	public static function snakeCase(string $value): string
 	{
 		return strtolower(preg_replace('/[A-Z]/', '_$0', $value));
 	}
 
 
+	/**
+	 * @example camelCase
+	 */
 	public static function camelCase(string $value): string
 	{
-		return lcfirst(implode('', array_map('ucfirst', preg_split('/[_-]/', $value))));
+		return lcfirst(static::pascalCase($value));
+	}
+
+
+	/**
+	 * @example PascalCase
+	 */
+	public static function pascalCase(string $value): string
+	{
+		return implode('', array_map('ucfirst', preg_split('/[_-]/', $value)));
 	}
 
 

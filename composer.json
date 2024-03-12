@@ -21,7 +21,7 @@
 	},
 
 	"suggest": {
-		"umpirsky/country-list": "List of countris in various format for CountryList.",
+		"umpirsky/country-list": "List of countries in various format for CountryList.",
 		"scrivo/highlight.php": "For syntaxHighlight latte filter."
 	}
 }

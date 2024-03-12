@@ -29,7 +29,7 @@ final class Html extends NetteHtml
 	}
 
 
-	public function addText($text, mixed ...$args): static
+	public function addText(mixed $text, mixed ...$args): static
 	{
 		if (is_string($text) && sizeof($args) > 0) {
 			$text = sprintf($text, ...$args);

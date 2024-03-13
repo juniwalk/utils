@@ -30,7 +30,7 @@ class ArrayInput extends BaseInput
 	/**
 	 * {@inheritdoc}
 	 */
-	public function bind(InputDefinition $definition)
+	public function bind(InputDefinition $definition): void
 	{
 		$this->definition = $definition;
 		$this->parse();

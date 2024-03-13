@@ -101,7 +101,7 @@ abstract class AbstractCommand extends Command
 	 */
 	protected function execCommand(
 		string $commandName,
-		array $arguments,
+		array $arguments = [],
 		callable $callback = null,
 		OutputInterface $output = null,
 	): int {

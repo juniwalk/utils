@@ -11,6 +11,7 @@ use JuniWalk\Utils\Enums\Strategy;
 use JuniWalk\Utils\Exceptions\VersionInvalidException;
 use Stringable;
 use ValueError;
+use Throwable;
 
 /**
  * @link https://semver.org/

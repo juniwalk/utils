@@ -19,8 +19,9 @@ final class Version implements Stringable
 {
 	private const Pattern = '/^v?(?<major>[0-9]+).(?<minor>[0-9]+).?(?<patch>[0-9]*)([+.-]*(?<preRelease>[a-z][a-z0-9]*))?.?(?<build>[0-9]*)$/i';
 
-	final public const SemVer = '%M.%m.%p-%r.%b';
-	final public const Tag = 'v%M.%m.%p-%r.%b';
+	public const SemVer = '%M.%m.%p-%r.%b';
+	public const Tag = 'v%M.%m.%p-%r.%b';
+	public const Dev = 'v%M.%m.x-%r.%b';
 
 	private ?string $preRelease = null;
 	private ?int $major = null;
@@ -35,17 +36,49 @@ final class Version implements Stringable
 	public static function fromFile(string $file): ?static
 	{
 		try {
-			$result = Json::decodeFile($file);
+			// TODO: Check JSON schema
+			$json = Json::decodeFile($file);
 
 		} catch (Throwable) {
 			throw VersionInvalidException::fromFile($file);
 		}
 
-		if (!$result->tag) {
+		if (!$json->tag) {
 			return null;
 		}
 
-		return new static($result->tag);
+		return new static($json->tag);
+	}
+
+
+	public static function getVersionFromFile(string $file, string $format = self::Tag): ?string
+	{
+		try {
+			// TODO: Check JSON schema
+			$json = Json::decodeFile($file);
+			$json->branch ??= $json->tag ?: 'master';
+
+		} catch (Throwable) {
+			return null;
+		}
+
+		try {
+			$version = new static($json->tag);
+			$branch = new static($json->branch);
+
+		} catch (Throwable) {
+		}
+
+		if (!$json->tag && !($branch ?? null)) {
+			return 'dev-'.$json->branch.'@'.$json->hash;
+		}
+
+		if ($json->isDirty || $json->commits > 0) {
+			$version = ($branch ?? $version)->advance(Strategy::Build, 'dev', $json->commits);
+			$format = static::Dev;
+		}
+
+		return $version?->format($format);
 	}
 
 
@@ -141,7 +174,7 @@ final class Version implements Stringable
 	}
 
 
-	public function advance(Strategy $strategy, ?string $preRelease = null): static
+	public function advance(Strategy $strategy, ?string $preRelease = null, ?int $value = null): static
 	{
 		if (!$preRelease && $strategy <> Strategy::Build) {
 			$this->preRelease = null;
@@ -151,6 +184,7 @@ final class Version implements Stringable
 		$this->{$strategy->value} += 1;
 
 		switch ($strategy) {
+			// ! Intentionally no break statements to fall through
 			case Strategy::Major: $this->minor = 0;
 			case Strategy::Minor: $this->patch = 0;
 			case Strategy::Patch: $this->build = null;
@@ -159,6 +193,10 @@ final class Version implements Stringable
 		if ($preRelease && ($preRelease <> $this->preRelease || !$this->build)) {
 			$this->preRelease = $preRelease;
 			$this->build = 1;
+		}
+
+		if (!is_null($value)) {
+			$this->{$strategy->value} = abs($value);
 		}
 
 		return $this;

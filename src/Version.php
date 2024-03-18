@@ -51,11 +51,22 @@ final class Version implements Stringable
 	}
 
 
+	/** @deprecated */
 	public static function getVersionFromFile(string $file, string $format = self::Tag): ?string
 	{
+		trigger_error('Use getVersion(file|object) instead', E_USER_DEPRECATED);
+		return static::getVersion($file, $format);
+	}
+
+
+	public static function getVersion(string|object $json, string $format = self::Tag): ?string
+	{
 		try {
-			// TODO: Check JSON schema
-			$json = Json::decodeFile($file);
+			if (is_string($json)) {
+				// TODO: Check JSON schema
+				$json = Json::decodeFile($json);
+			}
+
 			$json->branch ??= $json->tag ?: 'master';
 
 		} catch (Throwable) {

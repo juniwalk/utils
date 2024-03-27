@@ -34,8 +34,7 @@ class Dropdown extends UIControl implements Action
 	public function create(): Html
 	{
 		$dropdownMenu = Html::el('div class="dropdown-menu"');
-		$button = $this->control->create()
-			->addClass('dropdown-toggle')
+		$button = $this->getControl()->addClass('dropdown-toggle')
 			->data('toggle', 'dropdown');
 
 		foreach ($this->getActions() as $action) {
@@ -57,9 +56,7 @@ class Dropdown extends UIControl implements Action
 		}
 
 		return Html::el('div class="btn-group" role="group"')
-			->setId($this->getUniqueId())
-			->addHtml($button)
-			->addHtml($dropdownMenu);
+			->addHtml($button)->addHtml($dropdownMenu);
 	}
 
 

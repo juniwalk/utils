@@ -26,14 +26,14 @@ trait Actions
 	}
 
 
-	public function addButton(string $name, string $label, string $link = null, array $args = []): Action
+	public function addButton(string $name, string $label = null, string $link = null, array $args = []): Action
 	{
 		$action = new Button($name, $label, $link ?? $name, $args);
 		return $this->addAction($action);
 	}
 
 
-	public function addDropdown(string $name, string $label): Action
+	public function addDropdown(string $name, string $label = null): Action
 	{
 		$action = new Dropdown($name, $label);
 		return $this->addAction($action);

@@ -25,7 +25,7 @@ class Button extends UIControl implements Action, Component
 
 	public function __construct(
 		private string $name,
-		private string $label,
+		private ?string $label = null,
 		string $dest,
 		array $args = [],
 	) {

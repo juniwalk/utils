@@ -11,20 +11,31 @@ enum Casing: string
 {
 	case Camel = 'camel';
 	case Snake = 'snake';
+	case Kebab = 'kebap';
 	case Pascal = 'pascal';
 
 
 	/**
-	 * @example snake_case
 	 * @example camelCase
+	 * @example snake_case
+	 * @example kebap-case
 	 * @example PascalCase
 	 */
 	public function format(string $value): string
 	{
+		$value = $this->camelCase($value);
+
 		return match ($this) {
-			self::Camel => lcfirst(self::Pascal->format($value)),
+			self::Camel => $value,
+			self::Pascal => ucfirst($value),
+			self::Kebab => strtolower(preg_replace('/[A-Z]/', '-$0', $value)),
 			self::Snake => strtolower(preg_replace('/[A-Z]/', '_$0', $value)),
-			self::Pascal => implode('', array_map('ucfirst', preg_split('/[_-]/', $value))),
 		};
+	}
+
+
+	private function camelCase(string $value): string
+	{
+		return lcfirst(implode('', array_map('ucfirst', preg_split('/[_-]/', $value))));
 	}
 }

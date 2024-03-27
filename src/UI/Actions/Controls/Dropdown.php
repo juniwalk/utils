@@ -23,7 +23,7 @@ class Dropdown extends UIControl implements Action
 
 	public function __construct(
 		private string $name,
-		Stringable|string $label = null,
+		Stringable|string|null $label = null,
 	) {
 		$this->control = $this->addAction(new Button('_btn', $label, '#'));
 		$this->name = Strings::webalize($name);

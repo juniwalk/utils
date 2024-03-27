@@ -24,7 +24,7 @@ class Button extends UIControl implements Action, Component
 
 	public function __construct(
 		private string $name,
-		private Stringable|string $label = null,
+		private Stringable|string|null $label = null,
 	) {
 		$this->name = Strings::webalize($name);
 		$this->control = Html::el('a');

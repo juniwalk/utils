@@ -28,7 +28,7 @@ trait Actions
 	}
 
 
-	public function addButton(string $name, Stringable|string $label = null, string $dest = null, array $args = []): Action
+	public function addButton(string $name, Stringable|string|null $label = null, string $dest = null, array $args = []): Action
 	{
 		$action = new Button($name, $label);
 		$action->monitor(Presenter::class, fn() => $action->setLink(
@@ -39,7 +39,7 @@ trait Actions
 	}
 
 
-	public function addDropdown(string $name, Stringable|string $label = null): Action
+	public function addDropdown(string $name, Stringable|string|null $label = null): Action
 	{
 		$action = new Dropdown($name, $label);
 		return $this->addAction($action);

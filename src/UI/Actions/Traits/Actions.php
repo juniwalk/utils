@@ -10,6 +10,7 @@ namespace JuniWalk\Utils\UI\Actions\Traits;
 use JuniWalk\Utils\Strings;
 use JuniWalk\Utils\UI\Actions\Action;
 use JuniWalk\Utils\UI\Actions\Component;
+use JuniWalk\Utils\UI\Actions\LinkProvider;
 use JuniWalk\Utils\UI\Actions\Controls\Button;
 use JuniWalk\Utils\UI\Actions\Controls\Divider;
 use JuniWalk\Utils\UI\Actions\Controls\Dropdown;
@@ -26,9 +27,13 @@ trait Actions
 	}
 
 
-	public function addButton(string $name, string $label = null, string $link = null, array $args = []): Action
+	public function addButton(string $name, string $label = null, string $dest = null, array $args = []): Action
 	{
-		$action = new Button($name, $label, $link ?? $name, $args);
+		$action = new Button($name, $label);
+		$action->monitor(Presenter::class, fn() => $action->setLink(
+			$action->lookup(LinkProvider::class)->createLink($dest ?? $name, $args)
+		));
+
 		return $this->addAction($action);
 	}
 
@@ -49,11 +54,9 @@ trait Actions
 
 	public function addAction(Action $action): Action
 	{
-		$action->monitor(Presenter::class, function(Presenter $presenter) use ($action) {
-			if ($action instanceof Component) {
-				$action->setTranslator($presenter->getTranslator());
-			}
-		});
+		if ($action instanceof Component) {
+			$action->monitor(Presenter::class, fn($parent) => $action->setTranslator($parent->getTranslator()));
+		}
 
 		$this->addComponent($action, null);
 		return $action;

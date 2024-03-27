@@ -15,6 +15,7 @@ use JuniWalk\Utils\UI\Actions\Traits\Control;
 use Nette\Application\UI\Control as UIControl;
 use Nette\ComponentModel\IComponent;
 use Nette\InvalidStateException;
+use Stringable;
 
 class Dropdown extends UIControl implements Action
 {
@@ -22,7 +23,7 @@ class Dropdown extends UIControl implements Action
 
 	public function __construct(
 		private string $name,
-		?string $label = null,
+		Stringable|string $label = null,
 	) {
 		$this->control = $this->addAction(new Button('_btn', $label, '#'));
 		$this->name = Strings::webalize($name);

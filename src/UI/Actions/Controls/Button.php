@@ -14,6 +14,7 @@ use JuniWalk\Utils\UI\Actions\Component;
 use JuniWalk\Utils\UI\Actions\Traits\Control;
 use Nette\Application\UI\Control as UIControl;
 use Nette\Application\UI\Link;
+use Stringable;
 
 class Button extends UIControl implements Action, Component
 {
@@ -23,7 +24,7 @@ class Button extends UIControl implements Action, Component
 
 	public function __construct(
 		private string $name,
-		private ?string $label = null,
+		private Stringable|string $label = null,
 	) {
 		$this->name = Strings::webalize($name);
 		$this->control = Html::el('a');

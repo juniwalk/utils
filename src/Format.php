@@ -23,7 +23,7 @@ final class Format
 	/**
 	 * @throws ReflectionException
 	 */
-	public static function className(object|string $class, ?Casing $case = null, ?string $suffix = null): string
+	public static function className(object|string $class, Casing $case = Casing::Kebap, ?string $suffix = null): string
 	{
 		$name = (new ReflectionClass($class))->getShortName();
 
@@ -35,10 +35,7 @@ final class Format
 			$name = Strings::replace($name, '/'.$suffix.'$/', '');
 		}
 
-		$name = Strings::replace($name, '/[A-Z]/', ' $0');
-		$name = Strings::webalize($name);
-
-		return $case?->format($name) ?? $name;
+		return $case->format($name);
 	}
 
 

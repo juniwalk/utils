@@ -94,7 +94,10 @@ trait Control
 		}
 
 		if ($this->icon instanceof Html) {
-			$control->addHtml($this->icon)->addText(' ');
+			$control->insert(0, Html::el()
+				->addHtml($this->icon)
+				->addText(' ')
+			);
 		}
 
 		if ($title = $this->title) {

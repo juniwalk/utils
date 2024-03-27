@@ -25,6 +25,6 @@ enum Casing: string
 			self::Camel => lcfirst(self::Pascal->format($value)),
 			self::Snake => strtolower(preg_replace('/[A-Z]/', '_$0', $value)),
 			self::Pascal => implode('', array_map('ucfirst', preg_split('/[_-]/', $value))),
-		}
+		};
 	}
 }

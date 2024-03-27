@@ -39,6 +39,12 @@ class Button extends UIControl implements Action, Component
 	}
 
 
+	public function setLink(Link|string $link): void
+	{
+		$this->link = $link;
+	}
+
+
 	public function create(): Html
 	{
 		$label = $this->translator?->translate($this->label) ?? $this->label;

@@ -23,7 +23,7 @@ final class Format
 	/**
 	 * @throws ReflectionException
 	 */
-	public static function className(object|string $class, Casing $case = Casing::Kebap, ?string $suffix = null): string
+	public static function className(object|string $class, Casing $case = Casing::Kebab, ?string $suffix = null): string
 	{
 		$name = (new ReflectionClass($class))->getShortName();
 

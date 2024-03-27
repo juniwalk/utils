@@ -11,14 +11,14 @@ enum Casing: string
 {
 	case Camel = 'camel';
 	case Snake = 'snake';
-	case Kebab = 'kebap';
+	case Kebab = 'kebab';
 	case Pascal = 'pascal';
 
 
 	/**
 	 * @example camelCase
 	 * @example snake_case
-	 * @example kebap-case
+	 * @example kebab-case
 	 * @example PascalCase
 	 */
 	public function format(string $value): string

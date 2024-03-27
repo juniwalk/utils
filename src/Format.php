@@ -9,6 +9,7 @@ namespace JuniWalk\Utils;
 
 use DateTimeInterface;
 use JsonSerializable;
+use JuniWalk\Utils\Enums\Case;
 use JuniWalk\Utils\Enums\Interfaces\Currency;
 use ReflectionClass;
 use stdClass;
@@ -22,7 +23,7 @@ final class Format
 	/**
 	 * @throws ReflectionException
 	 */
-	public static function className(object|string $class, ?string $suffix = null): string
+	public static function className(object|string $class, ?Case $case = null, ?string $suffix = null): string
 	{
 		$name = (new ReflectionClass($class))->getShortName();
 
@@ -35,7 +36,9 @@ final class Format
 		}
 
 		$name = Strings::replace($name, '/[A-Z]/', ' $0');
-		return Strings::webalize($name);
+		$name = Strings::webalize($name);
+
+		return $case?->format($name) ?? $name;
 	}
 
 
@@ -44,7 +47,7 @@ final class Format
 	 */
 	public static function snakeCase(string $value): string
 	{
-		return strtolower(preg_replace('/[A-Z]/', '_$0', $value));
+		return Case::Snake->format($value);
 	}
 
 
@@ -53,7 +56,7 @@ final class Format
 	 */
 	public static function camelCase(string $value): string
 	{
-		return lcfirst(static::pascalCase($value));
+		return Case::Camel->format($value);
 	}
 
 
@@ -62,7 +65,7 @@ final class Format
 	 */
 	public static function pascalCase(string $value): string
 	{
-		return implode('', array_map('ucfirst', preg_split('/[_-]/', $value)));
+		return Case::Pascal->format($value);
 	}
 
 

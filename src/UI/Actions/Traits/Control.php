@@ -57,6 +57,7 @@ trait Control
 		$class = $this->control->getClass() ?? '';
 
 		if (is_array($class)) {
+			$class = array_keys($class);
 			$class = implode(' ', $class);
 		}
 

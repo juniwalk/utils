@@ -22,12 +22,16 @@ final class Format
 	/**
 	 * @throws ReflectionException
 	 */
-	public static function className(object|string $class): string
+	public static function className(object|string $class, ?string $suffix = null): string
 	{
 		$name = (new ReflectionClass($class))->getShortName();
 
 		if ($class instanceof Throwable) {
-			$name = Strings::replace($name, '/Exception$/', '');
+			$suffix = 'Exception';
+		}
+
+		if ($suffix <> null) {
+			$name = Strings::replace($name, '/'.$suffix.'$/', '');
 		}
 
 		$name = Strings::replace($name, '/[A-Z]/', ' $0');

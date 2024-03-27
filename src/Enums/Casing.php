@@ -7,7 +7,7 @@
 
 namespace JuniWalk\Utils\Enums;
 
-enum Case: string
+enum Casing: string
 {
 	case Camel = 'camel';
 	case Snake = 'snake';

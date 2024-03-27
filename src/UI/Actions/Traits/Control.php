@@ -85,9 +85,13 @@ trait Control
 	}
 
 
-	public function getControl(): Html|Component
+	public function getControl(): Html
 	{
 		$control = clone $this->control;
+
+		if ($control instanceof Component) {
+			$control = clone $control->create();
+		}
 
 		if ($this->icon instanceof Html) {
 			$control->addHtml($this->icon)->addText(' ');

@@ -21,22 +21,33 @@ class Dropdown extends UIControl implements Action
 {
 	use Actions, Control;
 
+	private Html $menu;
+
 	public function __construct(
 		private string $name,
 		Stringable|string|null $label = null,
 	) {
 		$this->control = $this->addAction(new Button('_btn', $label, '#'));
-		$this->name = Strings::webalize($name);
+		$this->menu = Html::el('div');
 
+		$this->name = Strings::webalize($name);
 		$this->setParent(null, $this->name);
+	}
+
+
+	public function addMenuClass($class): static
+	{
+		$this->menu->addClass($class);
+		return $this;
 	}
 
 
 	public function create(): Html
 	{
-		$dropdownMenu = Html::el('div class="dropdown-menu"');
 		$button = $this->getControl()->addClass('dropdown-toggle')
 			->data('toggle', 'dropdown');
+
+		$this->menu->addClass('dropdown-menu');
 
 		foreach ($this->getActions() as $action) {
 			if ($action === $this->control) {
@@ -53,11 +64,11 @@ class Dropdown extends UIControl implements Action
 				$element->addClass('ajax');
 			}
 
-			$dropdownMenu->addHtml($element);
+			$this->menu->addHtml($element);
 		}
 
 		return Html::el('div class="btn-group" role="group"')
-			->addHtml($button)->addHtml($dropdownMenu);
+			->addHtml($button)->addHtml($this->menu);
 	}
 
 

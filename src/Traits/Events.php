@@ -53,13 +53,14 @@ trait Events
 	/**
 	 * @throws InvalidStateException
 	 */
-	protected function watch(string $event, bool $clear = false): void
+	protected function watch(string $event, bool $clear = false): static
 	{
 		if (!$clear && $this->isWatched($event)) {
 			throw new InvalidStateException('Event "'.$event.'" is already watched. Use $clear to re-register.');
 		}
 
 		$this->events[$event] = [];
+		return $this;
 	}
 
 

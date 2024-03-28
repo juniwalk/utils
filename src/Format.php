@@ -49,6 +49,15 @@ final class Format
 
 
 	/**
+	 * @example kebab-case
+	 */
+	public static function kebabCase(string $value): string
+	{
+		return Casing::Kebab->format($value);
+	}
+
+
+	/**
 	 * @example camelCase
 	 */
 	public static function camelCase(string $value): string

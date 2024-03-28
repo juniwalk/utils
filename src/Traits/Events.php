@@ -15,9 +15,20 @@ trait Events
 
 
 	/**
+	 * @deprecated
 	 * @throws InvalidStateException
 	 */
 	public function on(string $event, callable $callback, ?int $priority = null): void
+	{
+		trigger_error('Method '.Events::class.'.::on is deprecated, use when', E_USER_DEPRECATED);
+		$this->when($event, $callback, $priority);
+	}
+
+
+	/**
+	 * @throws InvalidStateException
+	 */
+	public function when(string $event, callable $callback, ?int $priority = null): void
 	{
 		$priority ??= sizeof($this->events[$event] ?? []);
 

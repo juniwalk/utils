@@ -30,11 +30,13 @@ trait Links
 	/**
 	 * @throws InvalidLinkException
 	 */
-	public function createLink(string $dest, array $args = []): Link|string
+	public function createLink(Link|string $dest, array $args = []): Link|string
 	{
 		$args = array_merge($args, $this->linkArgs);
 
-		if (str_starts_with($dest, 'javascript:') || str_starts_with($dest, '#')) {
+		if (str_starts_with($dest, 'javascript:') ||
+			str_starts_with($dest, '#') ||
+			$dest instanceof Link) {
 			return $dest;
 		}
 

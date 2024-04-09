@@ -15,6 +15,7 @@ use JuniWalk\Utils\UI\Actions\Controls\Button;
 use JuniWalk\Utils\UI\Actions\Controls\Divider;
 use JuniWalk\Utils\UI\Actions\Controls\Dropdown;
 use JuniWalk\Utils\UI\Actions\Controls\Group;
+use Nette\Application\UI\Link;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Random;
 use Stringable;
@@ -28,7 +29,7 @@ trait Actions
 	}
 
 
-	public function addButton(string $name, Stringable|string|null $label = null, string $dest = null, array $args = []): Action
+	public function addButton(string $name, Stringable|string|null $label = null, Link|string|null $dest = null, array $args = []): Action
 	{
 		$action = new Button($name, $label);
 		$action->monitor(Presenter::class, fn() => $action->setLink(

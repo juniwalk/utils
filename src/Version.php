@@ -141,7 +141,7 @@ final class Version implements Stringable
 
 	public function isPreRelease(): bool
 	{
-		return isset($this->preRelease) || $this->build > 0;
+		return $this->major === 0 || isset($this->preRelease) || $this->build > 0;
 	}
 
 

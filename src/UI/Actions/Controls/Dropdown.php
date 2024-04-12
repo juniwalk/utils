@@ -60,6 +60,10 @@ class Dropdown extends UIControl implements Action
 				$element->setClass('dropdown-item');
 			}
 
+			if ($action->hasClass('active')) {
+				$element->addClass('active');
+			}
+
 			if ($action->hasClass('ajax')) {
 				$element->addClass('ajax');
 			}

@@ -74,9 +74,7 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function uninitialize(InputInterface $input, OutputInterface $output, Throwable $error = null): void
-	{
-	}
+	protected function uninitialize(InputInterface $input, OutputInterface $output, Throwable $error = null): void { }
 
 
 	/**
@@ -142,9 +140,7 @@ abstract class AbstractCommand extends Command
 	protected function execShell(string ...$command): int
 	{
 		$process = $this->createProcess(implode(' ', $command));
-		return $process->run(function($type, $buffer) {
-			$this->output->write($buffer);
-		});
+		return $process->run(fn($type, $buffer) => $this->output->write($buffer));
 	}
 
 
@@ -193,7 +189,7 @@ abstract class AbstractCommand extends Command
 	/** @deprecated */
 	protected function choose(string $message, array $choices, mixed $default = null): mixed
 	{
-		// trigger_error('Choose is deprecated, use Select instead', E_USER_DEPRECATED);
+		trigger_error('Method "choose" is deprecated, use "select" instead', E_USER_DEPRECATED);
 		return $this->select($message, $choices, $default);
 	}
 
@@ -201,7 +197,7 @@ abstract class AbstractCommand extends Command
 	/** @deprecated */
 	protected function chooseMultiple(string $message, array $choices, mixed $default = null): array
 	{
-		// trigger_error('ChooseMultiple is deprecated, use SelectMultiple instead', E_USER_DEPRECATED);
+		trigger_error('Method "chooseMultiple" is deprecated, use "selectMultiple" instead', E_USER_DEPRECATED);
 		return $this->selectMultiple($message, $choices, $default);
 	}
 

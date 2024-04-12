@@ -136,6 +136,6 @@ final class Sanitize
 			$value = round($value, $precision);
 		}
 
-		return $value ?? null;
+		return $value ?: null;
 	}
 }

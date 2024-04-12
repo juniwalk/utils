@@ -125,7 +125,7 @@ abstract class AbstractCommand extends Command
 			throw CommandFailedException::fromName($commandName);
 		}
 
-		return $code ?? Command::SUCCESS;
+		return $code;
 	}
 
 

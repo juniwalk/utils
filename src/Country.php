@@ -36,7 +36,7 @@ final class Country
 		$path = sprintf(self::$packagePath.'/data/%s/country.%s', $locale, $format);
 
 		if (!file_exists($path)) {
-			throw CountryException::listNotFound($path);
+			throw CountryException::listNotFound($path, $format, $path);
 		}
 
 		return self::$cache[$format] ??= match($format) {

@@ -7,7 +7,7 @@
 
 namespace JuniWalk\Utils\UI\DataGrids\DataSource;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
 use Ublaboo\DataGrid\DataGrid;
 use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
@@ -49,7 +49,7 @@ final class DoctrineFastCountDataSource extends DoctrineDataSource
 				"SELECT reltuples::bigint AS count FROM pg_class WHERE oid = '{$tableName}'::regclass;"
 			);
 
-		} catch (DBALException $e) {
+		} catch (DBALException) {
 			// return $this->calculateSlidingCount();
 			return parent::getCount();
 		}

@@ -7,9 +7,8 @@
 
 namespace JuniWalk\Utils\Enums;
 
-use JuniWalk\Utils\Arrays;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
-use JuniWalk\Utils\Strings;
+use JuniWalk\Utils\Parse;
 
 enum Color: string implements LabeledEnum
 {

@@ -75,7 +75,7 @@ final class Parse
 	public static function link(string $value): ?object
 	{
 		if (!$match = Strings::match($value, '/^'.implode('', static::HelpLink).'$/i')) {
-			throw new ValueError('Unable to parse link from: '.$link);
+			throw new ValueError('Unable to parse link from: '.$value);
 		}
 
 		try {

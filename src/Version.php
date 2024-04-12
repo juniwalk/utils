@@ -85,8 +85,10 @@ final class Version implements Stringable
 			return 'dev-'.$json->branch.'@'.$json->hash;
 		}
 
+		$version ??= null;
+
 		if ($json->isDirty || $json->commits > 0) {
-			$version = ($branch ?? $version)->advance(Strategy::Build, 'dev', $json->commits);
+			$version = ($branch ?? $version)?->advance(Strategy::Build, 'dev', $json->commits);
 			$format = static::Dev;
 		}
 

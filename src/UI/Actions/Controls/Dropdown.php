@@ -27,7 +27,7 @@ class Dropdown extends UIControl implements Action
 		private string $name,
 		Stringable|string|null $label = null,
 	) {
-		$this->control = $this->addAction(new Button('_btn', $label, '#'));
+		$this->control = $this->addAction(new Button('_btn', $label));
 		$this->menu = Html::el('div');
 
 		$this->name = Strings::webalize($name);

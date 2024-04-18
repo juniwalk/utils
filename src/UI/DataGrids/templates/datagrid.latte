@@ -15,6 +15,7 @@
 				<a href="#" class="btn bg-info btn-sm" data-toggle="collapse" data-target="#datagrid-{$controlName}-row-filters">
 					<i class="fas fa-filter fa-fw"></i> {_ublaboo_datagrid.show_filter}
 				</a>
+				<a n:href="resetFilter!" n:if="$filter_active" class="btn bg-info btn-sm ajax text-nowrap reset-filter" title="{_ublaboo_datagrid.reset_filter}"><i class="fas fa-times"></i></a>
 			</div>
 
 			<div class="btn-group mr-2" n:if="$control->canHideColumns()">
@@ -242,7 +243,9 @@
 
 		<div class="col-items col-per-page form-inline flex-nowrap pr-3 py-2" n:ifcontent>
 
-			<a n:href="resetFilter!" n:if="$filter_active" class="btn btn-danger btn-sm ajax text-nowrap reset-filter">{_ublaboo_datagrid.reset_filter}</a>
+			<a n:href="resetFilter!" n:if="$filter_active" class="btn btn-danger btn-sm ajax text-nowrap reset-filter">
+				<i class="fas fa-filter-circle-xmark fa-fw"></i> {_ublaboo_datagrid.reset_filter}
+			</a>
 
 			<span class="mx-1" n:if="$control->isPaginated() && $filter_active"></span>
 

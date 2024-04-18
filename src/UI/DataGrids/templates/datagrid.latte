@@ -15,7 +15,7 @@
 				<a href="#" class="btn bg-info btn-sm" data-toggle="collapse" data-target="#datagrid-{$controlName}-row-filters">
 					<i class="fas fa-filter fa-fw"></i> {_ublaboo_datagrid.show_filter}
 				</a>
-				<a n:href="resetFilter!" n:if="$filter_active" class="btn bg-info btn-sm ajax text-nowrap reset-filter" title="{_ublaboo_datagrid.reset_filter}"><i class="fas fa-times"></i></a>
+				<a n:href="resetFilter!" class="btn bg-info btn-sm ajax" title="{_ublaboo_datagrid.reset_filter}"><i class="fas fa-times"></i></a>
 			</div>
 
 			<div class="btn-group mr-2" n:if="$control->canHideColumns()">

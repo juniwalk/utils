@@ -33,7 +33,7 @@ final class ProgressIndicator
 	private ProgressBar $progress;
 
 	public function __construct(
-		private OutputInterface $output,
+		OutputInterface $output,
 		int $max = 0,
 		private ?bool $throwExceptions = null,
 		private bool $hideOnFinish = true,
@@ -95,7 +95,7 @@ final class ProgressIndicator
 	}
 
 
-	public function getStatus(): string
+	public function getStatus(): ?string
 	{
 		return $this->progress->getMessage('status');
 	}
@@ -127,6 +127,9 @@ final class ProgressIndicator
 	}
 
 
+	/**
+	 * @param mixed[] $values
+	 */
 	public function iterate(iterable $values, callable $callback): void
 	{
 		$this->progress->setFormat("\n %percent:3s%% [%bar%] %current%/%max%\n %message%\n\n");
@@ -166,10 +169,10 @@ final class ProgressIndicator
 		$formatter = $this->errorOutput->getFormatter();
 		$lines = [];
 
-		foreach (preg_split('/\r?\n/', $e->getMessage()) as $line) {
+		foreach (preg_split('/\r?\n/', $e->getMessage()) ?: [] as $line) {
 			foreach ($this->splitStringByWidth($line, $width - 4) as $line) {
 				// pre-format lines to get the right string length
-				$lineLength = Helper::length(preg_replace('/\[[^m]*m/', '', $formatter->format($line))) + 4;
+				$lineLength = Helper::length(preg_replace('/\[[^m]*m/', '', $formatter->format($line) ?: '')) + 4;
 				$lines[] = array($line, $lineLength);
 				$len = max($lineLength, $len);
 			}
@@ -200,20 +203,23 @@ final class ProgressIndicator
 	}
 
 
+	/**
+	 * @return string[]
+	 */
 	private function splitStringByWidth(string $string, int $width): iterable
 	{
 		// str_split is not suitable for multi-byte characters, we should use preg_split to get char array properly.
 		// additionally, array_slice() is not enough as some character has doubled width.
 		// we need a function to split string not by character count but by string width
 		if (false === $encoding = mb_detect_encoding($string, null, true)) {
-			return str_split($string, $width);
+			return str_split($string, max(1, $width));
 		}
 
 		$utf8String = mb_convert_encoding($string, 'utf8', $encoding);
 		$lines = [];
 		$line = '';
 
-		foreach (preg_split('//u', $utf8String) as $char) {
+		foreach (preg_split('//u', $utf8String) ?: [] as $char) {
 			if (Helper::width($line.$char) <= $width) {
 				$line .= $char;
 				continue;

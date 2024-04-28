@@ -14,10 +14,12 @@ use Nette\Application\UI\Link;
 use Nette\HtmlStringable;
 use Nette\Localization\Translator;
 use Nette\Utils\Html as NetteHtml;
+use Stringable;
 
 final class Html extends NetteHtml
 {
-	public const TRANSLATION_REGEX = '/^(?:[a-z0-9-_]+\.){1,}(?:[a-z0-9-_]+)$/i';
+	public const TranslationRegEx = '/^(?:[a-z0-9-_]+\.){1,}(?:[a-z0-9-_]+)$/i';
+	public const TRANSLATION_REGEX = self::TranslationRegEx;
 
 	public static bool $disableTranslation = false;
 	private static ?Translator $translator = null;
@@ -29,6 +31,9 @@ final class Html extends NetteHtml
 	}
 
 
+	/**
+	 * @param Stringable|scalar $args
+	 */
 	public function addText(mixed $text, mixed ...$args): static
 	{
 		if (is_string($text) && sizeof($args) > 0) {
@@ -58,15 +63,23 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function highlight(mixed $content, Color $color = Color::Primary, bool $translate = true): self
-	{
+	public static function highlight(
+		Stringable|string|null $content,
+		Color $color = Color::Primary,
+		bool $translate = true,
+	): self {
+		/** @var Html */
 		return static::el('strong')->addText(static::translate($content, $translate))
 			->addClass($color->for('text'));
 	}
 
 
-	public static function subtext(mixed $content, Color $color = Color::Secondary, bool $translate = true): self
-	{
+	public static function subtext(
+		Stringable|string|null $content,
+		Color $color = Color::Secondary,
+		bool $translate = true,
+	): self {
+		/** @var Html */
 		return static::el('i')->addText(static::translate($content, $translate))
 			->addClass($color->for('text'));
 	}
@@ -79,7 +92,7 @@ final class Html extends NetteHtml
 		bool $translate = true,
 		bool $isPill = false
 	): self {
-		$content = static::translate($content, $translate);
+		/** @var Html */
 		$badge = static::el('span class="badge"')
 			->addClass($color->for('badge'));
 
@@ -92,6 +105,7 @@ final class Html extends NetteHtml
 			$badge->addHtml($icon)->addText(' ');
 		}
 
+		$content = static::translate($content, $translate);
 		return $badge->addHtml($content);
 	}
 
@@ -141,6 +155,7 @@ final class Html extends NetteHtml
 	{
 		static $types = ['fa', 'fas', 'fab', 'far', 'fi'];
 
+		/** @var Html */
 		$html = static::el('i')->addClass($icon);
 		$html->addClass($color?->for('text'));
 
@@ -172,6 +187,7 @@ final class Html extends NetteHtml
 			$content = $labelHtml;
 		}
 
+		/** @var Html */
 		return Html::el('option', $label)->value($value)
 			->data('color', $color?->for('text'))
 			->data('content', $content)
@@ -200,8 +216,9 @@ final class Html extends NetteHtml
 
 	public static function link(string $label, Link|string $href = null, self|string $icon = null, bool $translate = true): self
 	{
-		$label = static::translate($label, $translate);
+		/** @var Html */
 		$link = static::el('a')->setHref($href);
+		$label = static::translate($label, $translate);
 
 		if (!empty($icon)) {
 			if (!$icon instanceof self) {
@@ -267,14 +284,16 @@ final class Html extends NetteHtml
 	}
 
 
-	private static function translate(mixed $text, bool $translate = true): ?string
+	private static function translate(Stringable|string|null $text, bool $translate = true): Stringable|string
 	{
+		$text ??= '';
+
 		if (!$translate || static::$disableTranslation || !static::$translator) {
-			return (string) $text;
+			return $text;
 		}
 
-		if (!$text || !Strings::match($text, static::TRANSLATION_REGEX)) {
-			return (string) $text;
+		if (!$text || !Strings::match((string) $text, static::TranslationRegEx)) {
+			return $text;
 		}
 
 		return static::$translator->translate($text);

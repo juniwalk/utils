@@ -32,9 +32,6 @@ class LatteExtension extends Extension
 			'icon' => $this->filterIcon(...),
 			'prettyJson' => $this->filterPrettyJson(...),
 			'syntaxHighlight' => $this->filterSyntaxHighlight(...),
-
-			/** @deprecated */
-			'readableJson' => $this->filterPrettyJson(...),
 		];
 	}
 
@@ -62,6 +59,7 @@ class LatteExtension extends Extension
 			return null;
 		}
 
+		/** @var Html */
 		return Html::icon($icon, $fixedWidth)->addClass($classes);
 	}
 
@@ -71,24 +69,27 @@ class LatteExtension extends Extension
 		string|Color $color = Color::Secondary,
 		string $icon = null,
 	): Html {
+		/** @var Color */
+		$color = Color::make($color);
+
 		if ($content instanceof LabeledEnum) {
 			return Html::badgeEnum($content);
 		}
 
-		return Html::badge($content, Color::make($color), $icon);
+		return Html::badge($content, $color, $icon);
 	}
 
 
 	protected function filterPrice(
 		?float $amount,
-		mixed $currency,
+		string|CurrencyInterface $currency,
 		bool $isColored = true,
 		string ...$classes,
 	): Html {
-		if (!$currency instanceof CurrencyInterface) {
-			$currency = Currency::make($currency);
-		}
+		/** @var CurrencyInterface */
+		$currency = Currency::remake($currency);
 
+		/** @var Html */
 		return Html::price((float) $amount, $currency, isColoredBySign: $isColored)->addClass($classes);
 	}
 
@@ -117,6 +118,7 @@ class LatteExtension extends Extension
 
 		$highlight = (new Highlighter)->highlight($lang, $code);
 
+		/** @var Html */
 		return $html->addClass($highlight->language)
 			->setHtml($highlight->value);
 	}

@@ -17,11 +17,11 @@ use Ublaboo\DataGrid\DataSource\DoctrineDataSource;
  */
 final class DoctrineFastCountDataSource extends DoctrineDataSource
 {
-	private DataGrid $datagrid;
+	// private DataGrid $datagrid;
 
 	public function setDataGrid(DataGrid $datagrid): void
 	{
-		$this->datagrid = $datagrid;
+		// $this->datagrid = $datagrid;
 	}
 
 
@@ -45,9 +45,10 @@ final class DoctrineFastCountDataSource extends DoctrineDataSource
 		}
 
 		try {
-			return $connection->fetchOne(
-				"SELECT reltuples::bigint AS count FROM pg_class WHERE oid = '{$tableName}'::regclass;"
-			);
+			$count = $connection->fetchOne("SELECT reltuples::bigint AS count FROM pg_class WHERE oid = '{$tableName}'::regclass;");
+
+			/** @var int */
+			return $count;
 
 		} catch (DBALException) {
 			// return $this->calculateSlidingCount();
@@ -62,14 +63,14 @@ final class DoctrineFastCountDataSource extends DoctrineDataSource
 	}
 
 
-	private function calculateSlidingCount(): int
-	{
-		if (!$this->datagrid || !$component = $this->datagrid->getPaginator()) {
-			// return parent::getCount(); // ? could be?
-			return 0;
-		}
+	// private function calculateSlidingCount(): int
+	// {
+	// 	if (!$this->datagrid || !$component = $this->datagrid->getPaginator()) {
+	// 		// return parent::getCount(); // ? could be?
+	// 		return 0;
+	// 	}
 
-		$paginator = $component->getPaginator();
-		return ($paginator->getPage() + 1) * $paginator->getItemsPerPage();
-	}
+	// 	$paginator = $component->getPaginator();
+	// 	return ($paginator->getPage() + 1) * $paginator->getItemsPerPage();
+	// }
 }

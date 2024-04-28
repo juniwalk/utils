@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils\Enums;
 
 use JuniWalk\Utils\Enums\Interfaces\Currency as CurrencyInterface;
+use ValueError;
 
 enum Currency: string implements CurrencyInterface
 {
@@ -16,6 +17,20 @@ enum Currency: string implements CurrencyInterface
 	case CZK = 'czk';
 	case EUR = 'eur';
 	case USD = 'usd';
+
+
+	/**
+	 * @param  int|string|CurrencyInterface|null $value
+	 * @throws ValueError
+	 */
+	public static function remake(mixed $value, bool $required = true): ?CurrencyInterface
+	{
+		if ($value instanceof CurrencyInterface) {
+			return $value;
+		}
+
+		return static::make($value, $required);
+	}
 
 
 	public function label(): string
@@ -36,7 +51,8 @@ enum Currency: string implements CurrencyInterface
 			self::CZK => '%1$s Kč',
 			self::EUR => '€%1$s',
 			self::USD => '$%1$s',
-			default => '%1$s %2$s',
+
+			// default => '%1$s %2$s',
 		};
 	}
 

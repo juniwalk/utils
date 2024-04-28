@@ -14,6 +14,9 @@ use ValueError;
 
 trait Labeled
 {
+	/**
+	 * @return array<string, string>
+	 */
 	public static function getLabels(): array
 	{
 		$items = [];
@@ -26,6 +29,9 @@ trait Labeled
 	}
 
 
+	/**
+	 * @return array<string, Html>
+	 */
 	public static function getOptions(bool $badge = true): array
 	{
 		$items = [];
@@ -39,17 +45,7 @@ trait Labeled
 
 
 	/**
-	 * @deprecated
-	 */
-	public static function tryMake(mixed $value): ?static
-	{
-		// todo add hard deprecate in future versions
-		// trigger_error('Use make($value, false) instead', E_USER_DEPRECATED);
-		return static::make($value, false);
-	}
-
-
-	/**
+	 * @param  int|string|static|null $value
 	 * @throws ValueError
 	 */
 	public static function make(mixed $value, bool $required = true): ?static
@@ -80,9 +76,9 @@ trait Labeled
 	}
 
 
-	public function color(): ?Color
+	public function color(): Color
 	{
-		return null;
+		return Color::Secondary;
 	}
 
 

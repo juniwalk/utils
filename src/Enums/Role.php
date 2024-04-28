@@ -21,6 +21,9 @@ enum Role: string implements PoweredRole, LabeledEnum
 	case Admin = 'admin';
 
 
+	/**
+	 * @return array<string, string|null>
+	 */
 	public static function getMap(): array
 	{
 		return [

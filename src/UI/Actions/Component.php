@@ -21,5 +21,14 @@ interface Component
 	public function hasClass(string $name): bool;
 	public function addClass(string $class): static;
 	public function setClass(string $class): static;
+
+	/**
+	 * @return string|array<string, bool>
+	 */
+	public function getClass(): string|array;
+
+	/**
+	 * @param array<string, scalar> $attributes
+	 */
 	public function addAttributes(array $attributes): static;
 }

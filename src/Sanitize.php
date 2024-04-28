@@ -7,6 +7,8 @@
 
 namespace JuniWalk\Utils;
 
+use Stringable;
+
 final class Sanitize
 {
 	public static function phoneNumber(?string $value): ?string
@@ -47,7 +49,7 @@ final class Sanitize
 	{
 		$isValid = function(string $cid, int $c = 0): bool {
 			for ($n = 0; $n < 7; $n++) {
-				$c += $cid[$n] * (8 - $n);
+				$c += (int) $cid[$n] * (8 - $n);
 			}
 
 			return (int) $cid[7] === (11 - ($c % 11)) % 10;
@@ -127,6 +129,9 @@ final class Sanitize
 	}
 
 
+	/**
+	 * @param Stringable|scalar $value
+	 */
 	public static function float(mixed $value, int $precision = null): ?float
 	{
 		$value = Strings::replace((string) $value, '/^e0-9\.\,/');

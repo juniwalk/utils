@@ -7,18 +7,25 @@
 
 namespace JuniWalk\Utils\Enums\Interfaces;
 
-// use BackedEnum;
+use BackedEnum;
 use JuniWalk\Utils\Enums\Color;
-use JuniWalk\Utils\Enums\LabeledEnum as DeprecatedLabeledEnum;
+use JuniWalk\Utils\Html;
 
-interface LabeledEnum extends DeprecatedLabeledEnum	// BackedEnum
+interface LabeledEnum extends BackedEnum
 {
 	public static function make(mixed $value, bool $required = true): ?static;
 
+	/**
+	 * @return array<string, string>
+	 */
 	public static function getLabels(): array;
+
+	/**
+	 * @return array<string, Html>
+	 */
 	public static function getOptions(bool $badge = true): array;
 
 	public function label(): string;
-	public function color(): ?Color;
+	public function color(): Color;
 	public function icon(): ?string;
 }

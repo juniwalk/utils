@@ -16,7 +16,11 @@ final class TableControl
 {
 	private Table $table;
 	private int $columns = 0;
+
+	/** @var string[] */
 	private array $headers = [];
+
+	/** @var mixed[] */
 	private array $rows = [];
 
 
@@ -57,6 +61,9 @@ final class TableControl
 	}
 
 
+	/**
+	 * @return mixed[]
+	 */
 	public function getRowsWithHeaders(): array
 	{
 		return [$this->headers] + $this->rows;

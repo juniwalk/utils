@@ -29,12 +29,17 @@ trait Actions
 	}
 
 
+	/**
+	 * @param array<string, scalar> $args
+	 */
 	public function addButton(string $name, Stringable|string|null $label = null, Link|string|null $dest = null, array $args = []): Action
 	{
 		$action = new Button($name, $label);
-		$action->monitor(Presenter::class, fn() => $action->setLink(
-			$action->lookup(LinkProvider::class)->createLink($dest ?? $name, $args)
-		));
+		$action->monitor(Presenter::class, function() use ($action, $name, $dest, $args) {
+			/** @var LinkProvider */
+			$linkProvider = $action->lookup(LinkProvider::class);
+			$action->setLink($linkProvider->createLink($dest ?? $name, $args));
+		});
 
 		return $this->addAction($action);
 	}
@@ -77,8 +82,12 @@ trait Actions
 	}
 
 
+	/**
+	 * @return array<int|string, Action>
+	 */
 	public function getActions(): iterable
 	{
+		/** @var array<int|string, Action> */
 		return $this->getComponents(false, Action::class);
 	}
 

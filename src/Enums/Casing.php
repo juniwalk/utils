@@ -28,14 +28,18 @@ enum Casing: string
 		return match ($this) {
 			self::Camel => $value,
 			self::Pascal => ucfirst($value),
-			self::Kebab => strtolower(preg_replace('/[A-Z]/', '-$0', $value)),
-			self::Snake => strtolower(preg_replace('/[A-Z]/', '_$0', $value)),
+			self::Kebab => strtolower(preg_replace('/[A-Z]/', '-$0', $value) ?: ''),
+			self::Snake => strtolower(preg_replace('/[A-Z]/', '_$0', $value) ?: ''),
 		};
 	}
 
 
 	private function camelCase(string $value): string
 	{
-		return lcfirst(implode('', array_map('ucfirst', preg_split('/[_-]/', $value))));
+		if (!$value = preg_split('/[_-]/', $value)) {
+			return '';
+		}
+
+		return lcfirst(implode('', array_map('ucfirst', $value)));
 	}
 }

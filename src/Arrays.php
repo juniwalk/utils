@@ -8,12 +8,15 @@
 namespace JuniWalk\Utils;
 
 use Iterator;
-use Stringable;
 use UnexpectedValueException;
 
 final class Arrays
 {
-	public static function map(iterable $items, callable $callback, bool $isRecursive = true): iterable
+	/**
+	 * @param  mixed[] $items
+	 * @return mixed[]
+	 */
+	public static function map(iterable $items, callable $callback, bool $isRecursive = true): array
 	{
 		$callback = function(mixed $value, mixed $key) use ($callback, $isRecursive) {
 			if (!$isRecursive || !is_iterable($value)) {
@@ -23,15 +26,19 @@ final class Arrays
 			return static::map($value, $callback, true);
 		};
 
+		$result = [];
+
 		foreach($items as $key => $value) {
-			$items[$key] = $callback($value, $key);
+			$result[$key] = $callback($value, $key);
 		}
 
-		return $items;
+		return $result;
 	}
 
 
 	/**
+	 * @param  mixed[] $items
+	 * @return mixed[]
 	 * @throws UnexpectedValueException
 	 */
 	public static function walk(array $items, callable $callback): array
@@ -62,6 +69,11 @@ final class Arrays
 	}
 
 
+	/**
+	 * @param  mixed[] $items
+	 * @param  mixed[] $array
+	 * @return mixed[]
+	 */
 	public static function intersect(array $items, array $array, bool $isRecursive = true): iterable
 	{
 		$callback = function(array $a1, array $a2): array {
@@ -80,6 +92,7 @@ final class Arrays
 				continue;
 			}
 
+			// @phpstan-ignore-next-line
 			$items[$key] = static::intersect($values, $data, $isRecursive);
 		}
 
@@ -87,6 +100,10 @@ final class Arrays
 	}
 
 
+	/**
+	 * @param  array<string, mixed> $items
+	 * @return array<string, mixed>
+	 */
 	public static function flatten(iterable $items, string $prefix = null): array
 	{
 		$result = [];
@@ -104,6 +121,10 @@ final class Arrays
 	}
 
 
+	/**
+	 * @param  array<string, mixed> $items
+	 * @return array<int|string, mixed>
+	 */
 	public static function unflatten(iterable $items): array
 	{
 		$items = static::flatten($items);
@@ -131,12 +152,16 @@ final class Arrays
 	}
 
 
+	/**
+	 * @param  array<string, scalar> $items
+	 * @return array<string, scalar>
+	 */
 	public static function tokenize(iterable $items, string $token = '{%s}'): array
 	{
 		$chars = str_replace('%s', '', $token);
 		$result = [];
 
-		foreach(static::flatten($items) as $key => $value) {
+		foreach (static::flatten($items) as $key => $value) {
 			$key = sprintf($token, trim($key, $chars));
 			$result[$key] = Format::scalarize($value);
 		}
@@ -145,6 +170,10 @@ final class Arrays
 	}
 
 
+	/**
+	 * @param  mixed[] $items
+	 * @return array<int|string, array<int, mixed>>
+	 */
 	public static function categorize(array $items, callable $callback): array
 	{
 		$result = [];

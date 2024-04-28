@@ -10,5 +10,5 @@ namespace JuniWalk\Utils\Enums\Interfaces;
 interface Currency extends LabeledEnum
 {
 	public function format(): string;
-	// public function formatInLocale(): string;
+	public function formatInLocale(): string;
 }

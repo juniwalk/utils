@@ -11,6 +11,8 @@ use JuniWalk\Utils\Console\Input\ArrayInput;
 use JuniWalk\Utils\Exceptions\CommandFailedException;
 use JuniWalk\Utils\Exceptions\ConfirmationDeniedException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\CommandNotFoundException;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -49,6 +51,7 @@ abstract class AbstractCommand extends Command
     }
 
 
+    /** {@inheritDoc} */
 	protected function initialize(InputInterface $input, OutputInterface $output): void
 	{
 		$this->output = $output;
@@ -56,6 +59,7 @@ abstract class AbstractCommand extends Command
 	}
 
 
+    /** {@inheritDoc} */
 	protected function interact(InputInterface $input, OutputInterface $output): void
 	{
 		if (empty($this->questions)) {
@@ -74,10 +78,11 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function uninitialize(InputInterface $input, OutputInterface $output, Throwable $error = null): void { }
+	protected function uninitialize(InputInterface $input, OutputInterface $output, Throwable $error = null): void {}
 
 
 	/**
+	 * @param  array<string, array<string, mixed>> $commandList
 	 * @throws CommandNotFoundException
 	 * @throws CommandFailedException
 	 */
@@ -94,6 +99,7 @@ abstract class AbstractCommand extends Command
 
 
 	/**
+	 * @param  array<string, mixed> $arguments
 	 * @throws CommandNotFoundException
 	 * @throws CommandFailedException
 	 */
@@ -103,7 +109,10 @@ abstract class AbstractCommand extends Command
 		callable $callback = null,
 		OutputInterface $output = null,
 	): int {
-		$command = $this->getApplication()->get($commandName);
+		if (!$command = $this->getApplication()?->get($commandName)) {
+			throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $commandName));
+		}
+
 		$definition = $command->getDefinition();
 
 		if ($definition->hasArgument('command')) {
@@ -147,17 +156,20 @@ abstract class AbstractCommand extends Command
 	protected function terminate(): void
 	{
 		$this->setCode(fn(): int => Command::SUCCESS);
-		$this->input?->setInteractive(false);
+		$this->input->setInteractive(false);
 	}
 
 
 	protected function confirm(string $message, bool $default = true): bool
 	{
 		$question = new ConfirmationQuestion($message.' <comment>['.($default ? 'Y,n' : 'y,N').']</> ', $default);
-		return $this->ask($question, true);
+		return (bool) $this->ask($question, true);
 	}
 
 
+	/**
+	 * @param scalar[] $choices
+	 */
 	protected function select(string $message, array $choices, mixed $default = null): mixed
 	{
 		$default ??= array_keys($choices)[0] ?? null;
@@ -171,6 +183,10 @@ abstract class AbstractCommand extends Command
 	}
 
 
+	/**
+	 * @param  scalar[] $choices
+	 * @return scalar[]
+	 */
 	protected function selectMultiple(string $message, array $choices, mixed $default = null): array
 	{
 		$default ??= array_keys($choices)[0] ?? null;
@@ -182,23 +198,8 @@ abstract class AbstractCommand extends Command
 		$question = new ChoiceQuestion($message.' <comment>['.$choices[$default].']</> ', $choices, $default);
 		$question->setMultiselect(true);
 
+		/** @var scalar[] */
 		return (array) $this->ask($question);
-	}
-
-
-	/** @deprecated */
-	protected function choose(string $message, array $choices, mixed $default = null): mixed
-	{
-		trigger_error('Method "choose" is deprecated, use "select" instead', E_USER_DEPRECATED);
-		return $this->select($message, $choices, $default);
-	}
-
-
-	/** @deprecated */
-	protected function chooseMultiple(string $message, array $choices, mixed $default = null): array
-	{
-		trigger_error('Method "chooseMultiple" is deprecated, use "selectMultiple" instead', E_USER_DEPRECATED);
-		return $this->selectMultiple($message, $choices, $default);
 	}
 
 
@@ -207,6 +208,7 @@ abstract class AbstractCommand extends Command
 	 */
 	protected function ask(Question $question, bool $throw = false): mixed
 	{
+		/** @var QuestionHelper */
 		$speaker = $this->getHelper('question');
 		$answer = $speaker->ask(
 			$this->input,

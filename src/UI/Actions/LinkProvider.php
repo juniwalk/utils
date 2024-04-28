@@ -11,5 +11,8 @@ use Nette\Application\UI\Link;
 
 interface LinkProvider
 {
-	public function createLink(string $dest, array $args = []): Link|string;
+	/**
+	 * @param array<string, scalar> $args
+	 */
+	public function createLink(Link|string $dest, array $args = []): Link|string;
 }

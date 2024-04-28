@@ -36,59 +36,45 @@ final class Version implements Stringable
 	 */
 	public static function fromFile(string $file): ?static
 	{
-		try {
-			// TODO: Check JSON schema
-			$json = Json::decodeFile($file);
+		$schema = VersionSchema::fromFile($file);
 
-		} catch (Throwable) {
-			throw VersionInvalidException::fromFile($file);
-		}
-
-		if (!$json->tag) {
+		if (!$schema->tag) {
 			return null;
 		}
 
-		return new static($json->tag);
-	}
-
-
-	/** @deprecated */
-	public static function getVersionFromFile(string $file, string $format = self::Tag): ?string
-	{
-		trigger_error('Use getVersion(file|object) instead', E_USER_DEPRECATED);
-		return static::getVersion($file, $format);
+		return new static($schema->tag);
 	}
 
 
 	public static function getVersion(string|object $json, string $format = self::Tag): ?string
 	{
 		try {
-			if (is_string($json)) {
-				// TODO: Check JSON schema
-				$json = Json::decodeFile($json);
-			}
+			$schema = match (true) {
+				is_object($json) => VersionSchema::fromObject($json),
+				is_string($json) => VersionSchema::fromFile($json),
+			};
 
-			$json->branch ??= $json->tag ?: 'master';
+			$schema->branch ??= $schema->tag ?: 'master';
 
 		} catch (Throwable) {
 			return null;
 		}
 
 		try {
-			$version = new static($json->tag);
-			$branch = new static($json->branch);
+			$version = new static($schema->tag);
+			$branch = new static($schema->branch);
 
 		} catch (Throwable) {
 		}
 
-		if (!$json->tag && !($branch ?? null)) {
-			return 'dev-'.$json->branch.'@'.$json->hash;
+		if (!$schema->tag && !($branch ?? null)) {
+			return 'dev-'.$schema->branch.'@'.$schema->hash;
 		}
 
 		$version ??= null;
 
-		if ($json->isDirty || $json->commits > 0) {
-			$version = ($branch ?? $version)?->advance(Strategy::Build, 'dev', $json->commits);
+		if ($schema->isDirty || $schema->commits > 0) {
+			$version = ($branch ?? $version)?->advance(Strategy::Build, 'dev', $schema->commits);
 			$format = static::Dev;
 		}
 
@@ -217,7 +203,7 @@ final class Version implements Stringable
 	}
 
 
-	public function compare(self|string $version, ?string $operator = null): bool|int
+	public function compare(self|string $version, ?string $operator = null): int|bool
 	{
 		if ($version instanceof static) {
 			$version = $version->format(static::SemVer);
@@ -226,7 +212,8 @@ final class Version implements Stringable
 		return version_compare(
 			$this->format(static::SemVer),
 			$version,
-			$operator
+			// @phpstan-ignore-next-line
+			$operator,
 		);
 	}
 }

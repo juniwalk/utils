@@ -9,6 +9,7 @@ namespace JuniWalk\Utils\Exceptions;
 
 use JuniWalk\Utils\Enums\Strategy;
 use JuniWalk\Utils\Version;
+use Throwable;
 
 final class VersionInvalidException extends \RuntimeException
 {
@@ -28,9 +29,9 @@ final class VersionInvalidException extends \RuntimeException
 	}
 
 
-	public static function fromFile(string $file): static
+	public static function fromFile(string $file, ?Throwable $previous = null): static
 	{
-		return new static('Unable to read version.json from file "'.$file.'"');
+		return new static('Unable to read version.json from file "'.$file.'"', 0, $previous);
 	}
 
 

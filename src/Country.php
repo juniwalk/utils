@@ -11,8 +11,11 @@ use JuniWalk\Utils\Exceptions\CountryException;
 
 final class Country
 {
-	private static string $packagePath = '../vendor/umpirsky/country-list';
+	/**
+	 * @var array<string, string|array<string, string>>
+	 */
 	private static array $cache = [];
+	private static string $packagePath = '../vendor/umpirsky/country-list';
 
 
 	/**
@@ -29,6 +32,7 @@ final class Country
 
 
 	/**
+	 * @return string|array<string, string>
 	 * @throws CountryException
 	 */
 	public static function getList(string $locale, string $format = 'php'): array|string

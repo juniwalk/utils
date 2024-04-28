@@ -42,7 +42,8 @@ class Button extends UIControl implements Action, Component
 
 	public function create(): Html
 	{
-		$label = $this->translator?->translate($this->label) ?? $this->label;
+		$label = $this->translator?->translate($this->label ?? '') ?? $this->label;
+		/** @var Html */
 		return $this->getControl()->addHtml($label)->setHref($this->link ?? '#');
 	}
 

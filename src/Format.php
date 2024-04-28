@@ -12,6 +12,7 @@ use JsonSerializable;
 use JuniWalk\Utils\Enums\Casing;
 use JuniWalk\Utils\Enums\Interfaces\Currency;
 use ReflectionClass;
+use ReflectionException;
 use stdClass;
 use Stringable;
 use Throwable;
@@ -21,6 +22,8 @@ use UnitEnum;
 final class Format
 {
 	/**
+     * @template T of object
+     * @param  T|class-string<T> $class
 	 * @throws ReflectionException
 	 */
 	public static function className(object|string $class, Casing $case = Casing::Kebab, ?string $suffix = null): string
@@ -75,10 +78,13 @@ final class Format
 	}
 
 
+	/**
+	 * @return scalar
+	 */
 	public static function scalarize(mixed $value): mixed
 	{
 		return match(true) {
-			!is_object($value),
+			!is_object($value),	// TODO: use is_scalar ?
 			$value instanceof stdClass => $value,
 			$value instanceof DateTimeInterface => $value->format('c'),
 			$value instanceof JsonSerializable => $value->jsonSerialize(),
@@ -135,7 +141,7 @@ final class Format
 			$number = sprintf($format, ...$match);
 			$phone = Sanitize::phoneNumber($number);
 
-			if (!Strings::match($phone, '/^[0-9]'.$length.'$/')) {
+			if (!$phone || !Strings::match($phone, '/^[0-9]'.$length.'$/')) {
 				continue;
 			}
 
@@ -159,7 +165,7 @@ final class Format
 	{
 		$regex = sprintf('/^(00%1$s|\(%1$s\))/', trim($area, '+'));
 
-		if (!$area || !$match = Strings::match($value ?? '', $regex)) {
+		if (!$value || !$area || !$match = Strings::match($value, $regex)) {
 			return null;
 		}
 
@@ -170,9 +176,9 @@ final class Format
 	/**
 	 * @throws UnexpectedValueException
 	 */
-	public static function bytes(int $number, string $unit): int
+	public static function bytes(int $number, string $unit): float|int
 	{
-		return $number * pow(1024, match($unit) {
+		return $number * pow(1024, match ($unit) {
 			 'B' => 0, 'KB' => 1, 'MB' => 2,
 			'GB' => 3, 'TB' => 4, 'PB' => 5,
 			'EB' => 6, 'ZB' => 7, 'YB' => 8,
@@ -228,6 +234,9 @@ final class Format
 	}
 
 
+	/**
+	 * @param array<string, scalar> $params
+	 */
 	public static function tokens(string $content, array $params = []): string
 	{
 		return strtr($content, Arrays::tokenize($params));

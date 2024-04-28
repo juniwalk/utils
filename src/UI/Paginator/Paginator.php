@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils\UI\Paginator;
 
+use BadFunctionCallException;
 use Countable;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -14,11 +15,13 @@ use Doctrine\ORM\Tools\Pagination\Paginator as QueryWrapper;
 use IteratorAggregate;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Utils\Paginator as NettePages;
 use Nette\Localization\Translator;
 use Traversable;
 
 /**
+ * @implements IteratorAggregate<int, mixed>
  * @method void onChange(int $page, int $perPage)
  */
 final class Paginator extends Control implements Countable, IteratorAggregate
@@ -26,13 +29,19 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 	/** @var callable[] */
 	public array $onChange = [];
 
-	private QueryWrapper $result;
-	private readonly NettePages $pages;
 	private readonly Translator $translator;
-	private array $queryHints = [];
-	private array $perPages = [10, 20, 50];
+	private readonly NettePages $pages;
 	private int $maxPages = 9;
 	private bool $isAjax = true;
+
+	/** @var QueryWrapper<mixed>|null */
+	private ?QueryWrapper $result = null;
+
+	/** @var int[] */
+	private array $perPages = [10, 20, 50];
+
+	/** @var array<string, mixed> */
+	private array $queryHints = [];
 
 	public function __construct(int $page, int $perPage, Translator $translator)
 	{
@@ -103,13 +112,23 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 	}
 
 
+	/**
+	 * @throws BadFunctionCallException
+	 */
 	public function getIterator(): Traversable
 	{
-		return $this->result?->getIterator();
+		if (!isset($this->result)) {
+			throw new BadFunctionCallException('Call '.static::class.'::setQuery first to be able to access iterator.');
+		}
+
+		return $this->result->getIterator();
 	}
 
 
-	public function getResult(): QueryWrapper
+	/**
+	 * @return QueryWrapper<mixed>|null
+	 */
+	public function getResult(): ?QueryWrapper
 	{
 		return $this->result;
 	}
@@ -131,6 +150,7 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 
 	public function renderPages(): void
 	{
+		/** @var DefaultTemplate */
 		$template = $this->createTemplate();
 		$template->setFile(__DIR__.'/templates/pages.latte');
 		$template->setParameters([
@@ -146,6 +166,7 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 
 	public function renderPerPage(): void
 	{
+		/** @var DefaultTemplate */
 		$template = $this->createTemplate();
 		$template->setFile(__DIR__.'/templates/perpage.latte');
 		$template->setParameters([
@@ -177,6 +198,9 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 	}
 
 
+	/**
+	 * @return array<int, int|null>
+	 */
 	protected function createSteps(): array
 	{
 		$pageCount = $this->pages->getPageCount();
@@ -193,14 +217,14 @@ final class Paginator extends Control implements Countable, IteratorAggregate
 			);
 		}
 
-		$slidingStart = min(
+		$slidingStart = (int) min(
 			$pageCount - $this->maxPages + 2,
 			$page - floor(($this->maxPages - 3) / 2),
 		);
 
 		if ($slidingStart < 2) $slidingStart = 2;
 
-		$slidingEnd = min(
+		$slidingEnd = (int) min(
 			$slidingStart + $this->maxPages - 3,
 			$pageCount - 1,
 		);

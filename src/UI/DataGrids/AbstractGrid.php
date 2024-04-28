@@ -7,11 +7,11 @@
 
 namespace JuniWalk\Utils\UI\DataGrids;
 
-use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
 use JuniWalk\Utils\Html;
 use Nette\Application\UI\Control;
-use Nette\Localization\Translator;
+use Nette\Localization\ITranslator as Translator;
+// use Nette\Localization\Translator;
 use Ublaboo\DataGrid\Column\Column;
 use Ublaboo\DataGrid\Column\ColumnDateTime;
 use Ublaboo\DataGrid\DataGrid;
@@ -22,7 +22,7 @@ use UnexpectedValueException;
 abstract class AbstractGrid extends Control
 {
 	protected DataGrid $grid;
-	protected Translator $translator;
+	protected ?Translator $translator = null;
 	protected bool $hasFiltersAlwaysShown = true;
 	protected bool $hasColumnsFixedWidth = false;
 	protected bool $isDisabled = false;
@@ -77,7 +77,7 @@ abstract class AbstractGrid extends Control
 	}
 
 
-	public function setTranslator(Translator $translator = null): void
+	public function setTranslator(?Translator $translator = null): void
 	{
 		$this->translator = $translator;
 	}
@@ -114,6 +114,7 @@ abstract class AbstractGrid extends Control
 						return null;
 					}
 
+					/** @phpstan-ignore-next-line */
 					return Html::badgeEnum($enum::make($value))
 						->addClass($blockButtons ?? 'd-block text-right');
 				});
@@ -124,8 +125,8 @@ abstract class AbstractGrid extends Control
 		$column->onChange[] = fn($id, $value) => $this->$signalMethod((int) $id, $enum::make($value));
 
 		foreach ($enum::cases() as $item) {
-			$class = ($item->color() ?? Color::Secondary)->for('btn');
-			$class .= $blockButtons ?? ' btn-block text-right';
+			$class = $blockButtons ?? ' btn-block text-right';
+			$class .= $item->color()->for('btn');
 
 			$option = $column->addOption($item->value, $item->label())
 				->setClass($class);
@@ -141,6 +142,9 @@ abstract class AbstractGrid extends Control
 	}
 
 
+	/**
+	 * @param array<string, scalar> $filter
+	 */
 	final public function setFilter(array $filter): void
 	{
 		$this->getComponent('grid')->setFilter($filter);
@@ -161,7 +165,7 @@ abstract class AbstractGrid extends Control
 	}
 
 
-	final public function render()
+	final public function render(): void
 	{
 		$grid = $this->getComponent('grid');
 
@@ -194,13 +198,10 @@ abstract class AbstractGrid extends Control
 	abstract protected function createComponentGrid(): DataGrid;
 
 
-	protected function onDataLoaded(array $items): void
-	{
-		if (method_exists($this, 'dataLoaded')) {
-			trigger_error('Method dataLoaded is deprecated, use onDataLoaded instead', E_USER_DEPRECATED);
-			$this->dataLoaded($items);
-		}
-	}
+	/**
+	 * @param mixed[] $items
+	 */
+	protected function onDataLoaded(array $items): void {}
 
 
 	final protected function createDataGrid(bool $rememberState = true, string $primaryKey = null): DataGrid

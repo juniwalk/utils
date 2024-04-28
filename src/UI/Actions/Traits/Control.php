@@ -9,13 +9,12 @@ namespace JuniWalk\Utils\UI\Actions\Traits;
 
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Html;
-use JuniWalk\Utils\UI\Actions\Component;
 use Nette\Localization\Translator;
 
 trait Control
 {
 	private ?Translator $translator = null;
-	private Html|Component $control;
+	private Html $control;
 	private ?string $title = null;
 	private ?Html $icon = null;
 
@@ -79,6 +78,18 @@ trait Control
 	}
 
 
+	/**
+	 * @return string|array<string, bool>
+	 */
+	public function getClass(): string|array
+	{
+		return $this->control->getClass() ?? '';
+	}
+
+
+	/**
+	 * @param array<string, scalar> $attributes
+	 */
 	public function addAttributes(array $attributes): static
 	{
 		$this->control->addAttributes($attributes);
@@ -89,10 +100,6 @@ trait Control
 	public function getControl(): Html
 	{
 		$control = clone $this->control;
-
-		if ($control instanceof Component) {
-			$control = clone $control->create();
-		}
 
 		if ($this->icon instanceof Html) {
 			$control->insert(0, Html::el()

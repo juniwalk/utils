@@ -10,10 +10,11 @@ namespace JuniWalk\Utils;
 use Nette\Utils\Strings as NetteStrings;
 use Latte\Essential\Filters as LatteFilters;
 use Latte\Runtime\FilterInfo;
+use Stringable;
 
 final class Strings extends NetteStrings
 {
-	public static function stripHtml(string $content): string
+	public static function stripHtml(Stringable|string $content): string
 	{
 		return LatteFilters::stripHtml(new FilterInfo('html'), $content);
 	}
@@ -42,7 +43,7 @@ final class Strings extends NetteStrings
 
 	private static function transliterate(string $string, string $lang = null): string
 	{
-		return match($lang) {
+		return (string) match($lang) {
 			'ru' => transliterator_transliterate('Russian-Latin/BGN', $string),
 			default => $string,
 		};

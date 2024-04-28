@@ -80,7 +80,10 @@ final class Json
 			throw new IOException("File '$file' does not exist.");
 		}
 
-		$json = file_get_contents($file);
+		if (($json = @file_get_contents($file)) === false) {
+			throw new IOException("File '$file' could not be read.");
+		}
+
 		return NetteJson::decode($json, $flags);
 	}
 }

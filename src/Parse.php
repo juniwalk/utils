@@ -94,6 +94,9 @@ final class Parse
 	}
 
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public static function arguments(string $args): array
 	{
 		if (empty($args)) {
@@ -101,18 +104,33 @@ final class Parse
 		}
 
 		$args = Strings::split($args, '/[,]\s*/');
-		$args = Arrays::map($args, function(mixed $arg): array {
+		// $args = Arrays::map($args, function(mixed $arg): array {
+		// 	$pair = Strings::split($arg, '/\s*(?::|=>?)\s*/');
+		// 	$pair = array_pad($pair, -2, 0);
+
+		// 	return [$pair[0] => match(Strings::lower($pair[1])) {
+		// 		'false' => false,
+		// 		'true' => true,
+		// 		'null' => null,
+
+		// 		default => $pair[1],
+		// 	}];
+		// });
+
+		$args = Arrays::walk($args, function(mixed $arg) {
 			$pair = Strings::split($arg, '/\s*(?::|=>?)\s*/');
 			$pair = array_pad($pair, -2, 0);
 
-			return [$pair[0] => match(Strings::lower($pair[1])) {
-				default => $pair[1],
-				'false' => false,	
-				'true' => true,	
+			yield $pair[0] => match(Strings::lower($pair[1])) {
+				'false' => false,
+				'true' => true,
 				'null' => null,
-			}];
+
+				default => $pair[1],
+			};
 		});
 
-		return array_merge(... $args);
+		return $args;
+		// return array_merge(...$args);
 	}
 }

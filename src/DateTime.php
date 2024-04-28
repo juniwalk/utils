@@ -13,7 +13,7 @@ use Nette\Utils\DateTime as NetteDate;
 
 class DateTime extends NetteDate
 {
-	public static function tryFrom(mixed $time): ?static
+	public static function tryFrom(DateTimeInterface|int|string|null $time): ?static
 	{
 		if (is_null($time)) {
 			return null;
@@ -39,7 +39,7 @@ class DateTime extends NetteDate
 			return null;
 		}
 
-		return static::createFromFormat($format, $matches[0]);
+		return static::createFromFormat($format, $matches[0]) ?: null;
 	}
 
 

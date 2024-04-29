@@ -16,7 +16,7 @@ trait NajaAjaxRedirectTrait
 	/**
 	 * @throws AbortException
 	 */
-	public function redirect(string $dest, mixed ...$args): never
+	public function redirect(string $dest, mixed ...$args): void
 	{
 		unset($this->payload->postGet);
 		unset($this->payload->url);
@@ -25,10 +25,8 @@ trait NajaAjaxRedirectTrait
 			parent::redirect($dest, ...$args);
 		}
 
-		$this->payload->postGet = true;
 		$this->payload->url = $this->link($dest, ...$args);
-
-		$this->sendTemplate();
+		$this->payload->postGet = true;
 	}
 
 
@@ -42,7 +40,7 @@ trait NajaAjaxRedirectTrait
 	/**
 	 * @deprecated
 	 */
-	public function redirectAjax(string $dest, mixed ...$args): never
+	public function redirectAjax(string $dest, mixed ...$args): void
 	{
 		// trigger_error('RedirectAjax is deprecated, use redirect method directly', E_USER_DEPRECATED);
 		$this->redirect($dest, ...$args);

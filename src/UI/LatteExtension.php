@@ -5,7 +5,7 @@
  * @license   MIT License
  */
 
-namespace JuniWalk\Utils\Latte;
+namespace JuniWalk\Utils\UI;
 
 use Highlight\Highlighter;
 use JuniWalk\Utils\Enums\Color;

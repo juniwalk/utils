@@ -79,7 +79,7 @@ final class Format
 
 
 	/**
-	 * @return scalar
+	 * @return scalar|stdClass
 	 */
 	public static function scalarize(mixed $value): mixed
 	{
@@ -106,8 +106,8 @@ final class Format
 		}
 
 		return match (true) {
+			is_array($value) => json_encode($value) ?: '',
 			is_bool($value) => $value ? 'true' : 'false',
-			is_array($value) => json_encode($value),
 			default => (string) $value,
 		};
 	}
@@ -242,7 +242,7 @@ final class Format
 
 
 	/**
-	 * @param array<string, scalar> $params
+	 * @param array<string, mixed> $params
 	 */
 	public static function tokens(string $content, array $params = []): string
 	{

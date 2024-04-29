@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils;
 
 use Iterator;
+use stdClass;
 use UnexpectedValueException;
 
 final class Arrays
@@ -153,8 +154,8 @@ final class Arrays
 
 
 	/**
-	 * @param  array<string, scalar> $items
-	 * @return array<string, scalar>
+	 * @param  array<string, mixed> $items
+	 * @return array<string, mixed>
 	 */
 	public static function tokenize(iterable $items, string $token = '{%s}'): array
 	{
@@ -179,9 +180,9 @@ final class Arrays
 		$result = [];
 
 		foreach ($items as $item) {
-			$category = $callback($item);
+			$key = Format::scalarize($callback($item));
 
-			if (!$key = Format::scalarize($category)) {
+			if (!$key || $key instanceof stdClass) {
 				continue;
 			}
 

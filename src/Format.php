@@ -83,8 +83,8 @@ final class Format
 	 */
 	public static function scalarize(mixed $value): mixed
 	{
-		return match(true) {
-			!is_object($value),	// TODO: use is_scalar ?
+		return match (true) {
+			!is_object($value),
 			$value instanceof stdClass => $value,
 			$value instanceof DateTimeInterface => $value->format('c'),
 			$value instanceof JsonSerializable => $value->jsonSerialize(),
@@ -99,9 +99,16 @@ final class Format
 
 	public static function stringify(mixed $value): string
 	{
-		return match(true) {
+		$value = static::scalarize($value);
+
+		if ($value instanceof stdClass) {
+			$value = (array) $value;
+		}
+
+		return match (true) {
 			is_bool($value) => $value ? 'true' : 'false',
-			default => (string) static::scalarize($value),
+			is_array($value) => json_encode($value),
+			default => (string) $value,
 		};
 	}
 

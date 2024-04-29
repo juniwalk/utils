@@ -35,7 +35,7 @@ final class Format
 		}
 
 		if ($suffix <> null) {
-			$name = Strings::replace($name, '/'.$suffix.'$/', '');
+			$name = Strings::replace($name, '/'.$suffix.'$/i', '');
 		}
 
 		return $case->format($name);

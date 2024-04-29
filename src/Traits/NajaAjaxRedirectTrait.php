@@ -5,7 +5,7 @@
  * @license   MIT License
  */
 
-namespace JuniWalk\Utils\UI\Traits;
+namespace JuniWalk\Utils\Traits;
 
 use Nette\Application\AbortException;
 
@@ -18,15 +18,18 @@ trait NajaAjaxRedirectTrait
 	 */
 	public function redirect(string $dest, mixed ...$args): void
 	{
-		unset($this->payload->postGet);
-		unset($this->payload->url);
+		$presenter = $this->getPresenter();
+		$payload = $presenter->getPayload();
 
-		if (!$this->isAjax() || $this->forceRedirect) {
+		unset($payload->postGet);
+		unset($payload->url);
+
+		if (!$presenter->isAjax() || $this->forceRedirect) {
 			parent::redirect($dest, ...$args);
 		}
 
-		$this->payload->url = $this->link($dest, ...$args);
-		$this->payload->postGet = true;
+		$payload->url = $this->link($dest, ...$args);
+		$payload->postGet = true;
 	}
 
 

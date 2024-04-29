@@ -5,7 +5,7 @@
  * @license   MIT License
  */
 
-namespace JuniWalk\Utils\UI\Traits;
+namespace JuniWalk\Utils\Traits;
 
 use JuniWalk\Utils\Strings;
 use JuniWalk\Utils\UI\Modal;
@@ -25,6 +25,8 @@ trait ModalControlTrait
 		}
 
 		if ($modal instanceof Modal) {
+			// TODO: Force modals to use Events trait, if render isWatched invoke
+			// TODO: $modal->when('render', fn($m, $t) => $t->setParameters($params))
 			// $modal->getTemplate()->setParameters($params);
 			// $params = [];
 
@@ -37,6 +39,6 @@ trait ModalControlTrait
 		$template->setParameters($params);
 
 		$this->redrawControl('modals');
-		$this->redirectAjax('this');
+		$this->redirect('this');
 	}
 }

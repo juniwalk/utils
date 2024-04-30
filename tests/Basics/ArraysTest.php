@@ -73,12 +73,19 @@ final class ArraysTest extends TestCase
 
 		Assert::same(
 			['_second' => 'two', '_third' => ['_fourth' => 'three', '_fifth' => 'four']],
-			Arrays::intersect($items, $array, false)
+			Arrays::intersect($items, $array)
 		);
+	}
+
+
+	public function testIntersectRecursive(): void
+	{
+		$items = ['_first' => 'one', '_second' => 'two', '_third' => ['_fourth' => 'three', '_fifth' => 'four']];
+		$array = ['_second' => null, '_third' => ['_fifth' => null]];
 
 		Assert::same(
 			['_second' => 'two', '_third' => ['_fifth' => 'four']],
-			Arrays::intersect($items, $array)
+			Arrays::intersectRecursive($items, $array)
 		);
 	}
 

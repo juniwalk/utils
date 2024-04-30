@@ -17,13 +17,9 @@ final class Arrays
 	 * @param  mixed[] $items
 	 * @return mixed[]
 	 */
-	public static function map(iterable $items, callable $callback, bool $isRecursive = true): array
+	public static function map(iterable $items, callable $callback): array
 	{
 		$result = [];
-
-		if ($isRecursive) {
-			return static::mapRecursive($items, $callback);
-		}
 
 		foreach($items as $key => $value) {
 			$result[$key] = $callback($value, $key);
@@ -93,18 +89,21 @@ final class Arrays
 	 * @param  mixed[] $array
 	 * @return mixed[]
 	 */
-	public static function intersect(array $items, array $array, bool $isRecursive = true): iterable
+	public static function intersect(array $items, array $array): array
 	{
-		$callback = function(array $a1, array $a2): array {
-			$a1 = array_intersect_key($a1, $a2);
-			return static::walk($a2, fn($v, $k) => yield $k => $a1[$k] ?? $v);
-		};
+		$items = array_intersect_key($items, $array);
+		return static::walk($array, fn($v, $k) => yield $k => $items[$k] ?? $v);
+	}
 
-		$items = $callback($items, $array);
 
-		if (!$isRecursive) {
-			return $items;
-		}
+	/**
+	 * @param  mixed[] $items
+	 * @param  mixed[] $array
+	 * @return mixed[]
+	 */
+	public static function intersectRecursive(array $items, array $array): array
+	{
+		$items = static::intersect($items, $array);
 
 		foreach ($items as $key => $values) {
 			if (!is_array($values) || !$data = $array[$key] ?? null) {
@@ -112,7 +111,7 @@ final class Arrays
 			}
 
 			// @phpstan-ignore-next-line
-			$items[$key] = static::intersect($values, $data, $isRecursive);
+			$items[$key] = static::intersectRecursive($values, $data);
 		}
 
 		return $items;

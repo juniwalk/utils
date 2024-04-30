@@ -123,7 +123,7 @@ final class Arrays
 	 * @param  array<string, mixed> $items
 	 * @return array<string, mixed>
 	 */
-	public static function flatten(iterable $items, string $prefix = null): array
+	public static function flatten(iterable $items, ?string $prefix = null): array
 	{
 		$result = [];
 

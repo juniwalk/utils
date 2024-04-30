@@ -13,13 +13,13 @@ use Throwable;
 
 final class VersionInvalidException extends \RuntimeException
 {
-	public static function fromVersion(Version|string $version = null): static
+	public static function fromVersion(Version|string|null $version): static
 	{
 		return new static('Invalid version "'.$version.'" given');
 	}
 
 
-	public static function fromStrategy(Version|string $version = null, Strategy $strategy): static
+	public static function fromStrategy(Version|string|null $version, Strategy $strategy): static
 	{
 		if ($version === null) {
 			$version = 'non-existing version';
@@ -38,7 +38,7 @@ final class VersionInvalidException extends \RuntimeException
 	public static function fromCompare(
 		Version|string $version1,
 		Version|string $version2,
-		?string $operator = null
+		?string $operator = null,
 	): static {
 		return new static('Version comparison failed: '.$version1.' '.$operator.' '.$version2);
 	}

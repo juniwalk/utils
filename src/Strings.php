@@ -20,7 +20,7 @@ final class Strings extends NetteStrings
 	}
 
 
-	public static function slugify(string $content, string $lang = null): string
+	public static function slugify(string $content, ?string $lang = null): string
 	{
 		$content = self::transliterate($content, $lang);
 		$content = self::webalize($content, "'");
@@ -41,9 +41,9 @@ final class Strings extends NetteStrings
 	}
 
 
-	private static function transliterate(string $string, string $lang = null): string
+	private static function transliterate(string $string, ?string $lang = null): string
 	{
-		return (string) match($lang) {
+		return (string) match ($lang) {
 			'ru' => transliterator_transliterate('Russian-Latin/BGN', $string),
 			default => $string,
 		};

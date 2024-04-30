@@ -87,9 +87,9 @@ final class Html extends NetteHtml
 	public static function badge(
 		string $content,
 		Color $color = Color::Secondary,
-		string $icon = null,
+		?string $icon = null,
 		bool $translate = true,
-		bool $isPill = false
+		bool $isPill = false,
 	): self {
 		/** @var Html */
 		$badge = static::el('span class="badge"')
@@ -112,7 +112,7 @@ final class Html extends NetteHtml
 	public static function badgeEnum(
 		LabeledEnum $enum,
 		bool $translate = true,
-		bool $isPill = false
+		bool $isPill = false,
 	): self {
 		if ($icon = $enum->icon()) {
 			$icon = static::icon($icon)->getClass();
@@ -133,7 +133,7 @@ final class Html extends NetteHtml
 		float|int $amount,
 		Currency $unit,
 		int $decimals = 2,
-		bool $isColoredBySign = false
+		bool $isColoredBySign = false,
 	): self {
 		$value = Format::price($amount, $unit, $decimals);
 		$color = $unit->color();
@@ -150,7 +150,7 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function icon(string $icon, bool $fixedWidth = false, Color $color = null): self
+	public static function icon(string $icon, bool $fixedWidth = false, ?Color $color = null): self
 	{
 		static $types = ['fa', 'fas', 'fab', 'far', 'fi'];
 
@@ -173,9 +173,9 @@ final class Html extends NetteHtml
 	public static function option(
 		string $label,
 		mixed $value,
-		string $content = null,
-		string $icon = null,
-		Color $color = null,
+		?string $content = null,
+		?string $icon = null,
+		?Color $color = null,
 		bool $translate = true,
 	): self {
 		$content = static::translate($content, $translate);
@@ -213,7 +213,7 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function link(string $label, Link|string $href = null, self|string $icon = null, bool $translate = true): self
+	public static function link(string $label, Link|string|null $href = null, self|string|null $icon = null, bool $translate = true): self
 	{
 		/** @var Html */
 		$link = static::el('a')->setHref($href);
@@ -231,7 +231,7 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function code(string $content, string $title = null, bool $allowCopy = false): self
+	public static function code(string $content, ?string $title = null, bool $allowCopy = false): self
 	{
 		$code = static::el('code', $content);
 

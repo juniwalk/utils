@@ -136,7 +136,7 @@ final class Version implements Stringable
 	/**
 	 * @throws VersionInvalidException
 	 */
-	public function parse(self|string $version = null): static
+	public function parse(self|string|null $version = null): static
 	{
 		$parts = Strings::match((string) $version, static::Pattern);
 

@@ -15,7 +15,7 @@ class ArrayInput extends BaseInput
 	/**
 	 * {@inheritdoc}
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		$input = parent::__toString();
 

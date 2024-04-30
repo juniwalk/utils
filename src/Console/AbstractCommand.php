@@ -78,7 +78,7 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function uninitialize(InputInterface $input, OutputInterface $output, Throwable $error = null): void {}
+	protected function uninitialize(InputInterface $input, OutputInterface $output, ?Throwable $error = null): void {}
 
 
 	/**
@@ -86,8 +86,11 @@ abstract class AbstractCommand extends Command
 	 * @throws CommandNotFoundException
 	 * @throws CommandFailedException
 	 */
-	protected function execCommands(array $commandList, callable $callback = null, OutputInterface $output = null): void
-	{
+	protected function execCommands(
+		array $commandList,
+		?callable $callback = null,
+		?OutputInterface $output = null
+	): void {
 		if (empty($commandList)) {
 			return;
 		}
@@ -106,8 +109,8 @@ abstract class AbstractCommand extends Command
 	protected function execCommand(
 		string $commandName,
 		array $arguments = [],
-		callable $callback = null,
-		OutputInterface $output = null,
+		?callable $callback = null,
+		?OutputInterface $output = null,
 	): int {
 		if (!$command = $this->getApplication()?->get($commandName)) {
 			throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $commandName));
@@ -136,20 +139,20 @@ abstract class AbstractCommand extends Command
 	}
 
 
-	protected function createProcess(string $command, int $timeout = null): Process
+	protected function execShell(string ...$command): int
+	{
+		$process = $this->createProcess(implode(' ', $command));
+		return $process->run(fn($type, $buffer) => $this->output->write($buffer));
+	}
+
+
+	protected function createProcess(string $command, ?int $timeout = null): Process
 	{
 		$process = Process::fromShellCommandline($command);
 		$process->setTty(Process::isTtySupported());
 		$process->setTimeout($timeout);
 
 		return $process;
-	}
-
-
-	protected function execShell(string ...$command): int
-	{
-		$process = $this->createProcess(implode(' ', $command));
-		return $process->run(fn($type, $buffer) => $this->output->write($buffer));
 	}
 
 

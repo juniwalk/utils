@@ -132,7 +132,7 @@ final class Sanitize
 	/**
 	 * @param Stringable|scalar $value
 	 */
-	public static function float(mixed $value, int $precision = null): ?float
+	public static function float(mixed $value, ?int $precision = null): ?float
 	{
 		$value = Strings::replace((string) $value, '/^e0-9\.\,/');
 		$value = (float) str_replace(',', '.', $value);

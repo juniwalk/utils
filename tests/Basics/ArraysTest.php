@@ -33,23 +33,35 @@ final class ArraysTest extends TestCase
 
 		Assert::same(
 			[[1, 2, 4], [8, 16, 32]],
-			Arrays::map($items, fn($v) => $v/2)
+			Arrays::mapRecursive($items, fn($v) => $v/2)
 		);
 	}
 
 
 	public function testWalk(): void
 	{
-		$items = ['_first' => 'one', '_second' => 'two', '_third' => 'three'];
+		$items = ['_first' => 'one', '_second' => 'two', '_third' => 'three', '_fourth' => ['_fifth' => 'four']];
 
 		Assert::same(
-			['one', 'two', 'three'],
+			['one', 'two', 'three', ['_fifth' => 'four']],
 			Arrays::walk($items, fn($v) => yield $v)
 		);
 
 		Assert::same(
-			['first' => 'one', 'second' => 'two', 'third' => 'three'],
+			['first' => 'one', 'second' => 'two', 'third' => 'three', 'fourth' => ['_fifth' => 'four']],
 			Arrays::walk($items, fn($v, $k) => yield trim($k, '_') => $v)
+		);
+
+		Assert::exception(
+			fn() => Arrays::walk($items, fn($v) => $v),
+			UnexpectedValueException::class,
+			'Callback is expected to return Iterator',
+		);
+
+		Assert::exception(
+			fn() => Arrays::walk($items, fn($v) => yield $this => $v),
+			UnexpectedValueException::class,
+			'Yielded key has to be of scalar type',
 		);
 	}
 

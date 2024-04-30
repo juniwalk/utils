@@ -19,18 +19,33 @@ final class Arrays
 	 */
 	public static function map(iterable $items, callable $callback, bool $isRecursive = true): array
 	{
-		$callback = function(mixed $value, mixed $key) use ($callback, $isRecursive) {
-			if (!$isRecursive || !is_iterable($value)) {
-				return $callback($value, $key);
-			}
-
-			return static::map($value, $callback, true);
-		};
-
 		$result = [];
+
+		if ($isRecursive) {
+			return static::mapRecursive($items, $callback);
+		}
 
 		foreach($items as $key => $value) {
 			$result[$key] = $callback($value, $key);
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * @param  mixed[] $items
+	 * @return mixed[]
+	 */
+	public static function mapRecursive(iterable $items, callable $callback): array
+	{
+		$result = [];
+
+		foreach($items as $key => $value) {
+			$result[$key] = match (true) {
+				is_iterable($value) => static::mapRecursive($value, $callback),
+				default => $callback($value, $key),
+			};
 		}
 
 		return $result;
@@ -45,28 +60,31 @@ final class Arrays
 	public static function walk(array $items, callable $callback): array
 	{
 		$result = [];
-		$callback = function(mixed $value, mixed $key) use ($callback): array {
-			$items = $callback($value, $key);
-
-			if (!$items instanceof Iterator) {
-				throw new UnexpectedValueException('Callback is expected to return instance of Iterator');
-			}
-
-			return iterator_to_array($items);
-		};
 
 		foreach ($items as $key => $value) {
 			$yield = $callback($value, $key);
 
-			if (!key($yield)) {
-				$result[] = current($yield);
-				continue;
+			if (!$yield instanceof Iterator) {
+				throw new UnexpectedValueException('Callback is expected to return Iterator');
 			}
 
-			$result = $result + $yield;
+			$key = $yield->key();
+
+			if (!is_scalar($key)) {
+				throw new UnexpectedValueException('Yielded key has to be of scalar type');
+			}
+
+			$result[] = [$key, $yield->current()];
 		}
 
-		return $result;
+		$keys = array_column($result, 0);
+		$vals = array_column($result, 1);
+
+		if (!array_filter($keys)) {
+			return $vals;
+		}
+
+		return array_combine($keys, $vals);	// @phpstan-ignore-line (Keys is already scalar)
 	}
 
 

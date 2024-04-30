@@ -9,10 +9,12 @@ namespace JuniWalk\Utils;
 
 use DateTimeInterface;
 use JsonSerializable;
+use JuniWalk\ORM\Entity\Interfaces\Identified;
 use JuniWalk\Utils\Enums\Casing;
 use JuniWalk\Utils\Enums\Interfaces\Currency;
 use ReflectionClass;
 use ReflectionException;
+use Serializable;
 use stdClass;
 use Stringable;
 use Throwable;
@@ -79,27 +81,49 @@ final class Format
 
 
 	/**
-	 * @return scalar|stdClass
+	 * @return scalar|stdClass|mixed[]|null
+	 * @deprecated
 	 */
 	public static function scalarize(mixed $value): mixed
 	{
+		// trigger_error('Method scalarize is deprecated, use serializable instead', E_USER_DEPRECATED);
+		return static::serializable($value);
+	}
+
+
+	/**
+	 * @return scalar|stdClass|mixed[]|null
+	 */
+	public static function serializable(mixed $value): mixed
+	{
+		if (is_scalar($value) || is_array($value)) {
+			return $value;
+		}
+
+		if (!is_object($value)) {
+			return null;
+		}
+
 		return match (true) {
-			!is_object($value),
-			$value instanceof stdClass => $value,
 			$value instanceof DateTimeInterface => $value->format('c'),
 			$value instanceof JsonSerializable => $value->jsonSerialize(),
+			$value instanceof Serializable => $value->serialize(),
 			$value instanceof Stringable => $value->__toString(),
 			$value instanceof UnitEnum => $value->value ?? $value->name,
+			$value instanceof Identified => $value->getId(),
+			$value instanceof stdClass => $value,
 
-			method_exists($value, 'getId') => (int) $value->getId(),
-			default => null,
+			default => match (true) {
+				method_exists($value, 'getId') => (int) $value->getId(),
+				default => null,
+			},
 		};
 	}
 
 
 	public static function stringify(mixed $value): string
 	{
-		$value = static::scalarize($value);
+		$value = static::serializable($value);
 
 		if ($value instanceof stdClass) {
 			$value = (array) $value;

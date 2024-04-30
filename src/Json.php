@@ -46,7 +46,7 @@ final class Json
 			return NetteJson::encode($content, $flags);
 		}
 
-		$content = Arrays::map($content, fn($v) => Format::scalarize($v));
+		$content = Arrays::map($content, fn($v) => Format::serializable($v));
 		$json = NetteJson::encode($content, $flags);
 
 		if (!($flags & static::PRETTY)) {

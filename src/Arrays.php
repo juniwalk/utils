@@ -8,7 +8,6 @@
 namespace JuniWalk\Utils;
 
 use Iterator;
-use stdClass;
 use UnexpectedValueException;
 
 final class Arrays
@@ -182,7 +181,7 @@ final class Arrays
 
 		foreach (static::flatten($items) as $key => $value) {
 			$key = sprintf($token, trim($key, $chars));
-			$result[$key] = Format::scalarize($value);
+			$result[$key] = Format::serializable($value);
 		}
 
 		return $result;
@@ -198,9 +197,7 @@ final class Arrays
 		$result = [];
 
 		foreach ($items as $item) {
-			$key = Format::scalarize($callback($item));
-
-			if (!$key || $key instanceof stdClass) {
+			if (!$key = Format::stringify($callback($item))) {
 				continue;
 			}
 

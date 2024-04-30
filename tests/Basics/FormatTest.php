@@ -62,7 +62,7 @@ final class FormatTest extends TestCase
 	}
 
 
-	public function testScalarize(): void
+	public function testSerializable(): void
 	{
 		$items = [
 			'stdClass'		=> [
@@ -88,7 +88,7 @@ final class FormatTest extends TestCase
 		];
 
 		foreach ($items as $testCase => ['actual' => $actual, 'expect' => $expect]) {
-			Assert::same($expect, Format::scalarize($actual), $testCase);
+			Assert::same($expect, Format::serializable($actual), $testCase);
 		}
 	}
 

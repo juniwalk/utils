@@ -39,8 +39,9 @@ final class Arrays
 
 		foreach($items as $key => $value) {
 			$result[$key] = match (true) {
-				is_iterable($value) => static::mapRecursive($value, $callback),
-				default => $callback($value, $key),
+				$value instanceof Html,
+				!is_iterable($value) => $callback($value, $key),
+				default => static::mapRecursive($value, $callback),
 			};
 		}
 

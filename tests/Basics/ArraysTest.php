@@ -6,6 +6,7 @@
  */
 
 use JuniWalk\Utils\Arrays;
+use JuniWalk\Utils\Html;
 use Tester\Assert;
 use Tester\TestCase;
 
@@ -29,12 +30,16 @@ final class ArraysTest extends TestCase
 
 	public function testMapRecursive(): void
 	{
+		$html = Html::el('div')->addHtml(Html::el('span'));
 		$items = [[2, 4, 8], [16, 32, 64]];
 
 		Assert::same(
 			[[1, 2, 4], [8, 16, 32]],
 			Arrays::mapRecursive($items, fn($v) => $v/2)
 		);
+
+		// ISSUE-#7: Instance of Html is handled as iterable which it should not be
+		Assert::same([$html], Arrays::mapRecursive([$html], fn($v) => $v));
 	}
 
 

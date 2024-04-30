@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils\Console\Tools;
 
+use JuniWalk\Utils\Console\Enums\Status;
 use Throwable;
 use Tracy\Debugger;
 use Symfony\Component\Console\Command\Command;
@@ -17,18 +18,6 @@ use Symfony\Component\Console\Terminal;
 
 final class ProgressIndicator
 {
-	public const Working = '....';
-	public const Success = '<info> ok </>';
-	public const Warning = '<comment>warn</>';
-	public const Error = '<fg=red>FAIL</>';
-	public const Skipped = '<comment>skip</>';
-
-	public const WORKING = self::Working;
-	public const SUCCESS = self::Success;
-	public const WARNING = self::Warning;
-	public const ERROR = self::Error;
-	public const SKIPPED = self::Skipped;
-
 	private OutputInterface $errorOutput;
 	private ProgressBar $progress;
 
@@ -89,15 +78,16 @@ final class ProgressIndicator
 	}
 
 
-	public function setStatus(string $message): void
+	public function setStatus(Status $status): void
 	{
-		$this->progress->setMessage($message, 'status');
+		$this->progress->setMessage($status->value, 'status');
 	}
 
 
-	public function getStatus(): ?string
+	public function getStatus(): ?Status
 	{
-		return $this->progress->getMessage('status');
+		$status = $this->progress->getMessage('status');
+		return Status::make($status, false);
 	}
 
 
@@ -105,19 +95,19 @@ final class ProgressIndicator
 	{
 		$this->progress->setFormat("[%status%] %message%\n");
 		$this->setMessage($message, 'message');
-		$this->setStatus(self::Working);
+		$this->setStatus(Status::Working);
 		$this->progress->start();
 
 		try {
 			return $callback($this);
 
 		} catch (Throwable $e) {
-			$this->setStatus(self::Error);
+			$this->setStatus(Status::Error);
 			$this->render($e);
 
 		} finally {
-			if ($this->getStatus() === self::Working) {
-				$this->setStatus(self::Success);
+			if ($this->getStatus() === Status::Working) {
+				$this->setStatus(Status::Success);
 			}
 
 			$this->progress->finish();

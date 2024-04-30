@@ -19,7 +19,6 @@ use Stringable;
 final class Html extends NetteHtml
 {
 	public const TranslationRegEx = '/^(?:[a-z0-9-_]+\.){1,}(?:[a-z0-9-_]+)$/i';
-	public const TRANSLATION_REGEX = self::TranslationRegEx;
 
 	public static bool $disableTranslation = false;
 	private static ?Translator $translator = null;

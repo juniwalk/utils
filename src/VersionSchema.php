@@ -30,7 +30,6 @@ final class VersionSchema
 		try {
 			/** @var stdClass */
 			$json = Json::decodeFile($file);
-
 			return static::fromObject($json);
 
 		} catch (Throwable $e) {

@@ -14,8 +14,8 @@ use Stringable;
 
 final class Json
 {
-	public const PATTERN = '/(\"code\:([\/=+0-9a-z]+)\")/iU';
-	public const LITERAL = 'code:';
+	public const Pattern = '/(\"code\:([\/=+0-9a-z]+)\")/iU';
+	public const Literal = 'code:';
 
 	public const FORCE_ARRAY = NetteJson::FORCE_ARRAY;
 	public const PRETTY = NetteJson::PRETTY;
@@ -31,7 +31,7 @@ final class Json
 
 			public function __toString(): string
 			{
-				return Json::LITERAL.base64_encode($this->code);
+				return Json::Literal.base64_encode($this->code);
 			}
 		};
 	}
@@ -53,7 +53,7 @@ final class Json
 			return $json;
 		}
 
-		foreach (Strings::matchAll($json, static::PATTERN) as $hash) {
+		foreach (Strings::matchAll($json, static::Pattern) as $hash) {
 			$json = str_replace($hash[0], base64_decode($hash[2]), $json);
 		}
 

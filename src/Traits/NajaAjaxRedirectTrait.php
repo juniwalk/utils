@@ -38,14 +38,4 @@ trait NajaAjaxRedirectTrait
 		$this->forceRedirect = true;
 		return $this;
 	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function redirectAjax(string $dest, mixed ...$args): void
-	{
-		// trigger_error('RedirectAjax is deprecated, use redirect method directly', E_USER_DEPRECATED);
-		$this->redirect($dest, ...$args);
-	}
 }

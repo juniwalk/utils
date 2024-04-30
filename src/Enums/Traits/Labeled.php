@@ -76,6 +76,12 @@ trait Labeled
 	}
 
 
+	public function label(): string
+	{
+		return $this->name;
+	}
+
+
 	public function color(): Color
 	{
 		return Color::Secondary;

@@ -41,17 +41,4 @@ class DateTime extends NetteDate
 
 		return static::createFromFormat($format, $matches[0]) ?: null;
 	}
-
-
-	public function timeFrom(?DateTimeInterface $date): static
-	{
-		$date ??= static::from('00:00:00');
-
-		return $this->setTime(
-			(int) $date->format('H'),
-			(int) $date->format('i'),
-			(int) $date->format('s'),
-			(int) $date->format('u'),
-		);
-	}
 }

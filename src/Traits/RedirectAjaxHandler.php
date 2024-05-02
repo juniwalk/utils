@@ -9,7 +9,7 @@ namespace JuniWalk\Utils\Traits;
 
 use Nette\Application\AbortException;
 
-trait NajaAjaxRedirectTrait
+trait RedirectAjaxHandler
 {
 	private bool $forceRedirect = false;
 
@@ -37,5 +37,16 @@ trait NajaAjaxRedirectTrait
 	{
 		$this->forceRedirect = true;
 		return $this;
+	}
+
+
+	/**
+	 * @throws AbortException
+	 * @deprecated
+	 */
+	public function redirectAjax(string $dest, mixed ...$args): void
+	{
+		// trigger_error('Method redirectAjax is deprecated, call redirect directly', E_USER_DEPRECATED);
+		$this->redirect($dest, ...$args);
 	}
 }

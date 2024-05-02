@@ -12,7 +12,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\Request;
 use Nette\Application\Response;
 
-trait DoctrineNoResultTrait
+trait DoctrineNoResultHandler
 {
 	public function run(Request $request): Response
 	{

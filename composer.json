@@ -17,7 +17,6 @@
 
 	"minimum-stability": "dev",
 	"prefer-stable": true,
-	"extra": {"branch-alias": {"dev-main": "4.0.x-dev"}},
 	"config": {
 		"sort-packages": true,
 		"allow-plugins": {

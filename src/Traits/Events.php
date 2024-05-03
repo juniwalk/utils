@@ -11,10 +11,12 @@ use Nette\InvalidStateException;
 
 trait Events
 {
+	/** @var array<string, callable> */
 	private array $events = [];
 
 
 	/**
+	 * @param  callable(): void $callback
 	 * @throws InvalidStateException
 	 */
 	public function when(string $event, callable $callback, ?int $priority = null): void
@@ -49,6 +51,20 @@ trait Events
 		}
 
 		$this->events[$event] = [];
+		return $this;
+	}
+
+
+	/**
+	 * @throws InvalidStateException
+	 */
+	protected function unwatch(string $event): static
+	{
+		if (!$this->isWatched($event)) {
+			throw new InvalidStateException('Event "'.$event.'" is not watched.');
+		}
+
+		unset($this->events[$event])
 		return $this;
 	}
 

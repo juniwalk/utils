@@ -134,6 +134,7 @@ final class FormatTest extends TestCase
 		Assert::type('float', Format::numeric('5,5'));
 		Assert::type('float', Format::numeric('5 000,50'));
 		Assert::type('null', Format::numeric('test'));
+		Assert::type('string', Format::numeric('test', strict: false));
 	}
 }
 

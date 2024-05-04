@@ -266,27 +266,28 @@ final class Format
 
 
 	/**
-	 * @param scalar $value
+	 * @param  scalar|null $value
+	 * @return scalar|null
 	 */
-	public static function numeric(mixed $value, ?int $precision = null): int|float|null
+	public static function numeric(mixed $value, ?int $precision = null, bool $strict = true): mixed
 	{
-		$value = strtr((string) $value, [' ' => '', ',' => '.']);
+		$number = strtr(strval($value), [' ' => '', ',' => '.']);
 
-		if (!$value || !is_numeric($value)) {
-			return null;
+		if (!$number || !is_numeric($number)) {
+			return $strict ? null : $value;
 		}
 
-		$value = (float) $value;
+		$number = (float) $number;
 
-		if ((int) $value == $value) {
-			return (int) $value;
+		if ((int) $number == $number) {
+			return (int) $number;
 		}
 
 		if (is_null($precision)) {
-			return $value;
+			return $number;
 		}
 
-		return round($value, $precision);
+		return round($number, $precision);
 	}
 
 

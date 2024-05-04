@@ -64,7 +64,7 @@ trait Events
 			throw new InvalidStateException('Event "'.$event.'" is not watched.');
 		}
 
-		unset($this->events[$event])
+		unset($this->events[$event]);
 		return $this;
 	}
 

@@ -266,6 +266,31 @@ final class Format
 
 
 	/**
+	 * @param scalar $value
+	 */
+	public static function numeric(mixed $value, ?int $precision = null): int|float|null
+	{
+		$value = strtr((string) $value, [' ' => '', ',' => '.']);
+
+		if (!$value || !is_numeric($value)) {
+			return null;
+		}
+
+		$value = (float) $value;
+
+		if ((int) $value == $value) {
+			return (int) $value;
+		}
+
+		if (is_null($precision)) {
+			return $value;
+		}
+
+		return round($value, $precision);
+	}
+
+
+	/**
 	 * @param array<string, mixed> $params
 	 */
 	public static function tokens(string $content, array $params = []): string

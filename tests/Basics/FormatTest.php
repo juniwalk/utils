@@ -122,6 +122,19 @@ final class FormatTest extends TestCase
 			Assert::same($expect, Format::stringify($actual), $testCase);
 		}
 	}
+
+
+	public function testNumeric(): void
+	{
+		Assert::type('int', Format::numeric(5.0));
+		Assert::type('int', Format::numeric('5.0'));
+		Assert::type('int', Format::numeric('5,0'));
+		Assert::type('float', Format::numeric(5.5));
+		Assert::type('float', Format::numeric('5.5'));
+		Assert::type('float', Format::numeric('5,5'));
+		Assert::type('float', Format::numeric('5 000,50'));
+		Assert::type('null', Format::numeric('test'));
+	}
 }
 
 (new FormatTest)->run();

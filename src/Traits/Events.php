@@ -9,8 +9,8 @@ namespace JuniWalk\Utils\Traits;
 
 use JuniWalk\Utils\Interfaces\EventHandler;
 use JuniWalk\Utils\Format;
+use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use UnexpectedValueException;
 
 /**
  * @phpstan-require-implements EventHandler
@@ -22,12 +22,12 @@ trait Events
 
 
 	/**
-	 * @throws UnexpectedValueException
+	 * @throws InvalidArgumentException
 	 */
 	public function &__get(string $name): array
 	{
 		if (!str_starts_with($name, 'on')) {
-			throw new UnexpectedValueException('Event name should use format on[EventName], '.$name.' given.');
+			throw new InvalidArgumentException('Event name should use format on[EventName], '.$name.' given.');
 		}
 
 		$event = Format::kebabCase($name);

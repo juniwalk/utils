@@ -17,7 +17,7 @@ use Nette\InvalidStateException;
  */
 trait Events
 {
-	/** @var array<string, callable> */
+	/** @var array<string, callable[]> */
 	private array $events = [];
 
 

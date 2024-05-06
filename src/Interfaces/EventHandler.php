@@ -10,5 +10,5 @@ namespace JuniWalk\Utils\Interfaces;
 interface EventHandler
 {
 	public function when(string $event, callable $callback, ?int $priority = null): void;
-	public function isWatched(string $event): bool;
+	public function isWatched(string $event, bool $throw = false): bool;
 }

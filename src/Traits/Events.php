@@ -7,8 +7,14 @@
 
 namespace JuniWalk\Utils\Traits;
 
+use JuniWalk\Utils\Interfaces\EventHandler;
+use JuniWalk\Utils\Format;
 use Nette\InvalidStateException;
+use UnexpectedValueException;
 
+/**
+ * @phpstan-require-implements EventHandler
+ */
 trait Events
 {
 	/** @var array<string, callable> */
@@ -16,16 +22,43 @@ trait Events
 
 
 	/**
-	 * @param  callable(): void $callback
+	 * @throws UnexpectedValueException
+	 */
+	public function &__get(string $name): array
+	{
+		if (!str_starts_with($name, 'on')) {
+			throw new UnexpectedValueException('Event name should use format on[EventName], '.$name.' given.');
+		}
+
+		$event = Format::kebabCase($name);
+		$event = substr($event, 3);
+
+		$this->isWatched($event, true);
+		return $this->events[$event];
+	}
+
+
+	/**
 	 * @throws InvalidStateException
 	 */
+	public function isWatched(string $event, bool $throw = false): bool
+	{
+		$event = Format::kebabCase($event);
+
+		if ($throw && !$isWatched = isset($this->events[$event])) {
+			throw new InvalidStateException('Event "'.$event.'" is not being watched.');
+		}
+
+		return $isWatched;
+	}
+
+
 	public function when(string $event, callable $callback, ?int $priority = null): void
 	{
-		$priority ??= sizeof($this->events[$event] ?? []);
+		$event = Format::kebabCase($event);
+		$this->isWatched($event, true);
 
-		if (!$this->isWatched($event)) {
-			throw new InvalidStateException('Event "'.$event.'" is not watched. Call '.static::class.'::watch($event) method.');
-		}
+		$priority ??= sizeof($this->events[$event] ?? []);
 
 		array_splice(
 			$this->events[$event],
@@ -35,17 +68,13 @@ trait Events
 	}
 
 
-	public function isWatched(string $event): bool
-	{
-		return isset($this->events[$event]);
-	}
-
-
 	/**
 	 * @throws InvalidStateException
 	 */
 	protected function watch(string $event, bool $clear = false): static
 	{
+		$event = Format::kebabCase($event);
+
 		if (!$clear && $this->isWatched($event)) {
 			throw new InvalidStateException('Event "'.$event.'" is already watched. Use $clear to re-register.');
 		}
@@ -60,9 +89,8 @@ trait Events
 	 */
 	protected function unwatch(string $event): static
 	{
-		if (!$this->isWatched($event)) {
-			throw new InvalidStateException('Event "'.$event.'" is not watched.');
-		}
+		$event = Format::kebabCase($event);
+		$this->isWatched($event, true);
 
 		unset($this->events[$event]);
 		return $this;
@@ -74,9 +102,8 @@ trait Events
 	 */
 	protected function trigger(string $event, mixed ...$args): void
 	{
-		if (!$this->isWatched($event)) {
-			throw new InvalidStateException('Event "'.$event.'" is not watched. Call '.static::class.'::listen($event) method.');
-		}
+		$event = Format::kebabCase($event);
+		$this->isWatched($event, true);
 
 		ksort($this->events[$event], SORT_NUMERIC);
 

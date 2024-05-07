@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils\Traits;
 
+use JuniWalk\Utils\Interfaces\EventAutoWatch;
 use JuniWalk\Utils\Interfaces\EventHandler;
 use JuniWalk\Utils\Format;
 use Nette\InvalidArgumentException;
@@ -14,14 +15,16 @@ use Nette\InvalidStateException;
 
 /**
  * @phpstan-require-implements EventHandler
+ * @phpstan-type EventCallback callable
  */
 trait Events
 {
-	/** @var array<string, callable[]> */
+	/** @var array<string, EventCallback[]> */
 	private array $events = [];
 
 
 	/**
+	 * @return EventCallback[]
 	 * @throws InvalidArgumentException
 	 */
 	public function &__get(string $name): array
@@ -43,9 +46,15 @@ trait Events
 	 */
 	public function isWatched(string $event, bool $throw = false): bool
 	{
+		$isWatched = isset($this->events[$event]);
 		$event = Format::kebabCase($event);
 
-		if ($throw && !$isWatched = isset($this->events[$event])) {
+		if (!$isWatched && $this instanceof EventAutoWatch) {
+			$this->watch($event, true);
+			return true;
+		}
+
+		if (!$isWatched && $throw) {
 			throw new InvalidStateException('Event "'.$event.'" is not being watched.');
 		}
 
@@ -53,6 +62,9 @@ trait Events
 	}
 
 
+	/**
+	 * @param EventCallback $callback
+	 */
 	public function when(string $event, callable $callback, ?int $priority = null): void
 	{
 		$event = Format::kebabCase($event);
@@ -75,7 +87,7 @@ trait Events
 	{
 		$event = Format::kebabCase($event);
 
-		if (!$clear && $this->isWatched($event)) {
+		if (!$clear && $this->isWatched($event) && !$this instanceof EventAutoWatch) {
 			throw new InvalidStateException('Event "'.$event.'" is already watched. Use $clear to re-register.');
 		}
 

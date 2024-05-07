@@ -42,6 +42,22 @@ trait Events
 
 
 	/**
+	 * @throws InvalidArgumentException
+	 */
+	public function __isset(string $name): bool
+	{
+		if (!str_starts_with($name, 'on')) {
+			throw new InvalidArgumentException('Event name should use format on[EventName], '.$name.' given.');
+		}
+
+		$event = Format::kebabCase($name);
+		$event = substr($event, 3);
+
+		return isset($this->events[$event]);
+	}
+
+
+	/**
 	 * @throws InvalidStateException
 	 */
 	public function isWatched(string $event, bool $throw = false): bool

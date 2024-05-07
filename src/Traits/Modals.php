@@ -5,7 +5,7 @@
  * @license   MIT License
  */
 
-namespace JuniWalk\Components\Traits;
+namespace JuniWalk\Utils\Traits;
 
 use JuniWalk\Utils\Interfaces\EventHandler;
 use JuniWalk\Utils\Interfaces\Modal;

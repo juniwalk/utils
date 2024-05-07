@@ -119,8 +119,8 @@ trait Events
 
 		ksort($this->events[$event], SORT_NUMERIC);
 
-		foreach ($this->events[$event] as $event) {
-			call_user_func($event, ...$args);
+		foreach ($this->events[$event] as $handler) {
+			call_user_func($handler, ...$args);
 		}
 	}
 }

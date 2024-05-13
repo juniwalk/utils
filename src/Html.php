@@ -62,8 +62,11 @@ final class Html extends NetteHtml
 	}
 
 
+	/**
+	 * @param Stringable|scalar|null $content
+	 */
 	public static function highlight(
-		Stringable|string|null $content,
+		mixed $content,
 		Color $color = Color::Primary,
 		bool $translate = true,
 	): self {
@@ -73,8 +76,11 @@ final class Html extends NetteHtml
 	}
 
 
+	/**
+	 * @param Stringable|scalar|null $content
+	 */
 	public static function subtext(
-		Stringable|string|null $content,
+		mixed $content,
 		Color $color = Color::Secondary,
 		bool $translate = true,
 	): self {
@@ -180,7 +186,7 @@ final class Html extends NetteHtml
 	): self {
 		$content = static::translate($content, $translate);
 		$labelHtml = static::translate($label, $translate);
-		$label = Strings::stripHtml($labelHtml);
+		$label = Strings::stripHtml($labelHtml ?? '');
 
 		if (!$content && $label <> $labelHtml) {
 			$content = $labelHtml;
@@ -283,18 +289,21 @@ final class Html extends NetteHtml
 	}
 
 
-	private static function translate(Stringable|string|null $text, bool $translate = true): Stringable|string
+	/**
+	 * @param  Stringable|scalar|null $value
+	 */
+	private static function translate(mixed $value, bool $translate = true): null|string|Stringable
 	{
-		$text ??= '';
+		$value = strval($value) ?: null;
 
 		if (!$translate || static::$disableTranslation || !static::$translator) {
-			return $text;
+			return $value;
 		}
 
-		if (!$text || !Strings::match((string) $text, static::TranslationRegEx)) {
-			return $text;
+		if (!$value || !Strings::match($value, static::TranslationRegEx)) {
+			return $value;
 		}
 
-		return static::$translator->translate($text);
+		return static::$translator->translate($value);
 	}
 }

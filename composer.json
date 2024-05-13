@@ -24,6 +24,10 @@
 		}
 	},
 
+	"extra" : {
+		"branch-alias" : {"dev-main" : "4.1.x-dev"}
+	},
+
 	"require": {
 		"php": ">=8.2",
 		"nette/schema": "^1.0",
@@ -31,7 +35,7 @@
 	},
 
 	"require-dev": {
-		"juniwalk/orm": "^0.10",
+		"juniwalk/orm": ">=0.10 <1.0 | ^1.0",
 		"latte/latte": "^3.0",
 		"nette/application": "^3.2",
 		"nette/security": "^3.2",

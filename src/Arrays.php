@@ -53,7 +53,7 @@ final class Arrays
 	 * @return mixed[]
 	 * @throws UnexpectedValueException
 	 */
-	public static function walk(array $items, callable $callback): array
+	public static function walk(iterable $items, callable $callback): array
 	{
 		$result = [];
 

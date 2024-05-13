@@ -66,7 +66,7 @@ final class Arrays
 
 			$key = $yield->key();
 
-			if (!is_scalar($key)) {
+			if (!is_int($key) && !is_string($key)) {
 				throw new UnexpectedValueException('Yielded key has to be of scalar type');
 			}
 
@@ -80,7 +80,7 @@ final class Arrays
 			return $vals;
 		}
 
-		return array_combine($keys, $vals);	// @phpstan-ignore-line (Keys is already scalar)
+		return array_combine($keys, $vals);
 	}
 
 

@@ -141,7 +141,7 @@ final class Arrays
 
 	/**
 	 * @param  array<string, mixed> $items
-	 * @return array<int|string, mixed>
+	 * @return array<string, mixed>
 	 */
 	public static function unflatten(iterable $items): array
 	{

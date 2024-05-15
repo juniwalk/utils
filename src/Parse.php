@@ -10,6 +10,7 @@ namespace JuniWalk\Utils;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use ValueError;
+use stdClass;
 
 final class Parse
 {
@@ -39,9 +40,10 @@ final class Parse
 
 
 	/**
+	 * @return stdClass{name: string, args: array<string, mixed>}
 	 * @throws ValueError
 	 */
-	public static function keyword(string $value): ?object
+	public static function keyword(string $value): ?stdClass
 	{
 		if (!$match = Strings::match($value, '/^'.implode('', static::HelpKeyword).'$/i')) {
 			throw new ValueError('Unable to parse keyword from: '.$value);
@@ -54,9 +56,10 @@ final class Parse
 
 
 	/**
+	 * @return stdClass{name: string, type: ?string, args: array<string, mixed>}
 	 * @throws ValueError
 	 */
-	public static function control(string $value): ?object
+	public static function control(string $value): ?stdClass
 	{
 		if (!$match = Strings::match($value, '/^'.implode('', static::HelpControl).'$/i')) {
 			throw new ValueError('Unable to parse control from: '.$value);

@@ -91,7 +91,7 @@ final class Html extends NetteHtml
 
 
 	public static function badge(
-		string $content,
+		string|Stringable $content,
 		Color $color = Color::Secondary,
 		?string $icon = null,
 		bool $translate = true,
@@ -177,10 +177,10 @@ final class Html extends NetteHtml
 
 
 	public static function option(
-		string $label,
+		string|Stringable $label,
 		mixed $value,
-		?string $content = null,
-		?string $icon = null,
+		string|Stringable|null $content = null,
+		string|Stringable|null $icon = null,
 		?Color $color = null,
 		bool $translate = true,
 	): self {
@@ -237,9 +237,12 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function code(string $content, ?string $title = null, bool $allowCopy = false): self
-	{
-		$code = static::el('code', $content);
+	public static function code(
+		string|Stringable $content,
+		?string $title = null,
+		bool $allowCopy = false,
+	): self {
+		$code = static::el('code', (string) $content);
 
 		if ($allowCopy) {
 			$code->data('copy', $content);

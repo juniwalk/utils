@@ -47,7 +47,7 @@ final class Format
 	/**
 	 * @example snake_case
 	 */
-	public static function snakeCase(string $value): string
+	public static function snakeCase(string|Stringable $value): string
 	{
 		return Casing::Snake->format($value);
 	}
@@ -56,7 +56,7 @@ final class Format
 	/**
 	 * @example kebab-case
 	 */
-	public static function kebabCase(string $value): string
+	public static function kebabCase(string|Stringable $value): string
 	{
 		return Casing::Kebab->format($value);
 	}
@@ -65,7 +65,7 @@ final class Format
 	/**
 	 * @example camelCase
 	 */
-	public static function camelCase(string $value): string
+	public static function camelCase(string|Stringable $value): string
 	{
 		return Casing::Camel->format($value);
 	}
@@ -74,7 +74,7 @@ final class Format
 	/**
 	 * @example PascalCase
 	 */
-	public static function pascalCase(string $value): string
+	public static function pascalCase(string|Stringable $value): string
 	{
 		return Casing::Pascal->format($value);
 	}
@@ -258,8 +258,12 @@ final class Format
 	}
 
 
-	public static function value(float|int $value, string $unit, int $decimals = 2, string $format = '%1$s %2$s'): string
-	{
+	public static function value(
+		float|int $value,
+		string|Stringable $unit,
+		int $decimals = 2,
+		string $format = '%1$s %2$s',
+	): string {
 		$value = number_format($value, $decimals, ',', ' ');
 		return sprintf($format, $value, $unit);
 	}
@@ -294,8 +298,8 @@ final class Format
 	/**
 	 * @param array<string, mixed> $params
 	 */
-	public static function tokens(string $content, array $params = []): string
+	public static function tokens(string|Stringable $content, array $params = []): string
 	{
-		return strtr($content, Arrays::tokenize($params));
+		return strtr((string) $content, Arrays::tokenize($params));
 	}
 }

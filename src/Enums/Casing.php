@@ -7,6 +7,8 @@
 
 namespace JuniWalk\Utils\Enums;
 
+use Stringable;
+
 enum Casing: string
 {
 	case Camel = 'camel';
@@ -21,7 +23,7 @@ enum Casing: string
 	 * @example kebab-case
 	 * @example PascalCase
 	 */
-	public function format(string $value): string
+	public function format(string|Stringable $value): string
 	{
 		$value = $this->camelCase($value);
 
@@ -34,9 +36,9 @@ enum Casing: string
 	}
 
 
-	private function camelCase(string $value): string
+	private function camelCase(string|Stringable $value): string
 	{
-		if (!$value = preg_split('/[_-]/', $value)) {
+		if (!$value = preg_split('/[_-]/', (string) $value)) {
 			return '';
 		}
 

@@ -14,13 +14,13 @@ use Stringable;
 
 final class Strings extends NetteStrings
 {
-	public static function stripHtml(Stringable|string $content): string
+	public static function stripHtml(string|Stringable $content): string
 	{
 		return LatteFilters::stripHtml(new FilterInfo('html'), $content);
 	}
 
 
-	public static function slugify(string $content, ?string $lang = null): string
+	public static function slugify(string|Stringable $content, ?string $lang = null): string
 	{
 		$content = self::transliterate($content, $lang);
 		$content = self::webalize($content, "'");
@@ -28,8 +28,10 @@ final class Strings extends NetteStrings
 	}
 
 
-	public static function shorten(string $content, int $length = 6, string $token = '…'): string
+	public static function shorten(string|Stringable $content, int $length = 6, string $token = '…'): string
 	{
+		$content = (string) $content;
+
 		if (static::length($content) < $length * 2) {
 			return $content;
 		}
@@ -41,8 +43,10 @@ final class Strings extends NetteStrings
 	}
 
 
-	private static function transliterate(string $string, ?string $lang = null): string
+	private static function transliterate(string|Stringable $string, ?string $lang = null): string
 	{
+		$string = (string) $string;
+
 		return (string) match ($lang) {
 			'ru' => transliterator_transliterate('Russian-Latin/BGN', $string),
 			default => $string,

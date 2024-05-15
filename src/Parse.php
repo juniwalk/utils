@@ -73,9 +73,10 @@ final class Parse
 
 
 	/**
+	 * @return stdClass{path: string, absolute: bool, signal: bool, args: array<string, mixed>, fragment: string}
 	 * @throws ValueError
 	 */
-	public static function link(string $value): ?object
+	public static function link(string $value): ?stdClass
 	{
 		if (!$match = Strings::match($value, '/^'.implode('', static::HelpLink).'$/i')) {
 			throw new ValueError('Unable to parse link from: '.$value);

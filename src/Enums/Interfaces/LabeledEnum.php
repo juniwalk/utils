@@ -16,12 +16,12 @@ interface LabeledEnum extends BackedEnum
 	public static function make(mixed $value, bool $required = true): ?static;
 
 	/**
-	 * @return array<string, string>
+	 * @return string[]
 	 */
 	public static function getLabels(): array;
 
 	/**
-	 * @return array<string, Html>
+	 * @return Html[]
 	 */
 	public static function getOptions(bool $badge = true): array;
 

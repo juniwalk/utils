@@ -15,7 +15,7 @@ use ValueError;
 trait Labeled
 {
 	/**
-	 * @return array<string, string>
+	 * @return string[]
 	 */
 	public static function getLabels(): array
 	{
@@ -30,7 +30,7 @@ trait Labeled
 
 
 	/**
-	 * @return array<string, Html>
+	 * @return Html[]
 	 */
 	public static function getOptions(bool $badge = true): array
 	{

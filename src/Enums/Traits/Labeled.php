@@ -46,6 +46,7 @@ trait Labeled
 
 	/**
 	 * @param  int|string|static|null $value
+	 * @return ($required is true ? static : ?static)
 	 * @throws ValueError
 	 */
 	public static function make(mixed $value, bool $required = true): ?static

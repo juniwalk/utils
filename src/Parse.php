@@ -43,7 +43,7 @@ final class Parse
 	 * @return stdClass{name: string, args: array<string, mixed>}
 	 * @throws ValueError
 	 */
-	public static function keyword(string $value): ?stdClass
+	public static function keyword(string $value): stdClass
 	{
 		if (!$match = Strings::match($value, '/^'.implode('', static::HelpKeyword).'$/i')) {
 			throw new ValueError('Unable to parse keyword from: '.$value);
@@ -59,7 +59,7 @@ final class Parse
 	 * @return stdClass{name: string, type: ?string, args: array<string, mixed>}
 	 * @throws ValueError
 	 */
-	public static function control(string $value): ?stdClass
+	public static function control(string $value): stdClass
 	{
 		if (!$match = Strings::match($value, '/^'.implode('', static::HelpControl).'$/i')) {
 			throw new ValueError('Unable to parse control from: '.$value);

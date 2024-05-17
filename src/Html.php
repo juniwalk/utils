@@ -219,9 +219,13 @@ final class Html extends NetteHtml
 	}
 
 
-	public static function link(string $label, Link|string|null $href = null, self|string|null $icon = null, bool $translate = true): self
-	{
-		$link = static::el('a')->setHref($href);
+	public static function link(
+		string $label,
+		Link|string|null $href = null,
+		self|string|null $icon = null,
+		bool $translate = true,
+	): self {
+		$html = static::el('a')->setHref($href);
 		$label = static::translate($label, $translate);
 
 		if (!empty($icon)) {
@@ -229,11 +233,13 @@ final class Html extends NetteHtml
 				$icon = static::icon($icon, true);
 			}
 
-			$link->addHtml($icon)->addText(' ');
+			$html->addHtml($icon)->addText(' ');
 		}
 
+		$html->addHtml($label);
+
 		/** @var Html */
-		return $link->addHtml($label);
+		return $html;
 	}
 
 

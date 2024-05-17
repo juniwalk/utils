@@ -221,7 +221,6 @@ final class Html extends NetteHtml
 
 	public static function link(string $label, Link|string|null $href = null, self|string|null $icon = null, bool $translate = true): self
 	{
-		/** @var Html */
 		$link = static::el('a')->setHref($href);
 		$label = static::translate($label, $translate);
 
@@ -233,6 +232,7 @@ final class Html extends NetteHtml
 			$link->addHtml($icon)->addText(' ');
 		}
 
+		/** @var Html */
 		return $link->addHtml($label);
 	}
 

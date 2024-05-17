@@ -8,10 +8,14 @@
 namespace JuniWalk\Utils\Enums\Traits;
 
 use JuniWalk\Utils\Enums\Color;
+use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;	// ! Used for @phpstan
 use JuniWalk\Utils\Html;
 use JuniWalk\Utils\Strings;
 use ValueError;
 
+/**
+ * @phpstan-require-implements LabeledEnum
+ */
 trait Labeled
 {
 	/**

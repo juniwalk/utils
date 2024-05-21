@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils\Traits;
 
 use Nette\Application\AbortException;
+use Nette\Application\UI\Presenter;
 
 trait RedirectAjaxHandler
 {
@@ -18,18 +19,28 @@ trait RedirectAjaxHandler
 	 */
 	public function redirect(string $dest, mixed ...$args): void
 	{
-		$presenter = $this->getPresenter();
-		$payload = $presenter->getPayload();
+		$self = $this->getPresenter();
+		$payload = $self->getPayload();
 
 		unset($payload->postGet);
 		unset($payload->url);
 
-		if (!$presenter->isAjax() || $this->forceRedirect) {
+		if (!$self->isAjax()) {
 			parent::redirect($dest, ...$args);
 		}
 
 		$payload->url = $this->link($dest, ...$args);
 		$payload->postGet = true;
+	}
+
+
+	public function isAjax(): bool
+	{
+		if (!$this instanceof Presenter) {
+			return $this->getPresenter()->isAjax();
+		}
+
+		return parent::isAjax() && !$this->forceRedirect;
 	}
 
 

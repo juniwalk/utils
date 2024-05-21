@@ -59,7 +59,7 @@ trait Labeled
 			return $value;
 		}
 
-		if ($value instanceof Stringable || is_string($value) || is_int($value)) {	// @phpstan-ignore instanceof.alwaysFalse ($value could be Stringable)
+		if ($value instanceof Stringable || is_string($value) || is_int($value)) {
 			$value = (string) $value;
 
 			foreach (static::cases() as $case) {

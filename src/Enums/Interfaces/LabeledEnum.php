@@ -14,7 +14,6 @@ use JuniWalk\Utils\Html;
 interface LabeledEnum extends BackedEnum
 {
 	/**
-	 * @param  int|string|static|null $value
 	 * @return ($required is true ? static : ?static)
 	 */
 	public static function make(mixed $value, bool $required = true): ?static;

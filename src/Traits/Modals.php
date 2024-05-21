@@ -9,11 +9,16 @@ namespace JuniWalk\Utils\Traits;
 
 use JuniWalk\Utils\Interfaces\EventHandler;
 use JuniWalk\Utils\Interfaces\Modal;
+use JuniWalk\Utils\Interfaces\ModalHandler;
 use Nette\InvalidArgumentException;
 
+/**
+ * @phpstan-require-implements ModalHandler
+ */
 trait Modals
 {
 	/**
+	 * @param  array<string, mixed> $params
 	 * @throws InvalidArgumentException
 	 */
 	public function openModal(Modal|string $modal, array $params = []): void

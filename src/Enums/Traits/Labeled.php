@@ -11,6 +11,7 @@ use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;	// ! Used for @phpstan
 use JuniWalk\Utils\Html;
 use JuniWalk\Utils\Strings;
+use Stringable;
 use ValueError;
 
 /**
@@ -49,7 +50,6 @@ trait Labeled
 
 
 	/**
-	 * @param  int|string|static|null $value
 	 * @return ($required is true ? static : ?static)
 	 * @throws ValueError
 	 */
@@ -59,25 +59,27 @@ trait Labeled
 			return $value;
 		}
 
-		$value = (string) $value;
+		if ($value instanceof Stringable || is_string($value) || is_int($value)) {	// @phpstan-ignore instanceof.alwaysFalse ($value could be Stringable)
+			$value = (string) $value;
 
-		foreach (static::cases() as $case) {
-			if (Strings::compare((string) $case->value, $value)) {
-				return $case;
+			foreach (static::cases() as $case) {
+				if (Strings::compare((string) $case->value, $value)) {
+					return $case;
+				}
+	
+				if (Strings::compare($case->name, $value)) {
+					return $case;
+				}
+	
+				continue;
 			}
-
-			if (Strings::compare($case->name, $value)) {
-				return $case;
-			}
-
-			continue;
 		}
 
 		if (!$required) {
 			return null;
 		}
 
-		throw new ValueError('"'.$value.'" is not a valid backing value for enum "'.static::class.'"');
+		throw new ValueError('Given value is not a valid backing for enum "'.static::class.'"');
 	}
 
 

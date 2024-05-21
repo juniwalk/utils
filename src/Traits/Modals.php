@@ -9,7 +9,7 @@ namespace JuniWalk\Utils\Traits;
 
 use JuniWalk\Utils\Interfaces\EventHandler;
 use JuniWalk\Utils\Interfaces\Modal;
-use JuniWalk\Utils\Interfaces\ModalHandler;
+use JuniWalk\Utils\Interfaces\ModalHandler;	// ! Used for @phpstan
 use Nette\InvalidArgumentException;
 
 /**

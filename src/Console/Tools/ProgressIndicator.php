@@ -91,6 +91,11 @@ final class ProgressIndicator
 	}
 
 
+	/**
+	 * @template T of mixed
+	 * @param  callable(static): T $callback
+	 * @return T|int
+	 */
 	public function execute(string $message, callable $callback): mixed
 	{
 		$this->progress->setFormat("[%status%] %message%\n");
@@ -120,7 +125,7 @@ final class ProgressIndicator
 	/**
 	 * @template T of mixed
 	 * @param T[] $values
-	 * @param (callable(static, T, int|string): ?bool) $callback
+	 * @param callable(static, T, int|string): mixed $callback
 	 */
 	public function iterate(iterable $values, callable $callback): void
 	{

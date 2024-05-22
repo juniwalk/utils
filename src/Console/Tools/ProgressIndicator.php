@@ -118,7 +118,9 @@ final class ProgressIndicator
 
 
 	/**
-	 * @param mixed[] $values
+	 * @template T of mixed
+	 * @param T[] $values
+	 * @param (callable(static, T, int|string): ?bool) $callback
 	 */
 	public function iterate(iterable $values, callable $callback): void
 	{

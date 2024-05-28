@@ -108,7 +108,7 @@ final class Parse
 		}
 
 		$args = Strings::split($args, '/[,]\s*/');
-		$args = Arrays::walk($args, function(mixed $arg) {
+		$args = Arrays::walk($args, function(string $arg) {
 			$pair = Strings::split($arg, '/\s*(?::|=>?)\s*/');
 			$pair = array_pad($pair, -2, 0);
 

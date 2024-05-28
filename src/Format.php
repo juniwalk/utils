@@ -270,13 +270,13 @@ final class Format
 
 
 	/**
-	 * @template T of scalar|null
+	 * @template T of mixed
 	 * @param  T $value
 	 * @return ($strict is true ? int|float|null : T)
 	 */
 	public static function numeric(mixed $value, ?int $precision = null, bool $strict = true): mixed
 	{
-		$number = strtr(strval($value), [' ' => '', ',' => '.']);
+		$number = strtr(static::stringify($value), [' ' => '', ',' => '.']);
 
 		if (!$number || !is_numeric($number)) {
 			return $strict ? null : $value;

@@ -270,8 +270,9 @@ final class Format
 
 
 	/**
-	 * @param  scalar|null $value
-	 * @return scalar|null
+	 * @template T of scalar|null
+	 * @param  T $value
+	 * @return ($strict is true ? int|float|null : T)
 	 */
 	public static function numeric(mixed $value, ?int $precision = null, bool $strict = true): mixed
 	{
@@ -283,15 +284,15 @@ final class Format
 
 		$number = (float) $number;
 
-		if ((int) $number == $number) {
+		if ($precision !== null) {
+			$number = round($number, $precision);
+		}
+
+		if ($number == (int) $number) {	// Intentionally used == for lax comparison
 			return (int) $number;
 		}
 
-		if (is_null($precision)) {
-			return $number;
-		}
-
-		return round($number, $precision);
+		return $number;
 	}
 
 

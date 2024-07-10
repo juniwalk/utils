@@ -26,8 +26,9 @@ final class Json
 	{
 		return new class($code) implements Stringable {
 			public function __construct(
-				private readonly string $code
-			) {}
+				private readonly string $code,
+			) {
+			}
 
 			public function __toString(): string
 			{
@@ -46,7 +47,7 @@ final class Json
 			return NetteJson::encode($content, $flags);
 		}
 
-		$content = Arrays::map($content, fn($v) => Format::serializable($v));
+		$content = Arrays::mapRecursive($content, fn($v) => Format::serializable($v));
 		$json = NetteJson::encode($content, $flags);
 
 		if (!($flags & static::PRETTY)) {

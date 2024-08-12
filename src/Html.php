@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils;
 
+use Contributte\Translation\Wrappers\Message;
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Interfaces\Currency;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
@@ -299,20 +300,24 @@ final class Html extends NetteHtml
 
 
 	/**
-	 * @param  Stringable|scalar|null $value
+	 * @param  Stringable|scalar|null $message
 	 */
-	private static function translate(mixed $value, bool $translate = true): null|string|Stringable
+	private static function translate(mixed $message, bool $translate = true): null|string|Stringable
 	{
-		$value = strval($value) ?: null;
+		$content = strval($message) ?: null;
 
 		if (!$translate || static::$disableTranslation || !static::$translator) {
-			return $value;
+			return $content;
 		}
 
-		if (!$value || !Strings::match($value, static::TranslationRegEx)) {
-			return $value;
+		if (!$content || !Strings::match($content, static::TranslationRegEx)) {
+			return $content;
 		}
 
-		return static::$translator->translate($value);
+		if ($message instanceof Message) {
+			$content = $message;
+		}
+
+		return static::$translator->translate($content);
 	}
 }

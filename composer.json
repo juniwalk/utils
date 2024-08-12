@@ -35,6 +35,7 @@
 	},
 
 	"require-dev": {
+		"contributte/translation": "^2.0",
 		"juniwalk/orm": ">=0.10 <1.0 | ^1.0",
 		"latte/latte": "^3.0",
 		"nette/application": "^3.2",

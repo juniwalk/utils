@@ -136,6 +136,10 @@ trait Events
 	{
 		$event = Format::kebabCase($event);
 
+		if (empty($this->events[$event] ?? [])) {
+			return;
+		}
+
 		ksort($this->events[$event], SORT_NUMERIC);
 
 		foreach ($this->events[$event] as $handler) {

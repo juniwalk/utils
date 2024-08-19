@@ -37,6 +37,10 @@ trait Events
 		$event = substr($event, 3);
 
 		$this->isWatched($event, true);
+
+		// Pre-sort current events before returning array reference
+		ksort($this->events[$event], SORT_NUMERIC);
+
 		return $this->events[$event];
 	}
 
@@ -62,8 +66,8 @@ trait Events
 	 */
 	public function isWatched(string $event, bool $throw = false): bool
 	{
-		$isWatched = isset($this->events[$event]);
 		$event = Format::kebabCase($event);
+		$isWatched = isset($this->events[$event]);
 
 		if (!$isWatched && $this instanceof EventAutoWatch) {
 			$this->watch($event, true);
@@ -131,7 +135,6 @@ trait Events
 	protected function trigger(string $event, mixed ...$args): void
 	{
 		$event = Format::kebabCase($event);
-		$this->isWatched($event, true);
 
 		ksort($this->events[$event], SORT_NUMERIC);
 

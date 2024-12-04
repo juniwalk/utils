@@ -25,7 +25,7 @@ final class ProgressIndicator
 		OutputInterface $output,
 		int $max = 0,
 		private ?bool $throwExceptions = null,
-		private bool $hideOnFinish = true,
+		private bool $hideOnFinish = false,
 		private bool $logExceptions = true,
 	) {
 		$this->progress = new ProgressBar($output, $max);

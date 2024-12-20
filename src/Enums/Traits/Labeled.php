@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils\Enums\Traits;
 
+use BackedEnum;
 use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;	// ! Used for @phpstan
 use JuniWalk\Utils\Html;
@@ -57,6 +58,10 @@ trait Labeled
 	{
 		if ($value instanceof static) {
 			return $value;
+		}
+
+		if ($value instanceof BackedEnum) {
+			$value = $value->value;
 		}
 
 		if ($value instanceof Stringable || is_string($value) || is_int($value)) {

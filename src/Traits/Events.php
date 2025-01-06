@@ -129,9 +129,6 @@ trait Events
 	}
 
 
-	/**
-	 * @throws InvalidStateException
-	 */
 	protected function trigger(string $event, mixed ...$args): void
 	{
 		$event = Format::kebabCase($event);

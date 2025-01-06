@@ -96,12 +96,6 @@ final class ModalsTest extends TestCase
 			'Event "%w%" is not being watched.',
 		);
 
-		Assert::exception(
-			fn() => $eventTest->event(),
-			InvalidStateException::class,
-			'Event "%w%" is not being watched.',
-		);
-
 		Assert::false($eventTest->triggered);
 	}
 

@@ -84,7 +84,7 @@ trait Labeled
 			return null;
 		}
 
-		throw new ValueError('Given value is not a valid backing for enum "'.static::class.'"');
+		throw new ValueError('Given value "'.var_export($value, true).'" is not a valid backing for enum "'.static::class.'"');
 	}
 
 

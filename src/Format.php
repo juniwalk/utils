@@ -28,16 +28,16 @@ final class Format
      * @param  T|class-string<T> $class
 	 * @throws ReflectionException
 	 */
-	public static function className(object|string $class, Casing $case = Casing::Kebab, ?string $suffix = null): string
+	public static function className(object|string $class, Casing $case = Casing::Kebab, string ...$suffix): string
 	{
 		$name = (new ReflectionClass($class))->getShortName();
 
 		if ($class instanceof Throwable) {
-			$suffix = 'Exception';
+			$suffix[] = 'Exception';
 		}
 
-		if ($suffix <> null) {
-			$name = Strings::replace($name, '/'.$suffix.'$/i', '');
+		foreach ($suffix as $part) {
+			$name = Strings::replace($name, '/'.preg_quote($part, '/').'$/i', '');
 		}
 
 		return $case->format($name);

@@ -278,7 +278,7 @@ final class Format
 	{
 		$number = strtr(static::stringify($value), [' ' => '', ',' => '.']);
 
-		if (!$number || !is_numeric($number)) {
+		if (!is_numeric($number)) {
 			return $strict ? null : $value;
 		}
 

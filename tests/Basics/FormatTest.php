@@ -67,11 +67,15 @@ final class FormatTest extends TestCase
 		$items = [
 			'stdClass'		=> [
 				'actual'	=> $this->object,
-				'expect'	=> $this->object,
+				'expect'	=> ['type' => 'stdClass'],
 			],
 			'datetime'		=> [
 				'actual'	=> DateTime::createFromFormat('Y-m-d H:i:s', '2024-01-01 00:00:00'),
 				'expect'	=> '2024-01-01T00:00:00+00:00',
+			],
+			'array'			=> [
+				'actual'	=> ['date' => DateTime::createFromFormat('Y-m-d H:i:s', '2024-01-01 00:00:00')],
+				'expect'	=> ['date' => '2024-01-01T00:00:00+00:00'],
 			],
 			'jsonSerialize'	=> [
 				'actual'	=> $this->jsonSerialize,

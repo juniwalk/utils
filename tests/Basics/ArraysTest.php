@@ -124,8 +124,8 @@ final class ArraysTest extends TestCase
 
 	public function testTokenize(): void
 	{
-		$class = (object) ['alpha' => 'A', 'beta' => 'B', 'gamma' => 'G'];
-		$items = ['first' => ['second' => true, 'third' => 'fourth'], 'fifth' => $class];
+		$class = ['alpha' => 'A', 'beta' => 'B', 'gamma' => 'G'];
+		$items = ['first' => ['second' => true, 'third' => 'fourth'], 'fifth' => (object) $class];
 
 		Assert::same(
 			['{first.second}' => true, '{first.third}' => 'fourth', '{fifth}' => $class],

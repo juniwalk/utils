@@ -92,11 +92,18 @@ final class Format
 
 
 	/**
-	 * @return scalar|stdClass|mixed[]|null
+	 * @return scalar|mixed[]|null
 	 */
 	public static function serializable(mixed $value): mixed
 	{
-		if (is_scalar($value) || is_array($value)) {
+		if (is_iterable($value) || $value instanceof stdClass) {
+			return Arrays::map(
+				is_iterable($value) ? $value : (array) $value,
+				fn($v) => static::serializable($v),
+			);
+		}
+
+		if (is_scalar($value)) {
 			return $value;
 		}
 
@@ -111,10 +118,10 @@ final class Format
 			$value instanceof Stringable => $value->__toString(),
 			$value instanceof UnitEnum => $value->value ?? $value->name,
 			$value instanceof Identified => $value->getId(),
-			$value instanceof stdClass => $value,
 
 			default => match (true) {
 				method_exists($value, 'getId') => (int) $value->getId(),
+
 				default => null,
 			},
 		};
@@ -125,13 +132,10 @@ final class Format
 	{
 		$value = static::serializable($value);
 
-		if ($value instanceof stdClass) {
-			$value = (array) $value;
-		}
-
 		return match (true) {
 			is_array($value) => json_encode($value) ?: '',
 			is_bool($value) => $value ? 'true' : 'false',
+
 			default => (string) $value,
 		};
 	}

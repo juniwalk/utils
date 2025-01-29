@@ -20,7 +20,7 @@ final class Arrays
 	{
 		$result = [];
 
-		foreach($items as $key => $value) {
+		foreach ($items as $key => $value) {
 			$result[$key] = $callback($value, $key);
 		}
 
@@ -36,7 +36,7 @@ final class Arrays
 	{
 		$result = [];
 
-		foreach($items as $key => $value) {
+		foreach ($items as $key => $value) {
 			$result[$key] = match (true) {
 				$value instanceof Html,
 				!is_iterable($value) => $callback($value, $key),

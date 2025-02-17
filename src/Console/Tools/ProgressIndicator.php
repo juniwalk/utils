@@ -122,7 +122,8 @@ final class ProgressIndicator
 			$this->progress->finish();
 		}
 
-		$result ??= $this->getStatus();
+		$result ??= $this->getStatus() ?? Status::Error;
+
 		return match ($result) {
 			Status::Working,
 			Status::Success,

@@ -104,7 +104,11 @@ final class ProgressIndicator
 		$this->progress->start();
 
 		try {
-			return $callback($this);
+			$result = $callback($this);
+
+			if ($result instanceof Status) {
+				$this->setStatus($result);
+			}
 
 		} catch (Throwable $e) {
 			$this->setStatus(Status::Error);
@@ -118,7 +122,16 @@ final class ProgressIndicator
 			$this->progress->finish();
 		}
 
-		return Command::FAILURE;
+		$result ??= $this->getStatus();
+		return match ($result) {
+			Status::Working,
+			Status::Success,
+			Status::Warning,
+			Status::Skipped => Command::SUCCESS,
+			Status::Error => Command::FAILURE,
+
+			default => $result,
+		};
 	}
 
 

@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils;
 
+use BackedEnum;
 use Iterator;
 use UnexpectedValueException;
 
@@ -115,6 +116,27 @@ final class Arrays
 		}
 
 		return $items;
+	}
+
+
+	/**
+	 * @template LabeledEnum of BackedEnum|string|int
+	 * @param  LabeledEnum[] $items
+	 * @param  BackedEnum[] $array
+	 * @return array<string, LabeledEnum>
+	 */
+	public static function filterEnums(array $items, array $array): array
+	{
+		$array = static::walk($array, fn(BackedEnum $x) => yield $x->value => null);
+		$items = static::walk($items, function(mixed $enum, int|string $key) {
+			if ($enum instanceof BackedEnum) {
+				$key = $enum->value;
+			}
+
+			yield $key => $enum;
+		});
+
+		return array_diff_key($items, $array);
 	}
 
 

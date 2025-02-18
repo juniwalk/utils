@@ -12,6 +12,14 @@ use Tester\TestCase;
 
 require __DIR__.'/../bootstrap.php';
 
+enum Suit: string
+{
+	case Hearts = 'H';
+	case Diamonds = 'D';
+	case Clubs = 'C';
+	case Spades = 'S';
+}
+
 /**
  * @testCase
  */
@@ -91,6 +99,37 @@ final class ArraysTest extends TestCase
 		Assert::same(
 			['_second' => 'two', '_third' => ['_fifth' => 'four']],
 			Arrays::intersectRecursive($items, $array)
+		);
+	}
+
+
+	public function testFilterEnums(): void
+	{
+		// TEST: List of enums
+		$items = [Suit::Hearts, Suit::Diamonds, Suit::Clubs, Suit::Spades];
+		$array = [Suit::Hearts];
+
+		Assert::same(
+			[Suit::Diamonds, Suit::Clubs, Suit::Spades],
+			array_values(Arrays::filterEnums($items, $array)),
+		);
+
+		// TEST: List of strings using indexing from enum values
+		$items = ['H' => 'Heart', 'D' => 'Diamond', 'C' => 'Club', 'S' => 'Spade'];
+		$array = [Suit::Hearts];
+
+		Assert::same(
+			['Diamond', 'Club', 'Spade'],
+			array_values(Arrays::filterEnums($items, $array)),
+		);
+
+		// TEST: List of strings without indexing using enum values
+		$items = ['Heart', 'Diamond', 'Club', 'Spade'];
+		$array = [Suit::Hearts];
+
+		Assert::same(
+			['Heart', 'Diamond', 'Club', 'Spade'],
+			array_values(Arrays::filterEnums($items, $array)),
 		);
 	}
 

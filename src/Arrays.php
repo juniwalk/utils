@@ -120,10 +120,10 @@ final class Arrays
 
 
 	/**
-	 * @template LabeledEnum of BackedEnum|string|int
+	 * @template LabeledEnum of mixed
 	 * @param  LabeledEnum[] $items
 	 * @param  BackedEnum[] $array
-	 * @return array<string, LabeledEnum>
+	 * @return LabeledEnum[]
 	 */
 	public static function filterEnums(array $items, array $array): array
 	{

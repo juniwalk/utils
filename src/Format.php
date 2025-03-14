@@ -12,6 +12,7 @@ use JsonSerializable;
 use JuniWalk\ORM\Entity\Interfaces\Identified;
 use JuniWalk\Utils\Enums\Casing;
 use JuniWalk\Utils\Enums\Interfaces\Currency;
+use Nette\HtmlStringable;
 use ReflectionClass;
 use ReflectionException;
 use Serializable;
@@ -96,6 +97,10 @@ final class Format
 	 */
 	public static function serializable(mixed $value): mixed
 	{
+		if ($value instanceof HtmlStringable) {
+			return $value->__toString();
+		}
+
 		if (is_iterable($value) || $value instanceof stdClass) {
 			return Arrays::map(
 				is_iterable($value) ? $value : (array) $value,

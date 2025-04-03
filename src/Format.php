@@ -82,7 +82,7 @@ final class Format
 
 
 	/**
-	 * @return scalar|stdClass|mixed[]|null
+	 * @return scalar|mixed[]|null
 	 * @deprecated
 	 */
 	public static function scalarize(mixed $value): mixed

@@ -10,7 +10,6 @@ namespace JuniWalk\Utils;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use ValueError;
-use stdClass;
 
 final class Parse
 {
@@ -40,10 +39,10 @@ final class Parse
 
 
 	/**
-	 * @return stdClass{name: string, args: array<string, mixed>}
+	 * @return object{name: string, args: array<string, mixed>}
 	 * @throws ValueError
 	 */
-	public static function keyword(string $value): stdClass
+	public static function keyword(string $value): object
 	{
 		if (!$match = Strings::match($value, '/^'.implode('', static::HelpKeyword).'$/i')) {
 			throw new ValueError('Unable to parse keyword from: '.$value);
@@ -56,10 +55,10 @@ final class Parse
 
 
 	/**
-	 * @return stdClass{name: string, type: ?string, args: array<string, mixed>}
+	 * @return object{name: string, type: ?string, args: array<string, mixed>}
 	 * @throws ValueError
 	 */
-	public static function control(string $value): stdClass
+	public static function control(string $value): object
 	{
 		if (!$match = Strings::match($value, '/^'.implode('', static::HelpControl).'$/i')) {
 			throw new ValueError('Unable to parse control from: '.$value);
@@ -73,10 +72,10 @@ final class Parse
 
 
 	/**
-	 * @return stdClass{path: string, absolute: bool, signal: bool, args: array<string, mixed>, fragment: string}
+	 * @return object{path: string, absolute: bool, signal: bool, args: array<string, mixed>, fragment: string}
 	 * @throws ValueError
 	 */
-	public static function link(string $value): ?stdClass
+	public static function link(string $value): ?object
 	{
 		if (!$match = Strings::match($value, '/^'.implode('', static::HelpLink).'$/i')) {
 			throw new ValueError('Unable to parse link from: '.$value);
@@ -94,7 +93,7 @@ final class Parse
 			return null;
 		}
 
-		return (object) $parts;
+		return (object) $parts;	// @phpstan-ignore return.type (This error should not be here as it works the same as keyword() and control() methods)
 	}
 
 

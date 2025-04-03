@@ -46,7 +46,7 @@ enum Color: string implements LabeledEnum
 	}
 
 
-	public function icon(): ?string
+	public function icon(): ?string	// @phpstan-ignore return.unusedType
 	{
 		return 'fa-droplet fas';
 	}

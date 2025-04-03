@@ -172,6 +172,7 @@ abstract class AbstractCommand extends Command
 
 	/**
 	 * @param scalar[] $choices
+	 * @param scalar $default
 	 */
 	protected function select(string $message, array $choices, mixed $default = null): mixed
 	{
@@ -188,6 +189,7 @@ abstract class AbstractCommand extends Command
 
 	/**
 	 * @param  scalar[] $choices
+	 * @param  scalar $default
 	 * @return scalar[]
 	 */
 	protected function selectMultiple(string $message, array $choices, mixed $default = null): array

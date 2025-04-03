@@ -149,11 +149,15 @@ final class Version implements Stringable
 				continue;
 			}
 
-			if (is_numeric($value)) {
-				$value = (int) $value;
-			}
+			$this->$part = match ($part) {
+				'major', 'minor',
+				'patch', 'build' => intval($value),
+				'preRelease' => strval($value),
+			};
 
-			$this->$part = $value !== '' ? $value : null;
+			if ($value === '') {
+				$this->$part = null;
+			}
 		}
 
 		return $this;
@@ -203,7 +207,10 @@ final class Version implements Stringable
 	}
 
 
-	public function compare(self|string $version, ?string $operator = null): int|bool
+	/**
+	 * @return ($operator is null ? int : bool)
+	 */
+	public function compare(self|string $version, ?string $operator = null): int|bool	// @phpstan-ignore return.unusedType
 	{
 		if ($version instanceof static) {
 			$version = $version->format(static::SemVer);
@@ -212,7 +219,6 @@ final class Version implements Stringable
 		return version_compare(
 			$this->format(static::SemVer),
 			$version,
-			// @phpstan-ignore-next-line
 			$operator,
 		);
 	}

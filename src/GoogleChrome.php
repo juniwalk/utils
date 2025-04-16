@@ -10,6 +10,7 @@ namespace JuniWalk\Utils;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Nette\Application\Application;
+use Nette\Application\UI\Link;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Random;
 use Tracy\ILogger;
@@ -91,7 +92,7 @@ final class GoogleChrome
 	 * @throws InvalidArgumentException
 	 * @throws ProcessFailedException
 	 */
-	public function covert(string $source, bool $keepFile = false): string
+	public function covert(string|Link $source, bool $keepFile = false): string
 	{
 		$file = $this->tempDir.'/'.Random::generate().'.pdf';
 		$this->application->onShutdown[] = function() use ($file, $keepFile) {

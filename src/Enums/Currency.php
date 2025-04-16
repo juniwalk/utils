@@ -21,6 +21,7 @@ enum Currency: string implements CurrencyInterface
 
 	/**
 	 * @param  int|string|CurrencyInterface|null $value
+	 * @return ($required is true ? CurrencyInterface : ?CurrencyInterface)
 	 * @throws ValueError
 	 */
 	public static function remake(mixed $value, bool $required = true): ?CurrencyInterface

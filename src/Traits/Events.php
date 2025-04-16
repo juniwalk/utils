@@ -8,7 +8,7 @@
 namespace JuniWalk\Utils\Traits;
 
 use JuniWalk\Utils\Interfaces\EventAutoWatch;
-use JuniWalk\Utils\Interfaces\EventHandler;
+use JuniWalk\Utils\Interfaces\EventHandler;	// ! Used for @phpstan
 use JuniWalk\Utils\Format;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
@@ -64,7 +64,7 @@ trait Events
 	/**
 	 * @throws InvalidStateException
 	 */
-	public function isWatched(string $event, bool $throw = false): bool
+	public function isWatched(string $event, bool $require = false): bool
 	{
 		$event = Format::kebabCase($event);
 		$isWatched = isset($this->events[$event]);
@@ -74,7 +74,7 @@ trait Events
 			return true;
 		}
 
-		if (!$isWatched && $throw) {
+		if (!$isWatched && $require) {
 			throw new InvalidStateException('Event "'.$event.'" is not being watched.');
 		}
 
@@ -97,6 +97,27 @@ trait Events
 			$priority, 0,
 			[$callback],
 		);
+	}
+
+
+	/**
+	 * @param  string|string[] $events
+	 * @param  EventCallback $callback
+	 * @throws InvalidStateException
+	 */
+	public function whenAny(string|array $events, callable $callback): void
+	{
+		if (is_string($events) && !str_contains($events, ',')) {
+			throw new InvalidStateException('Events need to be comma separated, "'.$events.'" given.');
+		}
+
+		if (is_string($events)) {
+			$events = explode(',', $events);
+		}
+
+		foreach ($events as $event) {
+			$this->when($event, $callback);
+		}
 	}
 
 
@@ -140,6 +161,8 @@ trait Events
 		ksort($this->events[$event], SORT_NUMERIC);
 
 		foreach ($this->events[$event] as $handler) {
+			// TODO: Send $this as first argument by default
+			// TODO: Send EventArgument with $target($this) and $event(name) as last argument
 			call_user_func($handler, ...$args);
 		}
 	}

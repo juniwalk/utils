@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils\Interfaces;
 
 use Nette\Application\IPresenter;
+use Nette\Application\UI\Link;
 use Nette\Security\IIdentity as Identity;
 
 /**
@@ -18,7 +19,7 @@ interface TokenProvider extends IPresenter
 	/**
 	 * @param TokenArgs $args
 	 */
-	public function createToken(string $dest, array $args = [], ?Identity $identity = null, string $lifespan = '20 minutes'): string;
+	public function createToken(string|Link $dest, array $args = [], ?Identity $identity = null, string $lifespan = '20 minutes'): string;
 	public function getToken(): ?string;
-	public function clearToken(): void;
+	public function clearToken(?string $token = null): void;
 }

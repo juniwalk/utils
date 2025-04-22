@@ -17,7 +17,7 @@ enum SignoutReason
 	case Banned;
 
 
-	public function fromUser(User $user): self
+	public static function fromUser(User $user): self
 	{
 		return match ($user->getLogoutReason()) {
 			User::LogoutInactivity => self::Inactivity,

@@ -21,16 +21,23 @@ trait RequiredAuthorized
 
 	public function injectRequireAuthorization(): void
 	{
-		$this->onStartup[] = function(): void {
-			if (!$this->_isRequiredAuthorized) {
-				return;
-			}
+		$this->onStartup[] = $this->forceAuthorized(...);
+	}
 
-			$this->isAllowed(
-				resource: $this->getName(),
-				task: $this->getAction(),
-			);
-		};
+
+	/**
+	 * @throws PermissionDeniedException
+	 */
+	private function forceAuthorized(): void
+	{
+		if (!$this->_isRequiredAuthorized) {
+			return;
+		}
+
+		$this->isAllowed(
+			resource: $this->getName(),
+			task: $this->getAction(),
+		);
 	}
 
 

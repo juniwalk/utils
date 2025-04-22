@@ -10,6 +10,7 @@ namespace JuniWalk\Utils\Traits;
 use JuniWalk\Utils\Interfaces\TokenProvider;	// ! Used for @phpstan
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Link;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Security\IIdentity as Identity;
@@ -36,28 +37,26 @@ trait AccessTokens
 
 
 	/**
-	 * @param TokenArgs $params
+	 * @param  TokenArgs $args
+	 * @throws InvalidLinkException
 	 */
-	public function createToken(string|Link $dest, array $params = [], ?Identity $identity = null, string $lifespan = '20 minutes'): string
+	public function createToken(string|Link $dest, array $args = [], ?Identity $identity = null, string $lifespan = '20 minutes'): string
 	{
+		$token = (string) Uuid::uuid4();
+
 		if ($dest instanceof Link) {
-			$params = $dest->getParameters();
+			$args = $dest->getParameters();		// ? Merge with incoming args?
 			$dest = $dest->getDestination();
 		}
 
-		$token = (string) Uuid::uuid4();
-		$params += ['token' => $token];
+		$dest = ltrim($dest, '/');
+		$args['token'] = $token;
 
 		if ($identity instanceof Identity) {
-			$params['_identity'] = $identity->getId();
+			$args['_identity'] = $identity->getId();
 		}
 
-		$request = $this->linkGenerator->createRequest(
-			component: $this,
-			destination: $dest,
-			args: $params,
-			mode: 'link',
-		);
+		$request = $this->linkGenerator->createRequest($this, $dest, $args, 'link');
 
 		$this->cache->save($token, $request->toArray(), [
 			Cache::Expire => $lifespan,
@@ -79,9 +78,9 @@ trait AccessTokens
 	}
 
 
-	public function clearToken(): void
+	public function clearToken(?string $token = null): void
 	{
-		if (!$token = $this->getToken()) {
+		if (!$token ??= $this->getToken()) {
 			return;
 		}
 

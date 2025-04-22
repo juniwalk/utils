@@ -7,7 +7,6 @@
 
 namespace JuniWalk\Utils\Traits;
 
-use JuniWalk\Utils\Attributes\AllowTokenAuthorization;
 use JuniWalk\Utils\Interfaces\TokenProvider;	// ! Used for @phpstan
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
@@ -80,7 +79,7 @@ trait AccessTokens
 	/**
 	 * @return TokenArgs
 	 */
-	private function getPackage(string $token, AllowTokenAuthorization $attribute): array
+	private function getPackage(string $token, bool $singleUseToken = true): array
 	{
 		/** @var TokenArgs */
 		$package = $this->cache->load($token);
@@ -95,7 +94,7 @@ trait AccessTokens
 			return [];
 		}
 
-		if ($attribute->singleUseToken) {
+		if ($singleUseToken) {
 			$this->clearToken();
 		}
 

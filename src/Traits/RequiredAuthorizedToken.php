@@ -20,8 +20,8 @@ use ReflectionMethod;
  */
 trait RequiredAuthorizedToken
 {
-	use AccessTokens;
 	use RequiredAuthorized;
+	use AccessTokens;
 
 
 	/**
@@ -37,7 +37,7 @@ trait RequiredAuthorizedToken
 			return;
 		}
 
-		if (!$package = $this->getPackage($token, $attribute)) {
+		if (!$package = $this->getPackage($token, $attribute->singleUseToken)) {
 			return;
 		}
 

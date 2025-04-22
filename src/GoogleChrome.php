@@ -10,6 +10,7 @@ namespace JuniWalk\Utils;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Nette\Application\Application;
+use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Link;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Random;
@@ -85,6 +86,12 @@ final class GoogleChrome
 	{
 		unset($this->options[$key]);
 		return $this;
+	}
+
+
+	public function downloadPdf(string|Link $source, string $fileName, bool $keepFile = false): FileResponse
+	{
+		return new FileResponse($this->covert($source, $keepFile), $fileName, 'application/pdf');
 	}
 
 

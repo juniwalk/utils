@@ -8,6 +8,8 @@
 namespace JuniWalk\Utils\Traits;
 
 use JuniWalk\Utils\Interfaces\TokenProvider;	// ! Used for @phpstan
+use Nette\Application\LinkGenerator;
+use Nette\Application\UI\Link;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
 use Nette\Security\IIdentity as Identity;
@@ -19,6 +21,7 @@ use Ramsey\Uuid\Uuid;
  */
 trait AccessTokens
 {
+	private LinkGenerator $linkGenerator;
 	private Cache $cache;
 
 	public function injectStorage(Storage $storage): void
@@ -26,23 +29,33 @@ trait AccessTokens
 		$this->cache = new Cache($storage, 'Authorization.Tokens');
 	}
 
+	public function injectLinkGenerator(LinkGenerator $linkGenerator): void
+	{
+		$this->linkGenerator = $linkGenerator;
+	}
+
 
 	/**
-	 * @param TokenArgs $args
+	 * @param TokenArgs $params
 	 */
-	public function createToken(string $dest, array $args = [], ?Identity $identity = null, string $lifespan = '20 minutes'): string
+	public function createToken(string|Link $dest, array $params = [], ?Identity $identity = null, string $lifespan = '20 minutes'): string
 	{
-		$token = (string) Uuid::uuid4();
-		$args += ['token' => $token];
-
-		if ($identity instanceof Identity) {
-			$args['_identity'] = $identity->getId();
+		if ($dest instanceof Link) {
+			$params = $dest->getParameters();
+			$dest = $dest->getDestination();
 		}
 
-		$request = $this->getLinkGenerator()->createRequest(
+		$token = (string) Uuid::uuid4();
+		$params += ['token' => $token];
+
+		if ($identity instanceof Identity) {
+			$params['_identity'] = $identity->getId();
+		}
+
+		$request = $this->linkGenerator->createRequest(
 			component: $this,
 			destination: $dest,
-			args: $args,
+			args: $params,
 			mode: 'link',
 		);
 

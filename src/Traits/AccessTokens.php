@@ -7,6 +7,7 @@
 
 namespace JuniWalk\Utils\Traits;
 
+use JuniWalk\Utils\Arrays;
 use JuniWalk\Utils\Interfaces\TokenProvider;	// ! Used for @phpstan
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Link;
@@ -102,12 +103,12 @@ trait AccessTokens
 		unset($package['_identity']);
 
 		// ? Check if the package coresponds to current request (presenter, action, id, etc.)
-		if (!$package || array_diff_assoc($package, $request ?? [])) {
+		if (!$package || Arrays::differenceRecursiveAssoc($package, $request ?? [])) {
 			return [];
 		}
 
 		if ($singleUseToken) {
-			$this->clearToken();
+			$this->clearToken($token);
 		}
 
 		$package['_identity'] = $identity;

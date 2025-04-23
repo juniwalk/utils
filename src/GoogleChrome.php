@@ -94,14 +94,15 @@ final class GoogleChrome
 	 * @throws InvalidLinkException
 	 * @throws ProcessFailedException
 	 */
-	public function downloadPdf(string|Link $url, string $fileName): FileResponse
+	public function convertUrl(string|Link $url, bool $persist = false): string
 	{
 		$file = $this->tempDir.'/'.Random::generate().'.pdf';
 
-		$this->scheduleRemoval($file);
-		$this->convert($url, $file);
+		if ($persist === false) {
+			$this->scheduleRemoval($file);
+		}
 
-		return new FileResponse($file, $fileName, 'application/pdf');
+		return $this->convert($url, $file);
 	}
 
 
@@ -109,7 +110,21 @@ final class GoogleChrome
 	 * @throws InvalidLinkException
 	 * @throws ProcessFailedException
 	 */
-	public function convert(string|Link $url, string $file): void
+	public function downloadPdf(string|Link $url, string $fileName, bool $persist = false): FileResponse
+	{
+		return new FileResponse(
+			$this->convertUrl($url, $persist),
+			$fileName,
+			'application/pdf',
+		);
+	}
+
+
+	/**
+	 * @throws InvalidLinkException
+	 * @throws ProcessFailedException
+	 */
+	private function convert(string|Link $url, string $file): string
 	{
 		$info = $this->fetchUrlStats($url);
 
@@ -136,6 +151,8 @@ final class GoogleChrome
 		if ($process->run() > 0) {
 		    throw new ProcessFailedException($process);
 		}
+
+		return $file;
 	}
 
 

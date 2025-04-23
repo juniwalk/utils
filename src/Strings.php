@@ -11,9 +11,23 @@ use Nette\Utils\Strings as NetteStrings;
 use Latte\Essential\Filters as LatteFilters;
 use Latte\Runtime\FilterInfo;
 use Stringable;
+use TypeError;
 
 final class Strings extends NetteStrings
 {
+	/**
+	 * @throws TypeError
+	 */
+	public static function cast(mixed $value): string
+	{
+		if (!is_scalar($value) && !is_null($value) && !is_resource($value) && !$value instanceof Stringable) {
+			throw new TypeError('Type of '.gettype($value).' cannot be casted to string.');
+		}
+
+		return (string) $value;
+	}
+
+
 	public static function stripHtml(string|Stringable $content): string
 	{
 		return LatteFilters::stripHtml(new FilterInfo('html'), $content);

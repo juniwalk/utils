@@ -11,6 +11,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Nette\Application\Application;
 use Nette\Application\Responses\FileResponse;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Link;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Random;
@@ -89,26 +90,32 @@ final class GoogleChrome
 	}
 
 
-	public function downloadPdf(string|Link $source, string $fileName, bool $keepFile = false): FileResponse
+	/**
+	 * @throws InvalidLinkException
+	 * @throws ProcessFailedException
+	 */
+	public function downloadPdf(string|Link $url, string $fileName): FileResponse
 	{
-		return new FileResponse($this->covert($source, $keepFile), $fileName, 'application/pdf');
+		$file = $this->tempDir.'/'.Random::generate().'.pdf';
+
+		$this->scheduleRemoval($file);
+		$this->convert($url, $file);
+
+		return new FileResponse($file, $fileName, 'application/pdf');
 	}
 
 
 	/**
-	 * @throws InvalidArgumentException
+	 * @throws InvalidLinkException
 	 * @throws ProcessFailedException
 	 */
-	public function covert(string|Link $source, bool $keepFile = false): string
+	public function convert(string|Link $url, string $file): void
 	{
-		$file = $this->tempDir.'/'.Random::generate().'.pdf';
-		$this->application->onShutdown[] = function() use ($file, $keepFile) {
-			if ($keepFile) {
-				return;
-			}
+		$info = $this->fetchUrlStats($url);
 
-			@unlink($file);
-		};
+		if ($info['http_code'] >= 300) {
+			throw new InvalidLinkException('Unable to access "'.$url.'" to convert to pdf.', $info['http_code']);
+		}
 
 		$this->setOption('print-to-pdf', $file);
 		$command = ['/usr/bin/google-chrome'];
@@ -117,7 +124,7 @@ final class GoogleChrome
 			$command[] = $argument;
 		}
 
-		$command[] = '"'.$source.'"';
+		$command[] = '"'.$url.'"';
 
 		$process = Process::fromShellCommandline(
 			command: implode(' ', $command),
@@ -129,8 +136,12 @@ final class GoogleChrome
 		if ($process->run() > 0) {
 		    throw new ProcessFailedException($process);
 		}
+	}
 
-		return $file;
+
+	private function scheduleRemoval(string $file): void
+	{
+		$this->application->onShutdown[] = fn() => @unlink($file); // @phpstan-ignore assign.propertyType (Callback has different structure, we dont care)
 	}
 
 
@@ -150,5 +161,35 @@ final class GoogleChrome
 		}
 
 		return $arguments;
+	}
+
+
+	/**
+	 * @return array{
+	 * 		http_code: int,
+	 * 		content_type: ?string,
+	 * 		download_content_length: float
+	 * }
+	 * @throws InvalidLinkException
+	 */
+	private function fetchUrlStats(string|Link $url, int $timeout = 10, int $maxRedirs = 3): array
+	{
+		if (!$curl = curl_init((string) $url)) {
+			throw new InvalidLinkException('Unable to stat remote url.', 500);
+		}
+
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
+		curl_setopt($curl, CURLOPT_MAXREDIRS, $maxRedirs);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($curl, CURLOPT_HEADER, true);
+		curl_setopt($curl, CURLOPT_NOBODY, true);
+
+		if (!curl_exec($curl) || !$info = curl_getinfo($curl)) {
+			throw new InvalidLinkException('Unable to stat remote url.', 500);
+		}
+
+		curl_close($curl);
+		return $info;
 	}
 }

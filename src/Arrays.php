@@ -120,6 +120,36 @@ final class Arrays
 
 
 	/**
+	 * @param  mixed[] $items
+	 * @param  mixed[] $array
+	 * @return mixed[]
+	 */
+	public static function differenceRecursiveAssoc(array $items, array $array): array
+	{
+		$diff = [];
+
+		foreach ($items as $key => $first) {
+			$exists = array_key_exists($key, $array);
+			$second = $array[$key] ?? null;
+
+			if (is_array($first)) {
+				if (!$exists || !is_array($second)) {
+					$diff[$key] = $first;
+
+				} elseif ($value = static::differenceRecursiveAssoc($first, $second)) {
+					$diff[$key] = $value;
+				}
+
+			} elseif (!$exists || Strings::cast($first) !== Strings::cast($second)) {
+				$diff[$key] = $first;
+			}
+		}
+
+		return $diff;
+	}
+
+
+	/**
 	 * @template LabeledEnum of mixed
 	 * @param  LabeledEnum[] $items
 	 * @param  BackedEnum[] $array

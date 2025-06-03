@@ -100,10 +100,12 @@ final class Html extends NetteHtml
 	): self {
 		/** @var Html */
 		$badge = static::el('span class="badge"')
-			->addClass($color->for('badge'));
+			->addClass($color->for('text-bg'))	// bs5
+			->addClass($color->for('badge'));	// bs4
 
 		if ($isPill === true) {
-			$badge->addClass('badge-pill');
+			$badge->addClass('rounded-pill');	// bs5
+			$badge->addClass('badge-pill');		// bs4
 		}
 
 		if (!empty($icon)) {

@@ -226,7 +226,7 @@ final class ProgressIndicator
 			return str_split($string, max(1, $width));
 		}
 
-		$utf8String = mb_convert_encoding($string, 'utf8', $encoding);
+		$utf8String = mb_convert_encoding($string, 'utf8', $encoding) ?: $string;
 		$lines = [];
 		$line = '';
 

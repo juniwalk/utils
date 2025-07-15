@@ -48,18 +48,10 @@ enum Currency: string implements CurrencyInterface
 
 	public function formatInLocale(): string
 	{
-		return match($this) {
+		return match ($this) {
 			self::CZK => '%1$s Kč',
 			self::EUR => '€%1$s',
 			self::USD => '$%1$s',
-
-			// default => '%1$s %2$s',
 		};
-	}
-
-
-	public function color(): Color
-	{
-		return Color::Secondary;
 	}
 }

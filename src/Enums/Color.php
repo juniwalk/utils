@@ -36,7 +36,7 @@ enum Color: string implements LabeledEnum
 
 	public function label(): string
 	{
-		return 'web.enum.color.'.$this->value;
+		return 'enum.color.'.$this->value;
 	}
 
 
@@ -64,7 +64,7 @@ enum Color: string implements LabeledEnum
 
 	public function hex(): string
 	{
-		return match($this) {
+		return match ($this) {
 			self::Primary => '#007bff',
 			self::Secondary => '#6c757d',
 			self::Info => '#17a2b8',
@@ -90,14 +90,14 @@ enum Color: string implements LabeledEnum
 	public function foreground(): string
 	{
 		return Parse::luminosity($this->hex()) > 0.5
-			? '#343a40'		// Dark
+			? '#343a40'	// Dark
 			: '#f8f9fa';	// Light
 	}
 
 
 	private function isBasicColor(): bool
 	{
-		return match($this) {
+		return match ($this) {
 			self::Primary, self::Secondary,
 			self::Info, self::Success,
 			self::Warning, self::Danger => true,

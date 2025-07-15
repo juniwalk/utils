@@ -38,19 +38,19 @@ enum Role: string implements PoweredRole, LabeledEnum
 
 	public function label(): string
 	{
-		return match($this) {
-			self::Guest => 'web.enum.role.guest',
-			self::Client => 'web.enum.role.client',
-			self::User => 'web.enum.role.user',
-			self::Manager => 'web.enum.role.manager',
-			self::Admin => 'web.enum.role.admin',
+		return match ($this) {
+			self::Guest => 'enum.role.guest',
+			self::Client => 'enum.role.client',
+			self::User => 'enum.role.user',
+			self::Manager => 'enum.role.manager',
+			self::Admin => 'enum.role.admin',
 		};
 	}
 
 
 	public function color(): Color
 	{
-		return match($this) {
+		return match ($this) {
 			self::Guest => Color::Secondary,
 			self::Client => Color::Info,
 			self::User => Color::Success,
@@ -62,7 +62,7 @@ enum Role: string implements PoweredRole, LabeledEnum
 
 	public function power(): int
 	{
-		return match($this) {
+		return match ($this) {
 			self::Guest => 0,
 			self::Client => 0,
 			self::User => 1,

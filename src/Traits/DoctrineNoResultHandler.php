@@ -19,8 +19,8 @@ trait DoctrineNoResultHandler
 		try {
 			return parent::run($request);
 
-		} catch (NoResultException) {
-			throw new BadRequestException;
+		} catch (NoResultException $e) {
+			throw new BadRequestException('No result was found.', 404, $e);
 		}
 	}
 }

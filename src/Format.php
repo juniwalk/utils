@@ -87,7 +87,7 @@ final class Format
 	 */
 	public static function scalarize(mixed $value): mixed
 	{
-		// trigger_error('Method scalarize is deprecated, use serializable instead', E_USER_DEPRECATED);
+		trigger_error('Method scalarize is deprecated, use serializable instead', E_USER_DEPRECATED);
 		return static::serializable($value);
 	}
 

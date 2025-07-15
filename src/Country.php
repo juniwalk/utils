@@ -43,7 +43,7 @@ final class Country
 			throw CountryException::listNotFound($path, $format, $path);
 		}
 
-		return self::$cache[$format] ??= match($format) {
+		return self::$cache[$format] ??= match ($format) {
 			'php' => include $path,
 			default => file_get_contents($path),
 		};

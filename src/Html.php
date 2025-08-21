@@ -54,12 +54,15 @@ final class Html extends NetteHtml
 	}
 
 
-	public function hasAnyClassOf(string ...$class): bool
+	public function hasAnyClassOf(string ...$needle): bool
 	{
-		return (bool) array_intersect_key(
-			array_fill_keys($class, true),
-			$this->getClass() ?? [],
-		);
+		$haystack = $this->getClass() ?? '';
+
+		if (is_array($haystack)) {
+			$haystack = implode(' ', array_keys($haystack));
+		}
+
+		return (bool) array_intersect(explode(' ', $haystack), $needle);
 	}
 
 

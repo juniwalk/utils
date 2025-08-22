@@ -138,6 +138,26 @@ trait Events
 
 
 	/**
+	 * @param  string|string[] $events
+	 * @throws InvalidStateException
+	 */
+	public function watchAny(string|array $events, bool $clear = false): void
+	{
+		if (is_string($events) && !str_contains($events, ',')) {
+			throw new InvalidStateException('Events need to be comma separated, "'.$events.'" given.');
+		}
+
+		if (is_string($events)) {
+			$events = explode(',', $events);
+		}
+
+		foreach ($events as $event) {
+			$this->watch($event, $clear);
+		}
+	}
+
+
+	/**
 	 * @throws InvalidStateException
 	 */
 	protected function unwatch(string $event): static

@@ -122,6 +122,18 @@ final class ModalsTest extends TestCase
 
 		Assert::true($eventTest->triggered);
 	}
+
+
+	public function testTriggerStopPropagation(): void
+	{
+		$eventTest = new class extends EventTest {};
+
+		$eventTest->when('event', fn($x, $e) => $e->stopPropagation());
+		$eventTest->when('event', fn($x, $e) => $e->triggered = true);
+		$eventTest->event();
+
+		Assert::false($eventTest->triggered);
+	}
 }
 
 (new ModalsTest)->run();

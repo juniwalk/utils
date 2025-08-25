@@ -7,9 +7,10 @@
 
 namespace JuniWalk\Utils\Traits;
 
+use JuniWalk\Utils\Format;
+use JuniWalk\Utils\Interfaces\Event;
 use JuniWalk\Utils\Interfaces\EventAutoWatch;
 use JuniWalk\Utils\Interfaces\EventHandler;	// ! Used for @phpstan
-use JuniWalk\Utils\Format;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 
@@ -180,10 +181,15 @@ trait Events
 
 		ksort($this->events[$event], SORT_NUMERIC);
 
+		$evt = $args[] = new class($event, $this)
+			implements Event { use EventArgument; };
+
 		foreach ($this->events[$event] as $handler) {
-			// TODO: Send $this as first argument by default
-			// TODO: Send EventArgument with $target($this) and $event(name) as last argument
 			call_user_func($handler, ...$args);
+
+			if ($evt->isPropagationStopped()) {
+				break;
+			}
 		}
 	}
 }

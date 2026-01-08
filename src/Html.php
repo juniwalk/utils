@@ -31,29 +31,6 @@ final class Html extends NetteHtml
 	}
 
 
-	/**
-	 * @param Stringable|scalar $args
-	 */
-	public function addText(mixed $text, mixed ...$args): static
-	{
-		if (is_string($text) && sizeof($args) > 0) {
-			$text = sprintf($text, ...$args);
-		}
-
-		return parent::addText($text);
-	}
-
-
-	public function insert(?int $index, HtmlStringable|string|null $child, bool $replace = false): static
-	{
-		if ($child === null) {
-			return $this;
-		}
-
-		return parent::insert($index, $child, $replace);
-	}
-
-
 	public function hasAnyClassOf(string ...$needle): bool
 	{
 		$haystack = $this->getClass() ?? '';
@@ -117,7 +94,7 @@ final class Html extends NetteHtml
 		}
 
 		$content = static::translate($content, $translate);
-		return $badge->addHtml($content);
+		return $badge->addHtml((string) $content);
 	}
 
 
@@ -242,7 +219,7 @@ final class Html extends NetteHtml
 			$html->addHtml($icon)->addText(' ');
 		}
 
-		$html->addHtml($label);
+		$html->addHtml((string) $label);
 
 		/** @var Html */
 		return $html;

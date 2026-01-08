@@ -12,7 +12,6 @@ use JuniWalk\Utils\Enums\Color;
 use JuniWalk\Utils\Enums\Interfaces\Currency;
 use JuniWalk\Utils\Enums\Interfaces\LabeledEnum;
 use Nette\Application\UI\Link;
-use Nette\HtmlStringable;
 use Nette\Localization\Translator;
 use Nette\Utils\Html as NetteHtml;
 use Stringable;

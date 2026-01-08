@@ -171,30 +171,40 @@ abstract class AbstractCommand extends Command
 
 
 	/**
-	 * @param scalar[] $choices
-	 * @param scalar $default
+	 * @param  array<int|string, scalar> $choices
+	 * @return scalar|null
 	 */
-	protected function select(string $message, array $choices, mixed $default = null): mixed
+	protected function select(string $message, array $choices, int|string|null $default = null): mixed
 	{
-		$default ??= array_keys($choices)[0] ?? null;
+		if (empty($choices)) {
+			return null;
+		}
+
+		$default ??= array_keys($choices)[0];
 
 		if (sizeof($choices) <= 1) {
-			return $choices[$default] ?? null;
+			return $choices[$default];
 		}
 
 		$question = new ChoiceQuestion($message.' <comment>['.$choices[$default].']</> ', $choices, $default);
+		$question->setMultiselect(false);
+
+		/** @var scalar|null */
 		return $this->ask($question);
 	}
 
 
 	/**
-	 * @param  scalar[] $choices
-	 * @param  scalar $default
+	 * @param  array<int|string, scalar> $choices
 	 * @return scalar[]
 	 */
-	protected function selectMultiple(string $message, array $choices, mixed $default = null): array
+	protected function selectMultiple(string $message, array $choices, int|string|null $default = null): array
 	{
-		$default ??= array_keys($choices)[0] ?? null;
+		if (empty($choices)) {
+			return [];
+		}
+
+		$default ??= array_keys($choices)[0];
 
 		if (sizeof($choices) <= 1) {
 			return array_values($choices);

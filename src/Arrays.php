@@ -184,6 +184,7 @@ final class Arrays
 				continue;
 			}
 
+			/** @var array<string, mixed> $value */
 			$result = $result + static::flatten($value, $prefix.$key.'.');
 		}
 

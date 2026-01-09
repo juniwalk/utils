@@ -206,7 +206,6 @@ final class GoogleChrome
 			throw new InvalidLinkException('Unable to stat remote url.', 500);
 		}
 
-		curl_close($curl);
 		return $info;
 	}
 }

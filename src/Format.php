@@ -122,13 +122,12 @@ final class Format
 			$value instanceof Serializable => $value->serialize(),
 			$value instanceof Stringable => $value->__toString(),
 			$value instanceof UnitEnum => $value->value ?? $value->name,
-			$value instanceof Identified => $value->getId(),
-
-			default => match (true) {
-				method_exists($value, 'getId') => (int) $value->getId(),
-
+			$value instanceof Identified => match (true) {
+				$value->isIdAvailable() => $value->getId(),
 				default => null,
 			},
+
+			default => null,
 		};
 	}
 

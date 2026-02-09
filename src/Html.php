@@ -202,7 +202,7 @@ final class Html extends NetteHtml
 
 
 	public static function link(
-		string $label,
+		string|int $label,
 		Link|string|null $href = null,
 		self|string|null $icon = null,
 		bool $translate = true,

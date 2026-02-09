@@ -52,13 +52,21 @@ enum Color: string implements LabeledEnum
 	}
 
 
-	public function for(string $type): string
+	public function for(string $type, bool $subtle = false): string
 	{
-		if ($type <> 'text' && !$this->isBasicColor()) {
+		$isBaseColor = $this->isBasicColor();
+
+		if ($type <> 'text' && !$isBaseColor) {
 			$type = 'bg';
 		}
 
-		return $type.'-'.$this->value;
+		$color = $type.'-'.$this->value;
+
+		if ($subtle && $isBaseColor) {
+			$color .= '-subtle';
+		}
+
+		return $color;
 	}
 
 

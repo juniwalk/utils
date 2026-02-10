@@ -64,6 +64,10 @@ trait Labeled
 			$value = $value->value;
 		}
 
+		if (is_bool($value)) {
+			$value = (int) $value;
+		}
+
 		if ($value instanceof Stringable || is_string($value) || is_int($value)) {
 			$value = (string) $value;
 

@@ -31,6 +31,6 @@ trait RequiredUserSignedIn
 			return;
 		}
 
-		$this->forceSignIn(SignoutReason::fromUser($user), true);
+		$this->forceSignIn(SignoutReason::fromUser($user));
 	}
 }

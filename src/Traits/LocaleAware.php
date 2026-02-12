@@ -9,6 +9,7 @@ namespace JuniWalk\Utils\Traits;
 
 use Contributte\Translation\LocalesResolvers\Session as SessionResolver;
 use Nette\Application\Attributes\Persistent;
+use Nette\Http\Session;
 use Nette\Localization\Translator;
 
 trait LocaleAware
@@ -16,52 +17,74 @@ trait LocaleAware
 	use RedirectAjaxHandler;
 
 	#[Persistent]
-	public string $locale;
+	public ?string $locale = null;
 
+	/** @var array<string, string> */
+	private array $locales = [];
+
+	private Session $session;
 	private SessionResolver $sessionResolver;
 	private Translator $translator;
 
 
-	public function injectSessionResolver(SessionResolver $sessionResolver): void
-	{
+	public function injectLocaleAwareness(
+		Session $session,
+		SessionResolver $sessionResolver,
+		Translator $translator,
+	): void {
+		foreach ($translator->getLocalesWhitelist() as $lang) {
+			$this->locales[$lang] = 'enum.locale.'.$lang;
+		}
+
+		$this->session = $session;
 		$this->sessionResolver = $sessionResolver;
-	}
-
-	public function injectTranslator(Translator $translator): void
-	{
 		$this->translator = $translator;
-	}
 
-	public function injectLocaleAwareness(): void
-	{
-		$this->onRender[] = function(): void {
-			$locale = $this->translator->getLocale();
-			$locales = [];
-	
-			foreach ($this->translator->getLocalesWhitelist() as $lang) {
-				$locales[$lang] = 'enum.locale.'.$lang;
-			}
-	
-			if (!isset($locales[$locale])) {
-				$locale = $this->translator->getDefaultLocale();
-			}
-	
-			$template = $this->getTemplate();
-			$template->add('locales', $locales);
-			$template->add('locale', $locale);
-		};
+		$this->onStartup[] = $this->localeAllowed(...);
+		$this->onRender[] = $this->localeAware(...);
 	}
 
 
 	public function handleLocale(string $lang): void
 	{
-		$this->sessionResolver->setLocale($this->locale = $lang);
-		$this->redirect('this');
+		if (!isset($this->locales[$lang])) {
+			$lang = null;
+		}
+
+		if ($this->session->isStarted()) {
+			$this->sessionResolver->setLocale($lang);
+		}
+
+		$this->redirect('this', ['locale' => $lang]);
+	}
+
+
+	public function getLocale(): string
+	{
+		return $this->locale ?? $this->translator->getLocale();
 	}
 
 
 	public function getTranslator(): Translator
 	{
 		return $this->translator;
+	}
+
+
+	private function localeAllowed(): void
+	{
+		$locale = $this->getLocale();
+
+		if (!isset($this->locales[$locale])) {
+			$this->handleLocale($locale);
+		}
+	}
+
+
+	private function localeAware(): void
+	{
+		$template = $this->getTemplate();
+		$template->add('locale', $this->getLocale());
+		$template->add('locales', $this->locales);
 	}
 }

@@ -17,6 +17,8 @@ use Nette\InvalidArgumentException;
  */
 trait Modals
 {
+	private const string ModalTarget = 'openModal';
+
 	/**
 	 * @param  array<string, mixed> $params
 	 * @throws InvalidArgumentException
@@ -37,8 +39,9 @@ trait Modals
 			$modal = '#'.$modal->getName();
 		}
 
+		$params[self::ModalTarget] = $modal;
+
 		$template = $this->getTemplate();
-		$template->add('openModal', $modal);
 		$template->setParameters($params);
 
 		$this->redrawControl('modals');

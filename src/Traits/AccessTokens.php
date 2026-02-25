@@ -9,6 +9,7 @@ namespace JuniWalk\Utils\Traits;
 
 use JuniWalk\Utils\Arrays;
 use JuniWalk\Utils\Interfaces\TokenProvider;	// ! Used for @phpstan
+use JuniWalk\Utils\Exceptions\PermissionDeniedException;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\Link;
 use Nette\Application\UI\InvalidLinkException;
@@ -26,14 +27,30 @@ trait AccessTokens
 	private LinkGenerator $linkGenerator;
 	private Cache $cache;
 
-	public function injectStorage(Storage $storage): void
-	{
+
+	public function injectAccessTokens(
+		Storage $storage,
+		LinkGenerator $linkGenerator,
+	): void {
 		$this->cache = new Cache($storage, 'Authorization.Tokens');
+		$this->linkGenerator = $linkGenerator;
 	}
 
-	public function injectLinkGenerator(LinkGenerator $linkGenerator): void
+
+	/**
+	 * @throws PermissionDeniedException
+	 */
+	public function validateToken(string $token, bool $throw = true): bool
 	{
-		$this->linkGenerator = $linkGenerator;
+		if ($token === $this->getToken() && $this->getPackage($token, false)) {
+			return true;
+		}
+
+		if ($throw === false) {
+			return false;
+		}
+
+		throw new PermissionDeniedException('Token "'.$token.'" is not valid.');
 	}
 
 
@@ -92,7 +109,7 @@ trait AccessTokens
 	/**
 	 * @return TokenArgs
 	 */
-	private function getPackage(string $token, bool $singleUseToken = true): array
+	private function getPackage(string $token, bool $singleUseToken = true): array|false
 	{
 		/** @var TokenArgs */
 		$package = $this->cache->load($token);
@@ -104,7 +121,7 @@ trait AccessTokens
 
 		// ? Check if the package coresponds to current request (presenter, action, id, etc.)
 		if (!$package || Arrays::differenceRecursiveAssoc($package, $request ?? [])) {
-			return [];
+			return false;
 		}
 
 		if ($singleUseToken) {

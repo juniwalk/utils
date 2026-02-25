@@ -20,6 +20,7 @@ interface TokenProvider extends IPresenter
 	 * @param TokenArgs $args
 	 */
 	public function createToken(string|Link $dest, array $args = [], ?Identity $identity = null, string $lifespan = '20 minutes'): string;
+	public function validateToken(string $token, bool $throw = true): bool;
 	public function getToken(): ?string;
 	public function clearToken(?string $token = null): void;
 }

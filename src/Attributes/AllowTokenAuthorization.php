@@ -14,6 +14,7 @@ class AllowTokenAuthorization
 {
 	public function __construct(
 		public readonly bool $singleUseToken = false,
+		public readonly bool $leaveAuthorized = false,
 	) {
 	}
 }

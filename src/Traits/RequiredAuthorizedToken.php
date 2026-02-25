@@ -47,8 +47,10 @@ trait RequiredAuthorizedToken
 			$user->login(new SimpleIdentity($userId));
 			$user->refreshStorage();
 
-			// ? Only allow identity access through token to this page
-			$this->onShutdown[] = fn() => $user->logout();
+			if (!$attribute->leaveAuthorized) {
+				// ? Only allow identity access through token to this page
+				$this->onShutdown[] = fn() => $user->logout();
+			}
 		}
 
 		$this->_isRequiredAuthorized = false;

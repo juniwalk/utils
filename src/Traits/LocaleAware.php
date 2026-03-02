@@ -73,7 +73,12 @@ trait LocaleAware
 
 	private function localeAllowed(): void
 	{
+		$localeSession = @$this->sessionResolver->resolve($this->translator);
 		$locale = $this->getLocale();
+
+		if ($localeSession && $locale !== $localeSession) {
+			$this->redirect('this', ['locale' => $localeSession]);
+		}
 
 		if (!isset($this->locales[$locale])) {
 			$this->handleLocale($locale);

@@ -8,7 +8,7 @@
 namespace JuniWalk\Utils;
 
 /**
- * @phpstan-type Point array{0: int, 1: int, 2?: int}
+ * @phpstan-type Point array{0: float, 1: float, 2?: float}
  */
 final class Vectors
 {

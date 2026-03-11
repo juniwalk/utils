@@ -33,6 +33,9 @@ enum Color: string implements LabeledEnum
 	case Olive = 'olive';
 	case GrayDark = 'gray-dark';
 
+	case Dark = 'dark';
+	case Light = 'light';
+
 
 	public function label(): string
 	{
@@ -91,6 +94,9 @@ enum Color: string implements LabeledEnum
 			self::Teal => '#20c997',
 			self::Olive => '#3d9970',
 			self::GrayDark => '#343a40',
+
+			self::Dark => '#212529',
+			self::Light => '#f8f9fa',
 		};
 	}
 
@@ -98,8 +104,8 @@ enum Color: string implements LabeledEnum
 	public function foreground(): string
 	{
 		return Parse::luminosity($this->hex()) > 0.5
-			? '#343a40'	// Dark
-			: '#f8f9fa';	// Light
+			? self::Dark->hex()
+			: self::Light->hex();
 	}
 
 
@@ -108,7 +114,8 @@ enum Color: string implements LabeledEnum
 		return match ($this) {
 			self::Primary, self::Secondary,
 			self::Info, self::Success,
-			self::Warning, self::Danger => true,
+			self::Warning, self::Danger,
+			self::Dark, self::Light => true,
 			default => false,
 		};
 	}

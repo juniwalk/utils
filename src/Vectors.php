@@ -48,6 +48,9 @@ final class Vectors
 		}
 
 		usort($points, static fn($a, $b) => $a['angle'] <=> $b['angle']);
+		array_walk($points, static function(&$x) {
+			unset($x['angle']);
+		});
 
 		return $points;
 	}

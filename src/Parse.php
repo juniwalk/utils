@@ -111,7 +111,7 @@ final class Parse
 			$pair = Strings::split($arg, '/\s*(?::|=>?)\s*/');
 			$pair = array_pad($pair, -2, 0);
 
-			yield $pair[0] => match (Strings::lower($pair[1])) {
+			yield $pair[0] => match (Strings::lower((string) $pair[1])) {
 				'false' => false,
 				'true' => true,
 				'null' => null,

@@ -16,7 +16,7 @@ final class Vectors
 	 * @param  Point[] $points
 	 * @return Point
 	 */
-	public static function pointsCenter(array $points): array
+	public static function centroid(array $points): array
 	{
 		if (!$count = count($points)) {
 			return [0, 0];
@@ -36,9 +36,9 @@ final class Vectors
 	 * @param  Point[] $points
 	 * @return Point[]
 	 */
-	public static function pointsAroundCenter(array $points): array
+	public static function sortAroundCenter(array $points): array
 	{
-		$center = static::pointsCenter($points);
+		$center = static::centroid($points);
 
 		foreach ($points as $key => $point) {
 			$points[$key]['angle'] = atan2(

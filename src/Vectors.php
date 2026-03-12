@@ -13,6 +13,16 @@ namespace JuniWalk\Utils;
 final class Vectors
 {
 	/**
+	 * @param Point $pointA
+	 * @param Point $pointB
+	 */
+	public static function distance(array $pointA, array $pointB): float
+	{
+		return sqrt(pow($pointA[0] - $pointB[0], 2) + pow($pointA[1] - $pointB[0], 2));
+	}
+
+
+	/**
 	 * @param  Point[] $points
 	 * @return Point
 	 */
@@ -53,5 +63,40 @@ final class Vectors
 		});
 
 		return $points;
+	}
+
+
+	/**
+	 * @param  Point[] $points
+	 * @return Point[]
+	 */
+	public static function combineCloseNeighbors(array $points, float $threshold): array
+	{
+		$count = count($points);
+		$merged = $handled = [];
+
+		for ($i = 0; $i < $count; $i++) {
+			if ($handled[$i] ?? false) {
+				continue;
+			}
+
+			$cluster = [$points[$i]];
+			$handled[$i] = true;
+
+			for ($j = $i + 1; $j < $count; $j++) {
+				if ($handled[$j] ?? false) {
+					continue;
+				}
+
+				if (static::distance($points[$i], $points[$j]) <= $threshold) {
+					$cluster[] = $points[$j];
+					$handled[$j] = true;
+				}
+			}
+
+			$merged[] = static::centroid($cluster);
+		}
+
+		return $merged;
 	}
 }

@@ -36,7 +36,7 @@ final class Vectors
 	 * @param  Point[] $points
 	 * @return Point[]
 	 */
-	public static function sortAroundCenter(array $points): array
+	public static function sortAroundCentroid(array $points): array
 	{
 		$center = static::centroid($points);
 

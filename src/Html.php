@@ -124,15 +124,14 @@ final class Html extends NetteHtml
 		bool $isColoredBySign = false,
 	): self {
 		$value = Format::price($amount, $unit, $decimals);
-		$color = $unit->color();
+		$color = match (true) {
+			// ? Default color of the unit
+			!$isColoredBySign => $unit->color(),
 
-		if ($isColoredBySign && $amount > 0) {
-			$color = Color::Success;
-		}
-
-		if ($isColoredBySign && $amount < 0) {
-			$color = Color::Danger;
-		}
+			$amount > 0	=> Color::Success,
+			$amount < 0	=> Color::Danger,
+			default		=> Color::Secondary,
+		};
 
 		return self::badge($value, $color, isPill: true, translate: false);
 	}

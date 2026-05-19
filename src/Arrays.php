@@ -208,18 +208,18 @@ final class Arrays
 			foreach($parts as $part) {
 				// ? Ignore unflattening if destination exists
 				// ? but it is not an array to write into
-				if (!is_array($current[$part] ?? [])) {
-					$result[$key] = $value;
+				if (!is_array($current[$part] ?? [])) {	// @phpstan-ignore offsetAccess.nonOffsetAccessible
+					$result[$key] = $value;	// @phpstan-ignore offsetAccess.nonOffsetAccessible
 					continue 2;
 				}
 
-				$current = &$current[$part];
+				$current = &$current[$part];	// @phpstan-ignore offsetAccess.nonOffsetAccessible
 			}
 
 			$current = $value;
 		}
 
-		return $result;
+		return $result;	// @phpstan-ignore return.type
 	}
 
 

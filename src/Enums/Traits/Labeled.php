@@ -98,6 +98,12 @@ trait Labeled
 	}
 
 
+	public function group(): ?string
+	{
+		return null;
+	}
+
+
 	public function color(): Color
 	{
 		return Color::Secondary;

@@ -29,6 +29,7 @@ interface LabeledEnum extends BackedEnum
 	public static function getOptions(bool $badge = true): array;
 
 	public function label(): string;
+	public function group(): ?string;
 	public function color(): Color;
 	public function icon(): ?string;
 }

@@ -24,7 +24,7 @@ final class GoogleChrome
 {
 	/** @var array<string, Option> */
 	private array $options = [
-		// 'no-sandbox' => null,
+		'no-sandbox' => null,
 		'headless' => 'new',
 		'disable-gpu' => null,
 		'virtual-time-budget' => 150,

@@ -14,8 +14,13 @@ use UnexpectedValueException;
 final class Arrays
 {
 	/**
-	 * @param  mixed[] $items
-	 * @return mixed[]
+	 * @template TValue
+	 * @template TKey of int|string
+	 * @template TReturn
+	 *
+	 * @param  iterable<TKey, TValue> $items
+	 * @param  callable(TValue, TKey): TReturn $callback
+	 * @return array<TKey, TReturn>
 	 */
 	public static function map(iterable $items, callable $callback): array
 	{

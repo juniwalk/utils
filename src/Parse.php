@@ -93,7 +93,7 @@ final class Parse
 			return null;
 		}
 
-		return (object) $parts;	// @phpstan-ignore return.type (This error should not be here as it works the same as keyword() and control() methods)
+		return (object) $parts;
 	}
 
 

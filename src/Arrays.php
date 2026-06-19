@@ -155,6 +155,31 @@ final class Arrays
 
 
 	/**
+	 * @param  mixed[] $items
+	 * @param  callable $callback
+	 * @return mixed[]
+	 */
+	public static function filterRecursive(iterable $items, callable $callback): array
+	{
+		$result = [];
+
+		foreach ($items as $key => $value) {
+			if (is_iterable($value)) {
+				$result[$key] = static::filterRecursive($value, $callback);
+				continue;
+			}
+
+			if ($callback($value, $key)) {
+				$result[$key] = $value;
+				continue;
+			}
+		}
+
+		return $result;
+	}
+
+
+	/**
 	 * @template LabeledEnum of mixed
 	 * @param  LabeledEnum[] $items
 	 * @param  BackedEnum[] $array

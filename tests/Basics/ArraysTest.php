@@ -103,6 +103,17 @@ final class ArraysTest extends TestCase
 	}
 
 
+	public function testFilterRecursive(): void
+	{
+		$items = ['_first' => 'one', '_second' => 'two', '_third' => ['_fourth' => 'three', '_fifth' => 'four']];
+
+		Assert::same(
+			['_second' => 'two', '_third' => ['_fifth' => 'four']],
+			Arrays::filterRecursive($items, fn($v) => $v === 'two' || $v === 'four')
+		);
+	}
+
+
 	public function testFilterEnums(): void
 	{
 		// TEST: List of enums

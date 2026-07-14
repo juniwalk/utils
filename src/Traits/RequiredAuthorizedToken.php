@@ -59,7 +59,7 @@ trait RequiredAuthorizedToken
 
 	private function findAuthorizationAttribute(): ?AllowTokenAuthorization
 	{
-		$action = static::formatActionMethod($this->action);
+		$action = static::formatActionMethod($this->getAction());
 		$class = new ComponentReflection(static::class);
 
 		$attributes = $class->getAttributes(AllowTokenAuthorization::class);

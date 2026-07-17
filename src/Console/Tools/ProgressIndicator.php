@@ -31,7 +31,8 @@ final class ProgressIndicator
 		$this->progress = new ProgressBar($output, $max);
 		$this->errorOutput = $output;
 
-		if (method_exists($output, 'getErrorOutput')) {
+		if (method_exists($output, 'getErrorOutput')
+		 && is_callable([$output, 'getErrorOutput'])) {		// @phpstan-ignore function.alreadyNarrowedType (getErrorOutput is not in interface)
 			$this->errorOutput = $output->getErrorOutput();
 		}
 

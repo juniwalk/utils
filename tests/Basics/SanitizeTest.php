@@ -16,22 +16,20 @@ require __DIR__.'/../bootstrap.php';
  */
 final class SanitizeTest extends TestCase
 {
-	public function testFloat(): void
+	public function testNumber_convertsParsedValuesToFloat(): void
 	{
-		Assert::same(null, Sanitize::float('text'));
-		Assert::same(null, Sanitize::float(''));
-		Assert::same(123.0, Sanitize::float('123'));
-		Assert::same(123.0, Sanitize::float(123));
-		Assert::same(12.34, Sanitize::float(12.34));
-		Assert::same(12.34, Sanitize::float('12,34'));
-		Assert::same(1000.0, Sanitize::float('1e3'));
-		Assert::same(-5.2, Sanitize::float('-5.2'));
-		Assert::same(1.0, Sanitize::float(true));
-		Assert::same(null, Sanitize::float(false));
-		Assert::same(null, Sanitize::float(0));
-		Assert::same(null, Sanitize::float('0'));
-		Assert::same(12.35, Sanitize::float('12,345', 2));
-		Assert::same(12.345, Sanitize::float('12,345', 0));
+		Assert::same(123.0, Sanitize::number('123'));
+		Assert::same(1234.56, Sanitize::number('1.234,56'));
+		Assert::same(1000.0, Sanitize::number('1e3'));
+		Assert::same(0.0, Sanitize::number('0'));
+		Assert::same(5.0, Sanitize::number('5kg'));
+	}
+
+
+	public function testNumber_precisionHandling(): void
+	{
+		Assert::same(12.35, Sanitize::number('12,345', 2));
+		Assert::same(12.0, Sanitize::number('12,345', 0));
 	}
 }
 

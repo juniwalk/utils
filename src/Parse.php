@@ -122,4 +122,88 @@ final class Parse
 
 		return $args;
 	}
+
+
+	public static function number(mixed $value): ?string
+	{
+		$value = Format::stringify($value);
+		$value = trim($value);
+
+		if ($value === '') {
+			return null;
+		}
+
+		preg_match_all('/[+\-]?(?:\d[\d\h.,\x{00A0}\x{202F}]*\d|\d)(?:[eE][+\-]?\d+)?/u', $value, $matches);
+		$numbers = array_values(array_filter(
+			$matches[0],
+			static fn(string $number): bool => preg_match('/\d/', $number) === 1,
+		));
+
+		if (count($numbers) !== 1) {
+			return null;
+		}
+
+		return static::numberNormalize($numbers[0]);
+	}
+
+
+	private static function numberNormalize(string $value): ?string
+	{
+		if (!($match = Strings::match($value, '/^(.+?)([eE][+\-]?\d+)?$/'))) {
+			return null;
+		}
+
+		$base = preg_replace('/[\h\x{00A0}\x{202F}]/u', '', $match[1]);
+
+		if (is_null($base)) {
+			return null;
+		}
+
+		$exponent = $match[2] ?? '';
+
+		if ($base === '') {
+			return null;
+		}
+
+		$comma = strrpos($base, ',');
+		$dot = strrpos($base, '.');
+
+		if ($comma !== false && $dot !== false) {
+			$decimal = $comma > $dot ? ',' : '.';
+			$grouping = $decimal === ',' ? '.' : ',';
+
+			$base = str_replace($grouping, '', $base);
+			$base = str_replace($decimal, '.', $base);
+
+		} elseif ($comma !== false) {
+			$base = static::numberSeparatorNormalize($base, ',');
+
+		} elseif (substr_count($base, '.') > 1) {
+			$base = static::numberSeparatorNormalize($base, '.');
+		}
+
+		if (is_null($base) || preg_match('/^[+\-]?(?:\d+|\d*\.\d+)$/', $base) !== 1) {
+			return null;
+		}
+
+		return $base.$exponent;
+	}
+
+
+	private static function numberSeparatorNormalize(string $value, string $separator): ?string
+	{
+		$separatorRegex = preg_quote($separator, '/');
+		$isGrouping = substr_count($value, $separator) > 1
+			&& preg_match('/^[+\-]?\d{1,3}(?:'.$separatorRegex.'\d{3})+$/', $value) === 1;
+
+		if ($isGrouping) {
+			return str_replace($separator, '', $value);
+		}
+
+		if (substr_count($value, $separator) > 1) {
+			return null;
+		}
+
+		return $separator === ',' ? str_replace(',', '.', $value) : $value;
+	}
 }

@@ -284,16 +284,10 @@ final class Format
 	 */
 	public static function numeric(mixed $value, ?int $precision = null, bool $strict = true): mixed
 	{
-		$number = strtr(static::stringify($value), [' ' => '', ',' => '.']);
+		$number = Sanitize::number($value, $precision);
 
-		if (!is_numeric($number)) {
+		if (is_null($number)) {
 			return $strict ? null : $value;
-		}
-
-		$number = (float) $number;
-
-		if ($precision !== null) {
-			$number = round($number, $precision);
 		}
 
 		if ($number == (int) $number) {	// Intentionally used == for lax comparison

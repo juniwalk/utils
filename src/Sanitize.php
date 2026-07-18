@@ -17,7 +17,7 @@ final class Sanitize
 			return null;
 		}
 
-		$hasPrefix = Strings::startsWith($value, '+');
+		$hasPrefix = str_starts_with($value, '+');
 		$value = Strings::replace($value, '/[^0-9]/');
 
 		return ($hasPrefix ? '+' : null).$value;
@@ -130,17 +130,30 @@ final class Sanitize
 
 
 	/**
-	 * @param Stringable|scalar $value
+	 * @deprecated Use Parse::number() instead
+	 * @see Parse::number()
 	 */
+	#[\Deprecated('Use Parse::number() instead')]
 	public static function float(mixed $value, ?int $precision = null): ?float
 	{
-		$value = Strings::replace((string) $value, '/^e0-9\.\,/');
-		$value = (float) str_replace(',', '.', $value);
+		return static::number($value, $precision);
+	}
 
-		if ($precision) {
-			$value = round($value, $precision);
+
+	public static function number(mixed $value, ?int $precision = null): ?float
+	{
+		$number = Parse::number($value);
+
+		if (is_null($number) || !is_numeric($number)) {
+			return null;
 		}
 
-		return $value ?: null;
+		$number = (float) $number;
+
+		if (!is_null($precision)) {
+			$number = round($number, $precision);
+		}
+
+		return $number;
 	}
 }

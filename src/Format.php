@@ -101,7 +101,7 @@ final class Format
 			return $value->__toString();
 		}
 
-		if (is_iterable($value) || $value instanceof stdClass) {
+		if ($value instanceof stdClass || (is_iterable($value) && !$value instanceof Stringable)) {
 			return Arrays::map(
 				is_iterable($value) ? $value : (array) $value,
 				fn($v) => static::serializable($v),

@@ -126,6 +126,12 @@ final class Parse
 
 	public static function number(mixed $value): ?string
 	{
+		$value = Format::serializable($value);
+
+		if (!is_scalar($value)) {
+			return null;
+		}
+
 		$value = Format::stringify($value);
 		$value = trim($value);
 

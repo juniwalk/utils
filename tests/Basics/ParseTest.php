@@ -40,6 +40,17 @@ final class ParseTest extends TestCase
 	}
 
 
+	public function testNumber_nonConvertibleValuesAreRejected(): void
+	{
+		Assert::same(null, Parse::number([1, 2, 3]));
+		Assert::same(null, Parse::number(['1', '2', '3']));
+		Assert::same(null, Parse::number((object) ['a' => 1, 'b' => 2]));
+		Assert::same(null, Parse::number(new \stdClass()));
+		Assert::same(null, Parse::number(new \DateTimeImmutable('2026-08-05 12:34:56')));
+		Assert::same(null, Parse::number(new \DateTime('2026-08-05 12:34:56')));
+	}
+
+
 	public function testNumber_plainNumericValues(): void
 	{
 		Assert::same('123', Parse::number('123'));

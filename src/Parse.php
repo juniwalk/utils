@@ -124,6 +124,20 @@ final class Parse
 	}
 
 
+	public static function EanChecksumDigit(string|int $value): int
+	{
+		$value = str_pad((string) $value, 14, '0', STR_PAD_LEFT);
+		$sum = 0;
+
+		for ($i = 0; $i < 14; $i++) {
+			$sum += ((int) $value[$i]) * ($i % 2 === 1 ? 3 : 1);
+		}
+
+		$checkDigit = ((ceil($sum / 10)) * 10) - $sum;
+		return (int) $checkDigit;
+	}
+
+
 	public static function number(mixed $value): ?string
 	{
 		$value = Format::serializable($value);

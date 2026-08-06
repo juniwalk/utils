@@ -31,6 +31,15 @@ final class SanitizeTest extends TestCase
 		Assert::same(12.35, Sanitize::number('12,345', 2));
 		Assert::same(12.0, Sanitize::number('12,345', 0));
 	}
+
+
+	public function testEan_sanitizesEanValues(): void
+	{
+		Assert::same('5901234123457', Sanitize::ean('590123412345'));
+		Assert::same('5901234123457', Sanitize::ean('5901234123457'));
+		Assert::same(null, Sanitize::ean('5901234123458'));
+		Assert::same(null, Sanitize::ean('1234567'));
+	}
 }
 
 (new SanitizeTest)->run();

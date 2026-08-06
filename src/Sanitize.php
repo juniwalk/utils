@@ -129,6 +129,28 @@ final class Sanitize
 	}
 
 
+	public static function ean(?string $value, ?int $version = null): ?string
+	{
+		$value = preg_replace('/[^\d]/', '', $value ?? '') ?? '';
+		$version ??= strlen($value) === 12 ? 13 : strlen($value);
+
+		if (!preg_match('/[0-9]{8,13}/', $value)) {
+			return null;
+		}
+
+		$ean = (int) substr($value, 0, 12);
+		$sum = (int) substr($value, 12, 1);
+
+		$checksum = Parse::EanChecksumDigit($ean);
+
+		if ($sum && $sum !== $checksum) {
+			return null;
+		}
+
+		return $ean.$checksum;
+	}
+
+
 	/**
 	 * @deprecated Use Parse::number() instead
 	 * @see Parse::number()

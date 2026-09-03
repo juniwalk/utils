@@ -157,6 +157,16 @@ final class Html extends NetteHtml
 	}
 
 
+	public static function iconStack(string $base, string $icon, bool $fixedWidth = false, ?Color $color = null): self
+	{
+		$stack = static::el('span class="fa-stack"')->addClass($color->for('text'));
+		$stack->addHtml(static::icon($base, $fixedWidth)->addClass('fa-stack-2x'));
+		$stack->addHtml(static::icon($icon, $fixedWidth)->addClass('fa-stack-1x fa-inverse'));
+
+		return $stack;
+	}
+
+
 	public static function option(
 		string|Stringable $label,
 		mixed $value,

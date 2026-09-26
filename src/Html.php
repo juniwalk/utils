@@ -16,6 +16,7 @@ use Nette\Localization\Translator;
 use Nette\Utils\Html as NetteHtml;
 use Stringable;
 
+// todo: remove extension of NetteHtml and rename to Html
 final class Html extends NetteHtml
 {
 	public const TranslationRegEx = '/^(?:[a-z0-9-_]+\.){1,}(?:[a-z0-9-_]+)$/i';
@@ -293,7 +294,7 @@ final class Html extends NetteHtml
 	/**
 	 * @param  Stringable|scalar|null $message
 	 */
-	private static function translate(mixed $message, bool $translate = true): null|string|Stringable
+	public static function translate(mixed $message, bool $translate = true): null|string|Stringable
 	{
 		$content = strval($message) ?: null;
 

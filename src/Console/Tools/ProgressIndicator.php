@@ -18,6 +18,7 @@ use Symfony\Component\Console\Terminal;
 
 final class ProgressIndicator
 {
+	private readonly OutputInterface $output;
 	private OutputInterface $errorOutput;
 	private ProgressBar $progress;
 
@@ -28,6 +29,7 @@ final class ProgressIndicator
 		private bool $hideOnFinish = false,
 		private bool $logExceptions = true,
 	) {
+		$this->output = $output;
 		$this->progress = new ProgressBar($output, $max);
 		$this->errorOutput = $output;
 
@@ -99,7 +101,7 @@ final class ProgressIndicator
 	 */
 	public function execute(string $message, callable $callback): mixed
 	{
-		$this->progress->setFormat("[%status%] %message%\n");
+		$this->setFormat("[%status%] %message%\n");
 		$this->setMessage($message, 'message');
 		$this->setStatus(Status::Working);
 		$this->progress->start();
@@ -144,7 +146,7 @@ final class ProgressIndicator
 	 */
 	public function iterate(iterable $values, callable $callback): void
 	{
-		$this->progress->setFormat("\n %percent:3s%% [%bar%] %current%/%max%\n %message%\n\n");
+		$this->setFormat("\n %percent:3s%% [%bar%] %current%/%max%\n %message%\n\n");
 		$this->setMessage('<info>Preparing...</>', 'message');
 		$this->progress->start(is_countable($values) ? count($values) : null);
 
@@ -167,6 +169,14 @@ final class ProgressIndicator
 		if ($this->hideOnFinish) {
 			$this->progress->clear();
 		}
+	}
+
+
+	private function setFormat(string $format): void
+	{
+		$debug = $this->output->isDebug();
+		$this->progress->setOverwrite(!$debug);
+		$this->progress->setFormat($debug ? "%message%\n" : $format);
 	}
 
 

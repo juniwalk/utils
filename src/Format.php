@@ -139,6 +139,7 @@ final class Format
 		return match (true) {
 			is_array($value) => json_encode($value) ?: '',
 			is_bool($value) => $value ? 'true' : 'false',
+			is_null($value) => 'NULL',
 
 			default => (string) $value,
 		};

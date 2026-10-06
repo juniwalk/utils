@@ -28,10 +28,11 @@ final class ProgressIndicator
 		private ?bool $throwExceptions = null,
 		private bool $hideOnFinish = false,
 		private bool $logExceptions = true,
+		private bool $silentOnDebug = false,
 	) {
-		$this->output = $output;
 		$this->progress = new ProgressBar($output, $max);
 		$this->errorOutput = $output;
+		$this->output = $output;
 
 		if (method_exists($output, 'getErrorOutput')
 		 && is_callable([$output, 'getErrorOutput'])) {		// @phpstan-ignore function.alreadyNarrowedType (getErrorOutput is not in interface)
@@ -58,6 +59,12 @@ final class ProgressIndicator
 	public function setHideOnFinish(bool $hideOnFinish = true): void
 	{
 		$this->hideOnFinish = $hideOnFinish;
+	}
+
+
+	public function setSilentOnDebug(bool $silentOnDebug = true): void
+	{
+		$this->silentOnDebug = $silentOnDebug;
 	}
 
 
@@ -104,7 +111,11 @@ final class ProgressIndicator
 		$this->setFormat("[%status%] %message%\n");
 		$this->setMessage($message, 'message');
 		$this->setStatus(Status::Working);
-		$this->progress->start();
+		$silent = $this->isSilentOnDebug();
+
+		if (!$silent) {
+			$this->progress->start();
+		}
 
 		try {
 			$result = $callback($this);
@@ -122,7 +133,9 @@ final class ProgressIndicator
 				$this->setStatus(Status::Success);
 			}
 
-			$this->progress->finish();
+			if (!$silent) {
+				$this->progress->finish();
+			}
 		}
 
 		$result ??= $this->getStatus() ?? Status::Error;
@@ -148,7 +161,11 @@ final class ProgressIndicator
 	{
 		$this->setFormat("\n %percent:3s%% [%bar%] %current%/%max%\n %message%\n\n");
 		$this->setMessage('<info>Preparing...</>', 'message');
-		$this->progress->start(is_countable($values) ? count($values) : null);
+		$silent = $this->isSilentOnDebug();
+
+		if (!$silent) {
+			$this->progress->start(is_countable($values) ? count($values) : null);
+		}
 
 		foreach ($values as $key => $value) {
 			try {
@@ -160,13 +177,18 @@ final class ProgressIndicator
 				$this->render($e);
 			}
 
-			$this->progress->advance();
+			if (!$silent) {
+				$this->progress->advance();
+			}
 		}
 
 		$this->setMessage('<info>Process has finished</>');
-		$this->progress->finish();
 
-		if ($this->hideOnFinish) {
+		if (!$silent) {
+			$this->progress->finish();
+		}
+
+		if ($this->hideOnFinish && !$silent) {
 			$this->progress->clear();
 		}
 	}
@@ -175,15 +197,26 @@ final class ProgressIndicator
 	private function setFormat(string $format): void
 	{
 		$debug = $this->output->isDebug();
-		$this->progress->setOverwrite(!$debug);
+
 		$this->progress->setFormat($debug ? "%message%\n" : $format);
+		$this->progress->setOverwrite(!$debug);
+	}
+
+
+	private function isSilentOnDebug(): bool
+	{
+		return $this->silentOnDebug && $this->output->isDebug();
 	}
 
 
 	private function render(Throwable $e): void
 	{
+		$silent = $this->isSilentOnDebug();
 		$terminal = new Terminal;
-		$this->progress->clear();
+
+		if (!$silent) {
+			$this->progress->clear();
+		}
 
 		$title = sprintf('  [%s]  ', get_class($e));
 		$len = Helper::length($title);
@@ -213,11 +246,13 @@ final class ProgressIndicator
 
 		$this->errorOutput->writeln($messages);
 
+		if (!$silent) {
+			$this->progress->display();
+		}
+
 		if ($this->logExceptions) {
 			Debugger::log($e);
 		}
-
-		$this->progress->display();
 
 		if ($this->throwExceptions) {
 			throw $e;

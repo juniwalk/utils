@@ -32,6 +32,28 @@ final class ProgressIndicatorTest extends TestCase
 	}
 
 
+	public function testSilentDebugSuppressesProgressButShowsErrors(): void
+	{
+		$output = new BufferedOutput;
+		$output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
+		$indicator = new ProgressIndicator($output, silentOnDebug: true);
+		$indicator->setLogExceptions(false);
+		$indicator->execute('Running task', static function (): void {
+			throw new RuntimeException('Task failed');
+		});
+		$indicator->iterate([1, 2], static function (ProgressIndicator $indicator, int $value): void {
+			$indicator->setMessage(sprintf('Step %d', $value));
+		});
+
+		$contents = $output->fetch();
+		Assert::contains('Task failed', $contents);
+		Assert::notContains('Running task', $contents);
+		Assert::notContains('Preparing...', $contents);
+		Assert::notContains('Step 1', $contents);
+		Assert::same('', $output->fetch());
+	}
+
+
 	public function testDebugIterateShowsMessagesWithoutProgressBar(): void
 	{
 		$output = new BufferedOutput;
@@ -59,7 +81,7 @@ final class ProgressIndicatorTest extends TestCase
 	public function testNormalOutputKeepsProgressDetails(): void
 	{
 		$output = new BufferedOutput;
-		$indicator = new ProgressIndicator($output);
+		$indicator = new ProgressIndicator($output, silentOnDebug: true);
 		$indicator->setRedrawFrequency(1);
 
 		$indicator->iterate([1], static function (): void {});

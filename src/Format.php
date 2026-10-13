@@ -132,14 +132,14 @@ final class Format
 	}
 
 
-	public static function stringify(mixed $value): string
+	public static function stringify(mixed $value, bool $includingNull = false): string
 	{
 		$value = static::serializable($value);
 
 		return match (true) {
 			is_array($value) => json_encode($value) ?: '',
 			is_bool($value) => $value ? 'true' : 'false',
-			is_null($value) => 'NULL',
+			is_null($value) => $includingNull ? 'NULL' : '',
 
 			default => (string) $value,
 		};

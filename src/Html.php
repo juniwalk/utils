@@ -140,7 +140,7 @@ final class Html extends NetteHtml
 
 	public static function icon(string $icon, bool $fixedWidth = false, ?Color $color = null): self
 	{
-		static $types = ['fa', 'fas', 'fab', 'far', 'fi'];
+		static $types = ['fa', 'fas', 'fa-solid', 'fab', 'fa-brand', 'far', 'fa-regular', 'fi'];
 
 		/** @var Html */
 		$html = static::el('i')->addClass($icon);

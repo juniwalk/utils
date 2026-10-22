@@ -25,11 +25,11 @@ final class PermissionDeniedException extends ForbiddenRequestException
 	 */
 	public static function fromTask(string $resource, string $task, ?self $previous = null): self
 	{
-		return self::permissionDenied($resource, $task, $previous);
+		return self::prohibited($resource, $task, $previous);
 	}
 
 
-	public static function permissionDenied(string $resource, string $task, ?self $previous = null): self
+	public static function prohibited(string $resource, string $task, ?self $previous = null): self
 	{
 		$self = new self('web.message.permission-denied', 403, $previous);
 		$self->color = Color::Warning;

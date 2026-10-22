@@ -71,7 +71,7 @@ trait AccessTokens
 		$args['token'] = $token;
 
 		if ($identity instanceof Identity) {
-			$args['_identity'] = $identity->getId();
+			$args['_identity'] = (string) $identity->getId();
 		}
 
 		$request = $this->linkGenerator->createRequest($this, $dest, $args, 'link');

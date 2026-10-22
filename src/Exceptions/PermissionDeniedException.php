@@ -78,4 +78,10 @@ final class PermissionDeniedException extends ForbiddenRequestException
 			'task' => $this->task,
 		]);
 	}
+
+
+	public function createType(): string
+	{
+		return $this->color->value;
+	}
 }

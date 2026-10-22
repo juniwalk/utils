@@ -54,7 +54,7 @@ trait RequiredAuthorized
 
 		try {
 			if (!$user->isAllowed($resource, $task)) {
-				throw PermissionDeniedException::fromTask($resource, $task);
+				throw PermissionDeniedException::prohibited($resource, $task);
 			}
 
 		} catch (InvalidStateException) {
@@ -69,6 +69,6 @@ trait RequiredAuthorized
 			return;
 		}
 
-		throw PermissionDeniedException::fromTask($resource, $task);
+		throw PermissionDeniedException::prohibited($resource, $task);
 	}
 }

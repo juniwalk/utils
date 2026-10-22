@@ -50,7 +50,7 @@ trait AccessTokens
 			return false;
 		}
 
-		throw new PermissionDeniedException('Token "'.$token.'" is not valid.');
+		throw PermissionDeniedException::operationNotAllowed();
 	}
 
 

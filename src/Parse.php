@@ -7,8 +7,8 @@
 
 namespace JuniWalk\Utils;
 
+use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
 use ValueError;
 
 final class Parse
@@ -82,7 +82,7 @@ final class Parse
 		}
 
 		try {
-			$parts = Presenter::parseDestination($match['link']);
+			$parts = LinkGenerator::parseDestination($match['link']);
 			$parts['path'] = str_replace($match['query'] ?? '', '', $match['link']);
 			$parts['args'] = array_merge(
 				static::arguments($match['args'] ?? ''),

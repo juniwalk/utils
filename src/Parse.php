@@ -13,7 +13,7 @@ use ValueError;
 
 final class Parse
 {
-	private const Arguments = '(?:,?\s(?<args>(?:(?:(?:[a-z][a-z0-9]*)\s?(?::|=>?)\s?)?(?:[^&,}]+)(?:(?:&|,)\s?)?)+))?';
+	private const Arguments = '(?:,?\s(?<args>(?:(?:(?:[a-z][a-z0-9]*)\s?(?::|=>?)\s?)?(?:[^&,}]+)(?:(?>,|&amp;|&)\s?)?)+))?';
 	private const HelpKeyword = [
 		'name' => '(?<name>(?:(?:[a-z][a-z0-9]+).?)+[^.,\s]+)',
 		'args' => self::Arguments,
@@ -72,7 +72,7 @@ final class Parse
 
 
 	/**
-	 * @return object{path: string, absolute: bool, signal: bool, args: array<string, mixed>, fragment: string}
+	 * @return \stdClass&object{path: string, absolute: bool, signal: bool, args: array<string, mixed>, fragment: string}
 	 * @throws ValueError
 	 */
 	public static function link(string $value): ?object
@@ -81,12 +81,17 @@ final class Parse
 			throw new ValueError('Unable to parse link from: '.$value);
 		}
 
+		if (!empty($match['query'])) {
+			$match['link'] = str_replace($match['query'], '', $match['link']);
+			$arguments = static::arguments(ltrim($match['query'], '?'));
+		}
+
 		try {
 			$parts = LinkGenerator::parseDestination($match['link']);
 			$parts['path'] = str_replace($match['query'] ?? '', '', $match['link']);
 			$parts['args'] = array_merge(
 				static::arguments($match['args'] ?? ''),
-				$parts['args'] ?? [],
+				$arguments ?? [],
 			);
 
 		} catch (InvalidLinkException) {
@@ -106,7 +111,7 @@ final class Parse
 			return [];
 		}
 
-		$args = Strings::split($args, '/[,]\s*/');
+		$args = Strings::split($args, '/(?:,|&amp;|&)\s*/');
 		$args = Arrays::walk($args, function(string $arg) {
 			$pair = Strings::split($arg, '/\s*(?::|=>?)\s*/');
 			$pair = array_pad($pair, -2, 0);

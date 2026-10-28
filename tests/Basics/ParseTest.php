@@ -27,6 +27,67 @@ final class ParseTest extends TestCase
 	}
 
 
+	public function testArguments_urlQueryPlain(): void
+	{
+		$items = 'remember=true&name=John';
+
+		Assert::same(
+			['remember' => true, 'name' => 'John'],
+			Parse::arguments($items)
+		);
+	}
+
+
+	public function testArguments_urlQueryEncoded(): void
+	{
+		$items = 'remember=true&amp;name=John';
+
+		Assert::same(
+			['remember' => true, 'name' => 'John'],
+			Parse::arguments($items)
+		);
+	}
+
+
+	public function testArguments_mixedSeparators(): void
+	{
+		$items = 'a=1&amp;b=2&c=3, d: true';
+
+		Assert::same(
+			['a' => '1', 'b' => '2', 'c' => '3', 'd' => true],
+			Parse::arguments($items)
+		);
+	}
+
+
+	public function testLink_netteWithArguments(): void
+	{
+		$result = Parse::link('Web:Auth:signIn remember: true');
+
+		if ($result === null) {
+			Assert::fail('Link was not parsed.');
+			return;
+		}
+
+		Assert::same('Web:Auth:signIn', $result->path);
+		Assert::same(['remember' => true], $result->args);
+	}
+
+
+	public function testLink_netteWithQuery(): void
+	{
+		$result = Parse::link('Web:Auth:signIn?remember=true');
+
+		if ($result === null) {
+			Assert::fail('Link was not parsed.');
+			return;
+		}
+
+		Assert::same('Web:Auth:signIn', $result->path);
+		Assert::same(['remember' => true], $result->args);
+	}
+
+
 	public function testNumber_invalidAndEmptyValues(): void
 	{
 		Assert::same(null, Parse::number('text'));

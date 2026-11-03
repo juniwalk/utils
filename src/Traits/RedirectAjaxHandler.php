@@ -21,11 +21,11 @@ trait RedirectAjaxHandler
 		$presenter = $this->getPresenter();
 
 		if (!$presenter->isAjax() || $this->forceRedirect) {
-			parent::redirect($dest, $args);
+			parent::redirect($dest, ...$args);
 		}
 
 		$payload = $presenter->getPayload();
-		$payload->url = $this->link($dest, $args);
+		$payload->url = $this->link($dest, ...$args);
 		$payload->postGet = true;
 	}
 

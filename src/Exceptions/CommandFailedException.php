@@ -17,4 +17,12 @@ final class CommandFailedException extends \RuntimeException
 	{
 		return new static('Command "'.$commandName.'" has failed to execute', 1);
 	}
+
+
+	public static function fromLastError(string $message, int $code = 1): self
+	{
+		$error = error_get_last();
+
+		return new static($error['message'] ?? $message, $code);
+	}
 }

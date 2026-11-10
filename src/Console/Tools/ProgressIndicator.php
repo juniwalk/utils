@@ -8,6 +8,7 @@
 namespace JuniWalk\Utils\Console\Tools;
 
 use JuniWalk\Utils\Console\Enums\Status;
+use JuniWalk\Utils\Exceptions\CommandFailedException;
 use Throwable;
 use Tracy\Debugger;
 use Symfony\Component\Console\Command\Command;
@@ -102,11 +103,9 @@ final class ProgressIndicator
 
 
 	/**
-	 * @template T of mixed
-	 * @param  callable(static): T $callback
-	 * @return T|int
+	 * @param callable(static): (Status|bool|int|null|void) $callback
 	 */
-	public function execute(string $message, callable $callback): mixed
+	public function execute(string $message, callable $callback): int
 	{
 		$this->setFormat("[%status%] %message%\n");
 		$this->setMessage($message, 'message');
@@ -117,11 +116,25 @@ final class ProgressIndicator
 			$this->progress->start();
 		}
 
+		$code = Command::FAILURE;
+		error_clear_last();
+
 		try {
 			$result = $callback($this);
 
 			if ($result instanceof Status) {
 				$this->setStatus($result);
+			}
+
+			$code = match (true) {
+				is_int($result)		=> $result,
+				$result === Status::Error,
+				$result === false	=> Command::FAILURE,
+				default				=> Command::SUCCESS,
+			};
+
+			if ($code > 0) {
+				throw CommandFailedException::fromLastError($message, $code);
 			}
 
 		} catch (Throwable $e) {
@@ -138,17 +151,8 @@ final class ProgressIndicator
 			}
 		}
 
-		$result ??= $this->getStatus() ?? Status::Error;
-
-		return match ($result) {
-			Status::Working,
-			Status::Success,
-			Status::Warning,
-			Status::Skipped => Command::SUCCESS,
-			Status::Error => Command::FAILURE,
-
-			default => $result,
-		};
+		// ? Return outside the try because exceptions might be just rendered and not thrown
+		return max(0, min($code, 255));
 	}
 
 
